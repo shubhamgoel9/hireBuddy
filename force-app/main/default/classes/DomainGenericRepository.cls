@@ -27,12 +27,6 @@ public inherited sharing class DomainGenericRepository extends DomainBaseReposit
         super(dmlTxn);
     }
 
-    public class Constructor implements IDomainRepositoryConstructable {
-        public IDomainRepository construct(VDMLTransaction dmlTxn) {
-            return new DomainGenericRepository(dmlTxn);
-        }
-    }
-
     /**
      * Constructor with table name, a new transaction object wil be created.
      */

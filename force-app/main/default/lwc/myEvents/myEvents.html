@@ -49,7 +49,6 @@
             </a>
           </h2>
         </div>
-        
         <!-- <div class="slds-no-flex">
           <button class="slds-button slds-button_neutral">New</button>
         </div> -->
@@ -57,6 +56,7 @@
     </div>
     <div class="slds-card__body">
       <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+        <template for:each={futureEvents} for:item="event"></template>
         <thead>
           <tr class="slds-line-height_reset">
             <th class="" scope="col">
@@ -74,10 +74,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="slds-hint-parent">
+          <template for:each={futureEvents} for:item="event">
+          <tr class="slds-hint-parent" key={event.index}>
             <th scope="row">
               <div class="slds-truncate" title="Amy Choi">
-                <a href="#" tabindex="-1">Amy Choi</a>
+                <a href="#" tabindex="-1">{event.Name}</a>
               </div>
             </th>
             <td role="gridcell">
@@ -90,6 +91,7 @@
               <div class="slds-truncate" title="adam@company.com">adam@company.com</div>
             </td>
           </tr>
+        </template>
         </tbody>
       </table>
     </div>

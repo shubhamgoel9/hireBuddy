@@ -205,6 +205,7 @@ public abstract inherited sharing class DomainBaseRepository implements IDomainR
         }
 
         String query =  'SELECT ' + queryFields + ' FROM ' + getTableName() + whereClause ;
+        System.debug('QUERY TO RUN' + query);
         List<Sobject> listOfSobject = Database.query(query + paginationQuery);
 
         if(listOfSobject != null && listOfSobject.size() > 0 && request.getOffsetNumber() != null){
