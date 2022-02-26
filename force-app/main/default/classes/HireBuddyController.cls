@@ -1,29 +1,16 @@
 global with sharing class HireBuddyController {
-    public HireBuddyController() {
+
+    @AuraEnabled(cacheable=true)
+    public static List<HiringEventItem__c> getAllEventItem(String eventId) {
+        List<HiringEventItem__c> eventItemList = [SELECT CreatedById, CreatedDate, Candidate__c, CandidateStatus__c, CodepairLink__c, HiringEvent__c, InterviewLink__c, R1Feedback__c, R1Interviewer__c, R1Observer__c, R1Round__c, R1RoundStatus__c, R1SiftLink__c, R1StartTime__c, R2Feedback__c, R2Interviewer__c, R2Observer__c, R2Round__c, R2RoundStatus__c, R2SiftLink__c, R2StartTime__c, R3Feedback__c, R3Interviewer__c, R3Observer__c, R3Round__c, R3RoundStatus__c, R3SiftLink__c, R3StartTime__c, ResumeLink__c, Role__c, Id, IsDeleted, LastModifiedById, LastModifiedDate, Name, OwnerId, SystemModstamp FROM HiringEventItem__ct WHERE Id =:eventId ];
+        return eventItemList;
     }
-    @RemoteAction
-    global static Object invokeMethod(String methodName, String serializedInputs) {
-        System.debug('HireBuddyController');
-        Map<String, Object> inputs = new Map<String, Object>();
-        Map<String, Object> output = new Map<String, Object>();
-        Map<String, Object> options = new Map<String, Object>();
-        if (serializedInputs != null) {
-            inputs = (Map<String, Object>)JSON.deserializeUntyped(serializedInputs);
-        }
-        try
-        {
-            IEPCHandler reqHandler = new EPCBaseHandler();
-            if(reqHandler != null){
-                reqHandler.initialize(methodName, inputs, output, options);
-                DomainResponse response = reqHandler.execute();
-                return response.toOutputMap();
-            }
-        }
-        catch (Exception e)
-        {
-            
-            System.debug('ProductConsoleController2 Exception: ' + e.getStackTraceString());
-        }
-        return null;
+
+    @AuraEnabled(cacheable=true)
+    public static List<HiringEventItem__c> getMyUpcomingRound() {
+        Id userId = User.getInstance().Id;
+        List<HiringEventItem__c> eventItemList = [SELECT CreatedById, CreatedDate, Candidate__c, CandidateStatus__c, CodepairLink__c, HiringEvent__c, InterviewLink__c, R1Feedback__c, R1Interviewer__c, R1Observer__c, R1Round__c, R1RoundStatus__c, R1SiftLink__c, R1StartTime__c, R2Feedback__c, R2Interviewer__c, R2Observer__c, R2Round__c, R2RoundStatus__c, R2SiftLink__c, R2StartTime__c, R3Feedback__c, R3Interviewer__c, R3Observer__c, R3Round__c, R3RoundStatus__c, R3SiftLink__c, R3StartTime__c, ResumeLink__c, Role__c, Id, IsDeleted, LastModifiedById, LastModifiedDate, Name, OwnerId, SystemModstamp FROM HiringEventItem__ct WHERE Id =:eventId ];
+        return eventItemList;
     }
+}
 }
