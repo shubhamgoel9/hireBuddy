@@ -1,0 +1,47 @@
+<template>
+    <lightning-card title={item.Name} class="events-items">
+    <td scope="row">
+        <div slot="actions">
+          <lightning-button-icon
+              icon-name="utility:search"
+              icon-class="slds-button"
+              variant="bare"
+              alternative-text="Open record"
+              onclick={handleOpenRecordClick}>
+          </lightning-button-icon>
+        </div>
+          <div class="slds-truncate" title="Candidate Name">{item.hirebuddy__Candidate__r.Name}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="Candidate Resume"><a href='\${item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}'>
+              {item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}</a></div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="Candidate Status">{item.hirebuddy__Candidate__r.hirebuddy__Status__c}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="Role Evaluation">{item.hirebuddy__Candidate__r.hirebuddy__Role__c}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="CodePair">{item.hirebuddy__Candidate__r.hirebuddy__CodepairLink__c}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="Interview Link">{item.hirebuddy__Candidate__r.hirebuddy__InterviewLink__c}</div>
+      </td>
+      <!--<td role="gridcell">
+          <div class="slds-truncate" title="Interviewer">{item.hirebuddy__R1Interviewer__r.Name}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="Observer">{item.hirebuddy__R1Observer__c}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="Time">{item.hirebuddy__R1StartTime__c}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="SIFT">{item.hirebuddy__R1SiftLink__c}</div>
+      </td>
+      <td role="gridcell">
+          <div class="slds-truncate" title="Comments">{item.hirebuddy__R1Feedback__c}</div>
+      </td>-->
+    </lightning-card>
+</template>

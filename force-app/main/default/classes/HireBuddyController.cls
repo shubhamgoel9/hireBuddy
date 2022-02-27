@@ -4,8 +4,16 @@ global with sharing class HireBuddyController {
     public static List<HiringEventItem__c> getAllEventItem(String eventId) {
         List<HiringEventItem__c> eventItemList = [
           SELECT 
-          Name,
-            Id
+            Candidate__r.Id,
+            Candidate__r.Name,
+            Candidate__r.CodepairLink__c,
+            Candidate__r.Contact__c,
+            Candidate__r.Email__c,
+            Candidate__r.HiringEventId__c,
+            Candidate__r.InterviewLink__c,
+            Candidate__r.ResumeLink__c,
+            Candidate__r.Role__c,
+            Candidate__r.Status__c
             FROM HiringEventItem__c WHERE  HiringEvent__r.Id=:eventId];
             System.debug('itemList:: '+eventItemList);
         return eventItemList;
