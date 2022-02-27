@@ -153,4 +153,11 @@ global with sharing class HireBuddyController {
     insert interviewer;
     return 'success';
   }
+
+  @AuraEnabled(cacheable=true)
+  public static String sendEmail(String toEmail, String subject, String toName, String mailContent) {
+    EmailService.toMail = toEmail;
+    EmailService.sendMail(subject, toName, mailContent);
+    return 'success';
+  }
 }
