@@ -6,7 +6,7 @@
           <div class="slds-media__body">
             <h2 class="slds-card__header-title">
               <a href="#" class="slds-card__header-link slds-truncate" title="Accounts">
-                <span>{eventId}</span>
+                <span>Welcome to Event!!</span>
               </a>
             </h2>
           </div>
@@ -184,194 +184,48 @@
                             size="small" ></lightning-icon>
                         <span class="slds-assistive-text">Close</span>
                     </button>
-                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modal/PopUp Box header LWC</h2>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modify Candidate Details</h2>
                 </header>
                 <!-- Modal/Popup Box LWC body starts here -->
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                   <table><tbody>
                   <template if:true={eventItemRecords}>
                     <template for:each={eventItemRecords} for:item="item">
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Candidate</div>
-                          </th>
-                          <td scope="row">
-                            <input type="text" size=50 value="\{item.hirebuddy__Candidate__r.Name}">
-                              <!--div class="slds-truncate" title="Candidate Name" contenteditable="true">{item.hirebuddy__Candidate__r.Name}</div>-->
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Resume</div>
-                          </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Candidate Resume">
-                                <a href='\{item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}'>
-                                  {item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}
-                                </a>{item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}
-                              </div>
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Status</div>
-                          </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Candidate Status">{item.hirebuddy__Candidate__r.hirebuddy__Status__c}</div>
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Role Evaluation</div>
-                          </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Role Evaluation">{item.hirebuddy__Candidate__r.hirebuddy__Role__c}</div>
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Codepair</div>
-                          </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="CodePair">
-                                <a href = '\{item.hirebuddy__Candidate__r.hirebuddy__CodepairLink__c}'>
-                                  {item.hirebuddy__Candidate__r.hirebuddy__CodepairLink__c}
-                                </a>
-                              </div>
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Interview link</div>
-                          </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Interview Link">
-                                <a href = '\{item.hirebuddy__Candidate__r.hirebuddy__InterviewLink__c}'>
-                                  {item.hirebuddy__Candidate__r.hirebuddy__InterviewLink__c}
-                                </a>
-                              </div>
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">R1Interviewer</div>
-                          </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Interviewer">{item.hirebuddy__R1Interviewer__c}</div>
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" key={item.Id}>
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">R1Observer</div>
-                          </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Observer">{item.hirebuddy__R1Observer__c}</div>
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" key={item.Id}>
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R1Time</div>
-                            </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Time">{item.hirebuddy__R1StartTime__c}</div>
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" key={item.Id}>
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R1SIFT</div>
-                            </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="SIFT">{item.hirebuddy__R1SiftLink__c}</div>
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" key={item.Id}>
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R1Comments</div>
-                            </th>
-                          <td role="gridcell">
-                              <div class="slds-truncate" title="Comments">{item.hirebuddy__R1Feedback__c}</div>
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" key={item.Id}>
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R2Interviewer</div>
-                            </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Interviewer">{item.hirebuddy__R2Interviewer__c}</div>
-                            </td>
-                          </tr>
-                          <tr class="slds-hint-parent" key={item.Id}>
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R2Observer</div>
-                            </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Observer">{item.hirebuddy__R2Observer__c}</div>
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" key={item.Id}>
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R2Time</div>
-                              </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Time">{item.hirebuddy__R2StartTime__c}</div>
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" key={item.Id}>
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R2SIFT</div>
-                              </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="SIFT">{item.hirebuddy__R2SiftLink__c}</div>
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" key={item.Id}>
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R2Comments</div>
-                              </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Comments">{item.hirebuddy__R2Feedback__c}</div>
-                            </td>
-                            </tr>
-                          <tr class="slds-hint-parent" key={item.Id}>
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R3Interviewer</div>
-                            </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Interviewer">{item.hirebuddy__R3Interviewer__c}</div>
-                            </td>
-                          </tr>
-                          <tr class="slds-hint-parent" key={item.Id}>
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R3Observer</div>
-                            </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Observer">{item.hirebuddy__R3Observer__c}</div>
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" key={item.Id}>
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R3Time</div>
-                              </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Time">{item.hirebuddy__R3StartTime__c}</div>
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" key={item.Id}>
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R3SIFT</div>
-                              </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="SIFT">{item.hirebuddy__R3SiftLink__c}</div>
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" key={item.Id}>
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R3Comments</div>
-                              </th>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="Comments">{item.hirebuddy__R3Feedback__c}</div>
-                            </td>
-                            </tr>
+                      <tr class="slds-hint-parent" key={item.Id}>
+                        <td>
+                          <lightning-input data-id="candidateName" type="text" label="Candidate Name" value={item.hirebuddy__Candidate__r.Name}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={item.Id}>
+                        <td>
+                          <lightning-input data-id="candidateStatus" type="text" onchange={handleChange} label="Candidate Status" value={item.hirebuddy__Candidate__r.hirebuddy__Status__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={item.Id}>
+                        <td>
+                          <lightning-input data-id="R1Interviewer" type="search" onchange={handleChange} label="R1 Interviewer" value={item.hirebuddy__R1Interviewer__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={item.Id}>
+                        <td>
+                          <lightning-input data-id="R1Observer" type="email" onchange={handleChange} label="R1 Observer Email" value={item.hirebuddy__R1Observer__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={item.Id}>
+                        <td>
+                          <lightning-input data-id="R1Time" type="datetime" onchange={handleChange} label="R1 Time" value={item.hirebuddy__R1StartTime__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={item.Id}>
+                        <td>
+                          <lightning-input data-id="R1Sift" type="url" onchange={handleChange} label="R1 SIFT" value={item.hirebuddy__R1SiftLink__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={item.Id}>
+                        <td>
+                          <lightning-input data-id="R1Feedback" type="text" onchange={handleChange} label="R1 Comments" value={item.hirebuddy__R1Feedback__c}></lightning-input>
+                        </td>
+                      </tr>
                     </template>
                     </template>
                   </tbody></table>
