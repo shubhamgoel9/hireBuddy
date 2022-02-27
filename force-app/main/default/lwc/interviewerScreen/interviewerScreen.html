@@ -1,0 +1,74 @@
+<template>
+    <lightning-card title={capitalizedGreeting} icon-name="custom:custom14">
+                   <br>
+                   <lightning-input
+                       value={greeting}
+                       onchange={handleGreetingChange}>
+                  </lightning-input>
+                  <br>
+                  <table class="slds-table slds-table_cell-buffer slds-table_fixed-layout slds-align_absolute-center" role="grid" aria-label="Example table in a Card">
+                    <tbody>
+                      <tr class="slds-hint-parent">
+                        <td role="gridcell">
+                          <div class="slds-truncate" title="Interviewer Status">
+                            <abbr class="slds-required" title="required">*</abbr>Status</div>
+                        </td>
+                        <td role="gridcell">
+                          <div class="slds-truncate" title="Radio Button Groups">
+                                <lightning-radio-group name="Interviewer Status Radio Button Groups"
+                                    label=""
+                                    options={options}
+                                    value={value}
+                                    type="radio"
+                                    onchange={handleChange}>   
+                                </lightning-radio-group>
+                           </div>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent">
+                        <td role="gridcell">
+                          <div class="slds-text-align_right slds-text-heading_medium">
+                            <lightning-button
+                                name="new-with-defaults"
+                                label="Fetch Assignments"
+                                class="slds-var-m-around_medium button"
+                                onclick={handleInterviewerAssignmentNavigate}
+                                variant="outline">
+                            </lightning-button>
+                        </div>
+                        </td>
+                        <td role="gridcell">
+                          <div class="slds-text-align_right slds-text-heading_medium">
+                            <lightning-button
+                                name="new-with-defaults"
+                                label="Event Board"
+                                class="slds-var-m-around_medium button"
+                                onclick={handlePastEventsNavigate}
+                                variant="outline">
+                            </lightning-button>
+                        </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table> 
+                  <br>
+                  <template for:each={People} for:item="person">
+                    <tr key={person.Id}>                
+                        <td key={person.Id}>                                
+                            {person.Name__c}
+                        </td>
+                        <td key={person.Id}>
+                            {person.Age__c}
+                        </td>
+                        <td key={person.Id}>
+                            {person.Occupation__c}
+                        </td>
+                        <td key={person.Id}>
+                            {person.Favorite_Food__c}
+                        </td> 
+                    </tr>                                                                     
+                </template>
+    </lightning-card>
+</template>
+
+  
