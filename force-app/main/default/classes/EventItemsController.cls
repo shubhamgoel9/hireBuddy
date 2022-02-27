@@ -118,23 +118,46 @@ global with sharing class EventItemsController {
           R3Observer__c
           FROM HiringEventItem__c WHERE  Id=:selectedEventId LIMIT 1];
       
-      List<Candidate__c> candidateList = [Select Id, Status__c from Candidate__c where Id = :items[0].Candidate__r.Id];
+      List<SObject> updateList = new List<SObject>();
+      List<Candidate__c> candidateList = [Select Id, Status__c from Candidate__c where Id = :items[0].Candidate__r.Id LIMIT 1];
       if(candidateStatus != null) 
       {
         candidateList[0].Status__c = candidateStatus;
-        update candidateList;
+        updateList.add(candidateList[0]);
       }
+      List<Round__c> round1 = [Select Id, Interviewer__r.Id, Interviewer__r.Name,Interviewer__r.Email__c, Observer__c, StartTime__c, SiftLink__c, Feedback__c from Round__C where Id=:items[0].Round1__r.Id LIMIT 1];
       if(R1Interviewer != null) 
       {
         items[0].R1Interviewer__c = R1Interviewer;
-
+        if(!round1.isEmpty())
+        {
+          Interviewer__c inter = (Interviewer__c)round1[0].getSObject(Round__c.Interviewer__c.getDescribe().getRelationshipName());
+          inter.Email__c = R1Interviewer;
+          updateList.add(inter);
+        }
+        HireBuddyController.sendEmail(R1Interviewer,'IMPORTANT: You are assigned as an interview task','','Kindly check HireBuddy for more details');
       }
-      if(R1Observer != null) items[0].R1Observer__c = R1Observer;
-      if(R1Sift != null) items[0].R1SiftLink__c = R1Sift;
-      if(R1Time != null) items[0].R1StartTime__c = R1Time;
-      if(R1Feedback != null) items[0].R1Feedback__c = R1Feedback;
+      if(R1Observer != null) {
+        items[0].R1Observer__c = R1Observer;
+        if(!round1.isEmpty()) round1[0].Observer__c = R1Observer;
+      }
+      if(R1Sift != null) 
+      {
+        items[0].R1SiftLink__c = R1Sift;
+        if(!round1.isEmpty()) round1[0].SiftLink__c = R1Sift;
+      }
+      if(R1Time != null){
+        items[0].R1StartTime__c = R1Time;
+        if(!round1.isEmpty()) round1[0].StartTime__c = R1Time;
+      }
+      if(R1Feedback != null) {
+        items[0].R1Feedback__c = R1Feedback;
+        if(!round1.isEmpty()) round1[0].Feedback__c = R1Feedback;
+      }
+      updateList.add(items[0]);
+      if(!round1.isEmpty()) updateList.add(round1[0]);
 System.debug('Prit: before update:'+ items);
-      update items;
+      update updateList;
     }
 
 }
