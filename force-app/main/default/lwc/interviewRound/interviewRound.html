@@ -1,0 +1,86 @@
+<template>
+     
+    <div class="slds-card">
+      <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-contact" title="contact">
+              <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#contact"></use>
+              </svg>
+              <span class="slds-assistive-text">Past Events</span>
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <h2 class="slds-card__header-title">
+              <a href="#" class="slds-card__header-link slds-truncate" title="Contacts (1)">
+                <span>Candidate Details</span>
+              </a>
+            </h2>
+          </div>
+          <!-- <div class="slds-no-flex">
+            <button class="slds-button slds-button_neutral">New</button>
+          </div> -->
+        </header>
+      </div>
+      </div>
+
+    <div class="slds-card__body">
+        <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+        
+          <tbody>
+
+
+            <template if:true={accounts.data}>
+              <template for:each={accounts.data} for:item="acc"> 
+                <tr key={acc.id}>
+                  <td><strong>Candidate Name</strong></td>
+                  
+                   <td>
+                    {acc.hirebuddy__Candidate__r.Name}
+                  </td>
+                </tr>
+                <tr key={acc.id}>
+                  <td> <strong>Candidate Resume </strong></td> 
+                   <td > <div class="slds-truncate" title="Name"> <a href='\${acc.hirebuddy__ResumeLink__c}'> {acc.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c} </a></div></td> 
+                </tr>
+                <tr key={acc.id}>
+                  <td> <strong>Round Number</strong></td> 
+                   <td > <div class="slds-truncate" title="Name">   {acc.Name}  </div></td> 
+                </tr>
+                <tr key={acc.id}>
+                  <td> <strong>Sift Link </strong></td> 
+                   <td > <div class="slds-truncate" title="Name"> <a href='\${acc.hirebuddy__SiftLink__c}'> {acc.hirebuddy__SiftLink__c} </a></div></td> 
+                </tr>
+                <tr key={acc.id}>
+                  <td> <strong>Role evaluation</strong> </td>
+                  <td> 
+                    {acc.hirebuddy__Candidate__r.hirebuddy__Role__c}
+                  </td>
+                </tr> 
+                <tr key={acc.id}>
+                   <td> <strong>Interview Link</strong></td>
+                  <td>
+                    <div class="slds-truncate" title="Name"> <a href='{acc.hirebuddy__InterviewLink__c}'>{acc.hirebuddy__Candidate__r.hirebuddy__InterviewLink__c}</a></div>
+                 </td>
+                </tr>
+                <tr key={acc.id}> <td><strong>Code pair link</strong></td>
+                  <td>
+                    <div class="slds-truncate" title="Name"> <a href='{acc.hirebuddy__CodepairLink__c}'>{acc.hirebuddy__Candidate__r.hirebuddy__CodepairLink__c}</a></div>
+                    </td></tr>
+                 
+              </template>
+            </template>
+            
+          </tbody>
+        </table>
+        
+        <br/><br/>
+        <div class="row">
+          <strong><h2 class="header">Provide Feedback</h2></strong>
+        <lightning-textarea name="input4"  value="" label="" ></lightning-textarea> </div>
+      </div>
+      <lightning-button variant="brand" label='Complete Interview'  title='Complete Interview' onclick={handleCompleted}    class="slds-var-m-left_x-small"></lightning-button>
+           
+     
+</template>
