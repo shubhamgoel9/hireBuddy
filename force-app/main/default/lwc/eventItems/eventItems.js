@@ -1,13 +1,53 @@
 import { LightningElement, wire, api, track } from "lwc";
+import { NavigationMixin } from 'lightning/navigation' ;
 import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventItem'
 import getEventItem from '@salesforce/apex/EventItemsController.getEventItem'
 import setEventItem from '@salesforce/apex/EventItemsController.setEventItem'
-export default class EventItems extends LightningElement {
+export default class EventItems extends NavigationMixin(LightningElement)
+{
     @track selectedEventId;
     @track isModalOpen = false;
     @track eventItemRecords;
-    eventId='a008c00000YUBTYAA5';
-    @wire(getAllEventItems, {eventId: '$eventId'}) eventItems;
+    @track eventId;// = 'a008c00000YUBTYAA5';
+    @track eventItems;
+    //@wire(getAllEventItems, {eventId: '$eventId'}) eventItems;
+
+
+    parameters = {};
+
+    connectedCallback() {
+
+        this.parameters = this.getQueryParameters();
+        console.log('shubham parameter : ' + JSON.stringify(this.parameters));
+        console.log('shubham c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
+        this.eventId = this.parameters.c__recordId;
+
+        getAllEventItems({eventId:this.eventId})
+		.then(result => {
+			this.eventItems = result;
+            console.log('Prit: event.items::'+JSON.stringify(this.eventItems));
+			this.error = undefined;
+		})
+		.catch(error => {
+			this.error = error;
+			this.eventItems = undefined;
+		})
+    }
+
+    getQueryParameters() {
+
+        var params = {};
+        var search = location.search.substring(1);
+
+        if (search) {
+            params = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', (key, value) => {
+                return key === "" ? value : decodeURIComponent(value)
+            });
+        }
+
+        return params;
+    }
+
     openModal(event) {
         // to open modal set isModalOpen tarck value as true
         this.isModalOpen = true;
@@ -77,8 +117,21 @@ export default class EventItems extends LightningElement {
             R1Time:this.R1Time,
             R1Sift:this.R1Sift,
             R1Feedback:this.R1Feedback})
+        
+        window.location.reload();
         this.isModalOpen = false;
-        this.refreshData();
+    }
+    navigateToNewHiringEventItem(){
+        this[NavigationMixin.Navigate]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: "hirebuddy__HiringEventItem__c",
+                actionName: 'new'
+            },
+            // state: {
+            //     defaultFieldValues: defaultValues
+            // }
+        });
     }
     
     @track isModal2Open = false;

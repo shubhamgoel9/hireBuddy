@@ -11,7 +11,11 @@
             </h2>
           </div>
           <div class="slds-no-flex">
-            <button class="slds-button slds-button_neutral" onclick={openModal2}>Add New Candidate</button>
+            <lightning-button 
+          class="slds-var-m-around_medium button" 
+          label="Add New Candidate"
+          onclick={navigateToNewHiringEventItem}
+          ></lightning-button>
           </div>
         </header>
 
@@ -19,38 +23,35 @@
       <div class="slds-card__body">
         <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
           <thead>
-            <tr class="slds-line-height_reset">
-              <th class="" scope="col">
-                <div class="slds-truncate" title="Edit"></div>
-              </th>
-              <th class="" scope="col">
+            <tr class="slds-line-height_reset" style="background-color: rgb(111, 162, 182)">
+              <th class="" scope="col" width="110">
                 <div class="slds-truncate" title="Candidate Name">Candidate Name</div>
               </th>
-              <th class="" scope="col">
+              <th class="" scope="col" width="90">
                 <div class="slds-truncate" title="Candidate Status">Candidate Status</div>
               </th>
-              <th class="" scope="col">
+              <th class="" scope="col" width="60">
                 <div class="slds-truncate" title="Role">Role Evaluation</div>
               </th>
-              <th class="" scope="col">
+              <th class="" scope="col" width="50">
                 <div class="slds-truncate" title="Codepair">Codepair</div>
               </th>
-              <th class="" scope="col">
+              <th class="" scope="col" width="50">
                 <div class="slds-truncate" title="Interview">Interview Link</div>
               </th>
-              <th class="" scope="col">
+              <th class="" scope="col" width="150">
                 <div class="slds-truncate" title="R1 Inteviewer">R1 Inteviewer</div>
               </th>
-              <th class="" scope="col">
+              <th class="" scope="col" width="80">
                 <div class="slds-truncate" title="R1 Observer">R1 Observer</div>
               </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="Title">R1 Time</div>
+              <th class="" scope="col" width="150">
+                <div class="slds-truncate" title="Time">R1 Time</div>
               </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R1 Time">R1 SIFT</div>
+              <th class="" scope="col" width="150">
+                <div class="slds-truncate" title="R1 SIFT">R1 SIFT</div>
               </th>
-              <th class="" scope="col">
+              <th class="" scope="col" width="100">
                 <div class="slds-truncate" title="R1 Comments">R1 Comments</div>
               </th>
               <th class="" scope="col">
@@ -83,29 +84,25 @@
               <th class="" scope="col">
                 <div class="slds-truncate" title="R3 Comments">R3 Comments</div>
               </th>
+              <th class="" scope="col">
+                <div class="slds-truncate" title="Edit"></div>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <template if:true={eventItems.data}>
-            <template for:each={eventItems.data} for:item="item">
+            <template if:true={eventItems}>
+            <template for:each={eventItems} for:item="item">
                 <tr class="slds-hint-parent" key={item.Id}>
                   <!--<c-event-items item={item} key={item.Id} onitemview={handleItemView}></c-event-items>-->
-                  <td><lightning-button variant="brand"
-                    label="Edit"
-                    title="Edit"
-                    onclick={openModal}
-                    data-id={item.Id}
-                    class="slds-m-left_x-small">
-                 </lightning-button></td>
                   <td scope="row">
-                      <div class="slds-truncate" title="Candidate Name">
+                      <div class="slds-truncate" title={item.hirebuddy__Candidate__r.Name}>
                         <a href='{item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}'>{item.hirebuddy__Candidate__r.Name}</a></div>
                   </td>
                   <td role="gridcell">
-                      <div class="slds-truncate" title="Candidate Status">{item.hirebuddy__Candidate__r.hirebuddy__Status__c}</div>
+                      <div class="slds-truncate" title={item.hirebuddy__Candidate__r.hirebuddy__Status__c}>{item.hirebuddy__Candidate__r.hirebuddy__Status__c}</div>
                   </td>
                   <td role="gridcell">
-                      <div class="slds-truncate" title="Role Evaluation">{item.hirebuddy__Candidate__r.hirebuddy__Role__c}</div>
+                      <div class="slds-truncate" title={item.hirebuddy__Candidate__r.hirebuddy__Role__c}>{item.hirebuddy__Candidate__r.hirebuddy__Role__c}</div>
                   </td>
                   <td role="gridcell">
                       <div class="slds-truncate" title="CodePair">
@@ -122,16 +119,16 @@
                       </div>
                   </td>
                   <td role="gridcell">
-                      <div class="slds-truncate" title="Interviewer">{item.hirebuddy__R1Interviewer__c}</div>
+                      <div class="slds-truncate" title={item.hirebuddy__R1Interviewer__c}>{item.hirebuddy__R1Interviewer__c}</div>
                   </td>
                   <td role="gridcell">
-                      <div class="slds-truncate" title="Observer">{item.hirebuddy__R1Observer__c}</div>
+                      <div class="slds-truncate" title={item.hirebuddy__R1Observer__c}>{item.hirebuddy__R1Observer__c}</div>
                   </td>
                   <td role="gridcell">
-                      <div class="slds-truncate" title="Time">{item.hirebuddy__R1StartTime__c}</div>
+                      <div class="slds-truncate" title={item.hirebuddy__R1StartTime__c}>{item.hirebuddy__R1StartTime__c}</div>
                   </td>
                   <td role="gridcell">
-                      <div class="slds-truncate" title="SIFT">{item.hirebuddy__R1SiftLink__c}</div>
+                      <div class="slds-truncate" title="SIFT"><a href={item.hirebuddy__R1SiftLink__c}>{item.hirebuddy__R1SiftLink__c}</a></div>
                   </td>
                   <td role="gridcell">
                       <div class="slds-truncate" title="Comments">{item.hirebuddy__R1Feedback__c}</div>
@@ -166,6 +163,13 @@
                   <td role="gridcell">
                       <div class="slds-truncate" title="Comments">{item.hirebuddy__R3Feedback__c}</div>
                   </td>
+                  <td><lightning-button variant="brand"
+                    label="Edit"
+                    title="Edit"
+                    onclick={openModal}
+                    data-id={item.Id}
+                    class="slds-m-left_x-small">
+                 </lightning-button></td>
                 </tr>
             </template>
             </template>
@@ -193,7 +197,7 @@
                     <template for:each={eventItemRecords} for:item="item">
                       <tr class="slds-hint-parent" key={item.Id}>
                         <td>
-                          <lightning-input data-id="candidateName" type="text" label="Candidate Name" value={item.hirebuddy__Candidate__r.Name}></lightning-input>
+                          <lightning-input data-id="candidateName" type="text" read-only="true" label="Candidate Name" value={item.hirebuddy__Candidate__r.Name}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={item.Id}>
@@ -233,7 +237,7 @@
                 <!-- Modal/Popup Box LWC footer starts here -->
                 <footer class="slds-modal__footer">
                     <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
-                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">Save</button>
                 </footer>
             </div>
           </section>

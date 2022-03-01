@@ -1,6 +1,7 @@
 global with sharing class EventItemsController {
   @AuraEnabled(cacheable=true)
   public static List<HiringEventItem__c> getAllEventItem(String eventId) {
+  System.debug('Prit: event id::'+eventId);
       List<HiringEventItem__c> eventItemList = [
         SELECT 
           Id,
@@ -132,10 +133,12 @@ global with sharing class EventItemsController {
         if(!round1.isEmpty())
         {
           Interviewer__c inter = (Interviewer__c)round1[0].getSObject(Round__c.Interviewer__c.getDescribe().getRelationshipName());
-          inter.Email__c = R1Interviewer;
+          if(inter != null){
+           inter.Email__c = R1Interviewer;
           updateList.add(inter);
+          }
         }
-        HireBuddyController.sendEmail(R1Interviewer,'IMPORTANT: You are assigned as an interview task','','Kindly check HireBuddy for more details');
+       sendEmail(R1Interviewer,'IMPORTANT: You have an assignment','','Kindly check HireBuddy for more details');
       }
       if(R1Observer != null) {
         items[0].R1Observer__c = R1Observer;
@@ -159,5 +162,12 @@ global with sharing class EventItemsController {
 System.debug('Prit: before update:'+ items);
       update updateList;
     }
+    
+    @AuraEnabled(cacheable=true)
+    public static String sendEmail(String toEmail, String subject, String toName, String mailContent) {
+        EmailService.toMail = toEmail;
+        EmailService.sendMail(subject, toName, mailContent);
+        return 'success';
+      }
 
 }
