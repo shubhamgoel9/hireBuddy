@@ -1,0 +1,63 @@
+<template>
+    <lightning-card icon-name="custom:custom14">
+      <h1 slot="title">Welcome {currentUser.FirstName}</h1>
+                   <br>
+                  <div class="slds-truncate" title="Status">
+                          <lightning-radio-group name="Status"
+                           label="Status"
+                           options={options}
+                           value={value}
+                           required
+                           onchange={handleChange}
+                           type="button"></lightning-radio-group>
+                           </div>
+                           <br>
+
+                          <div class="slds-text-heading_small">
+                            <lightning-button
+                                variant="brand"
+                                name="new-with-defaults"
+                                label="Event Board"
+                                class="slds-var-m-around_small button"
+                                onclick={handleEventBoardNavigate}>
+                            </lightning-button>
+                        </div>
+                  <br>
+                  <div class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                    </div>
+                  <div class="slds-card__body">
+                  <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+                  <template for:each={upcomingRounds} for:item="round"></template>
+                    <thead>
+                      <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                          <div class="slds-truncate" title="Name">Upcoming Interviews</div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <template if:true={roundList.data}></template>
+                      <template for:each={roundList.data} for:item="round">
+                      <tr class="slds-hint-parent" key={round.index}>
+                        <td role="gridcell">
+                          <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>{round.hirebuddy__StartTime__c}</a></div>
+                        </td>
+                      </tr>
+                    </template>
+                    <template if:false={roundList.data}>
+                      <tr class="slds-hint-parent" >
+                        <td role="gridcell">
+                          <div class="slds-truncate" title="Round">No Records found!</div>
+                        </td>
+                      </tr>
+                    </template>
+                    </tbody>
+                  </table> 
+                 </div> 
+                 </div>                                        
+    </lightning-card>
+</template>
+
+  
+
