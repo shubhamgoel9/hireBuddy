@@ -21,7 +21,7 @@
 
       </div>
       <div class="slds-card__body">
-        <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+        <!--<table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
           <thead>
             <tr class="slds-line-height_reset" style="background-color: rgb(111, 162, 182)">
               <th class="" scope="col" width="110">
@@ -93,7 +93,6 @@
             <template if:true={eventItems}>
             <template for:each={eventItems} for:item="item">
                 <tr class="slds-hint-parent" key={item.Id}>
-                  <!--<c-event-items item={item} key={item.Id} onitemview={handleItemView}></c-event-items>-->
                   <td scope="row">
                       <div class="slds-truncate" title={item.hirebuddy__Candidate__r.Name}>
                         <a href='{item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}'>{item.hirebuddy__Candidate__r.Name}</a></div>
@@ -174,12 +173,21 @@
             </template>
             </template>
           </tbody>
-        </table>
+        </table>-->
+        <div style="height: 300px;">
+          <lightning-tree-grid
+                  key-field="id"
+                  data={eventItems}
+                  columns={columns}
+                  hide-checkbox-column="true"  
+                  show-row-number-column="true"
+                  onrowaction={openModal}>
+          </lightning-tree-grid>
+        </div>
         <div if:true={isModalOpen}>
           <!-- Modal/Popup Box LWC starts here -->
           <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
-                <!-- Modal/Popup Box LWC header here -->
                 <header class="slds-modal__header">
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
                         <lightning-icon icon-name="utility:close"
@@ -190,21 +198,20 @@
                     </button>
                     <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modify Candidate Details</h2>
                 </header>
-                <!-- Modal/Popup Box LWC body starts here -->
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                   <table><tbody>
                   <template if:true={eventItemRecord}>
-                    <!--template for:each={eventItemRecords} for:item="item"-->
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="candidateName" type="text" read-only="true" label="Candidate Name" value={eventItemRecord.hirebuddy__Candidate__r.Name}></lightning-input>
+                          <lightning-input data-id="candidateName" type="text" read-only="true" label="Candidate Name" value={eventItemRecord.hirebuddy__CandidateName__c}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="candidateStatus" type="text" onchange={handleChange} label="Candidate Status" options={candidateStatusOptions} value={eventItemRecord.hirebuddy__Candidate__r.hirebuddy__Status__c}></lightning-combobox>
+                          <lightning-combobox data-id="candidateStatus" type="text" onchange={handleChange} label="Candidate Status" options={candidateStatusOptions} value={eventItemRecord.hirebuddy__CandidateStatus__c}></lightning-combobox>
                         </td>
                       </tr>
+                      <br><div class ="row"><h2 class="header"><b>Round 1 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
                           <lightning-input data-id="R1Interviewer" type="search" onchange={handleChange} label="R1 Interviewer" value={eventItemRecord.hirebuddy__R1Interviewer__c}></lightning-input>
@@ -227,220 +234,75 @@
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R1Feedback" type="text" onchange={handleChange} label="R1 Comments" value={eventItemRecord.hirebuddy__R1Feedback__c}></lightning-input>
+                          <lightning-textarea data-id="R1Feedback" onchange={handleChange} label="R1 Feedback" value={eventItemRecord.hirebuddy__R1Feedback__c}></lightning-textarea>
                         </td>
                       </tr>
-                    <!--/template-->
+                      <br><div class ="row"><h2 class="header"><b>Round 2 Details:</b></h2></div><br>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R2Interviewer" type="search" onchange={handleChange} label="R2 Interviewer" value={eventItemRecord.hirebuddy__R2Interviewer__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R2Observer" type="email" onchange={handleChange} label="R2 Observer Email" value={eventItemRecord.hirebuddy__R2Observer__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R2Time" type="datetime" onchange={handleChange} label="R2 Time" value={eventItemRecord.hirebuddy__R2StartTime__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R2Sift" type="url" onchange={handleChange} label="R2 SIFT" value={eventItemRecord.hirebuddy__R2SiftLink__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-textarea data-id="R2Feedback" onchange={handleChange} label="R2 Feedback" value={eventItemRecord.hirebuddy__R2Feedback__c}></lightning-textarea>
+                        </td>
+                      </tr>
+                      <br><div class ="row"><h2 class="header"><b>Round 3 Details:</b></h2></div><br>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R3Interviewer" type="search" onchange={handleChange} label="R3 Interviewer" value={eventItemRecord.hirebuddy__R3Interviewer__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R3Observer" type="email" onchange={handleChange} label="R3 Observer Email" value={eventItemRecord.hirebuddy__R3Observer__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R3Time" type="datetime" onchange={handleChange} label="R3 Time" value={eventItemRecord.hirebuddy__R3StartTime__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="R3Sift" type="url" onchange={handleChange} label="R3 SIFT" value={eventItemRecord.hirebuddy__R3SiftLink__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-textarea data-id="R3Feedback" onchange={handleChange} label="R3 Feedback" value={eventItemRecord.hirebuddy__R3Feedback__c}></lightning-textarea>
+                        </td>
+                      </tr>
+                      
                     </template>
                   </tbody></table>
                 </div>
-                <!-- Modal/Popup Box LWC footer starts here -->
                 <footer class="slds-modal__footer">
                     <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
-                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">Save</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="Save">Save</button>
                 </footer>
             </div>
           </section>
           <div class="slds-backdrop slds-backdrop_open"></div>
         </div>
-        <div if:true={isModal2Open}>
-          <!-- Modal/Popup Box LWC starts here -->
-          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
-            <div class="slds-modal__container">
-                <!-- Modal/Popup Box LWC header here -->
-                <header class="slds-modal__header">
-                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal2}>
-                        <lightning-icon icon-name="utility:close"
-                            alternative-text="close"
-                            variant="inverse"
-                            size="small" ></lightning-icon>
-                        <span class="slds-assistive-text">Close</span>
-                    </button>
-                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Add New Candidate</h2>
-                </header>
-                <!-- Modal/Popup Box LWC body starts here -->
-                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
-                  <table><tbody>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Candidate</div>
-                          </th>
-                          <td scope="row">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Resume</div>
-                          </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Status</div>
-                          </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Role Evaluation</div>
-                          </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Codepair</div>
-                          </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">Interview link</div>
-                          </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">R1Interviewer</div>
-                          </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                        </tr>
-                        <tr class="slds-hint-parent" >
-                          <th scope="row">
-                            <div class="slds-truncate" title="Title">R1Observer</div>
-                          </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" >
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R1Time</div>
-                            </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" >
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R1SIFT</div>
-                            </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" >
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R1Comments</div>
-                            </th>
-                          <td role="gridcell">
-                            <input type="text" size="5" maxlength="50" value="" />
-                          </td>
-                          </tr>
-                          <tr class="slds-hint-parent" >
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R2Interviewer</div>
-                            </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                          </tr>
-                          <tr class="slds-hint-parent" >
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R2Observer</div>
-                            </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" >
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R2Time</div>
-                              </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" >
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R2SIFT</div>
-                              </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" >
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R2Comments</div>
-                              </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                            </tr>
-                          <tr class="slds-hint-parent" >
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R3Interviewer</div>
-                            </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                          </tr>
-                          <tr class="slds-hint-parent" >
-                            <th scope="row">
-                              <div class="slds-truncate" title="Title">R3Observer</div>
-                            </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                          </tr>
-                          <tr class="slds-hint-parent" >
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R3Time</div>
-                              </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" >
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R3SIFT</div>
-                              </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                            </tr>
-                            <tr class="slds-hint-parent" >
-                              <th scope="row">
-                                <div class="slds-truncate" title="Title">R3Comments</div>
-                              </th>
-                            <td role="gridcell">
-                              <input type="text" size="5" maxlength="50" value="" />
-                            </td>
-                          </tr>
-                  </tbody></table>
-                </div>
-                <!-- Modal/Popup Box LWC footer starts here -->
-                <footer class="slds-modal__footer">
-                    <button class="slds-button slds-button_neutral" onclick={closeModal2} title="Cancel">Cancel</button>
-                    <button class="slds-button slds-button_brand" onclick={submitDetails2} title="OK">OK</button>
-                </footer>
-            </div>
-          </section>
-          <div class="slds-backdrop slds-backdrop_open"></div>
-        </div>
-    </div>
+        
+      </div>
   </div>
   
   </template>

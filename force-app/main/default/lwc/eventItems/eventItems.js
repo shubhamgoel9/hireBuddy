@@ -2,20 +2,54 @@ import { LightningElement, wire, api, track } from "lwc";
 import { NavigationMixin } from 'lightning/navigation' ;
 import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventItem';
 import setEventItem from '@salesforce/apex/EventItemsController.setEventItem';
+const columns = [
+    { label: 'Candidate Name', fieldName: 'hirebuddy__CandidateName__c', editable: true },
+    { label: 'Role Evaluation', fieldName: 'hirebuddy__RoleEvaluation__c', editable: true },
+    { label: 'Candidate Status', fieldName: 'hirebuddy__CandidateStatus__c', editable: true },
+    { label: 'Codepair Link', fieldName: 'hirebuddy__CodepairLink__c', type:'url', editable: true },
+    { label: 'Interview Link', fieldName: 'hirebuddy__InterviewLink__c', type:'url',editable: true },
+    { label: 'R1 Start Time ', fieldName: 'hirebuddy__R1StartTime__c',editable: true },
+    { label: 'R1 Interviewer ', fieldName: 'hirebuddy__R1Interviewer__c',editable: true },
+    { label: 'R1 Observer ', fieldName: 'hirebuddy__R1Observer__c',editable: true },
+    { label: 'R1 Round Status', fieldName: 'hirebuddy__R1RoundStatus__c',editable: true },
+    { label: 'R1 SIFT Link', fieldName: 'hirebuddy__R1SiftLink__c',type:'url', editable: true },
+    { label: 'R1 Feedback ', fieldName: 'hirebuddy__R1Feedback__c',editable: true },
+    { label: 'R2 Start Time ', fieldName: 'hirebuddy__R2StartTime__c',editable: true },
+    { label: 'R2 Interviewer ', fieldName: 'hirebuddy__R2Interviewer__c',editable: true },
+    { label: 'R2 Observer ', fieldName: 'hirebuddy__R2Observer__c',editable: true },
+    { label: 'R2 Round Status', fieldName: 'hirebuddy__R2RoundStatus__c',editable: true },
+    { label: 'R2 SIFT Link', fieldName: 'hirebuddy__R2SiftLink__c',type:'url', editable: true },
+    { label: 'R2 Feedback ', fieldName: 'hirebuddy__R2Feedback__c',editable: true },
+    { label: 'R3 Start Time ', fieldName: 'hirebuddy__R3StartTime__c',editable: true },
+    { label: 'R3 Interviewer ', fieldName: 'hirebuddy__R3Interviewer__c',editable: true },
+    { label: 'R3 Observer ', fieldName: 'hirebuddy__R3Observer__c',editable: true },
+    { label: 'R3 Round Status', fieldName: 'hirebuddy__R3RoundStatus__c',editable: true },
+    { label: 'R3 SIFT Link', fieldName: 'hirebuddy__R3SiftLink__c',type:'url', editable: true },
+    { label: 'R3 Feedback ', fieldName: 'hirebuddy__R3Feedback__c',editable: true },
+    {type: "button", typeAttributes: {  
+        label: 'Edit',  
+        name: 'Edit',  
+        title: 'Edit',  
+        disabled: false,  
+        value: 'edit',  
+        iconPosition: 'left'  
+    }}  
+
+];
 export default class EventItems extends NavigationMixin(LightningElement)
 {
+    columns = columns;
     @track selectedEventItemId;
     @track isModalOpen = false;
-    @track eventItemRecords;
     @track eventItemRecord;
     @track eventId;
-    @track eventItems;
+    @track eventName;
+    @track eventItems=[];
     //@wire(getAllEventItems, {eventId: '$eventId'}) eventItems;
     
     //Get All Event Items to display in dashboard
     parameters = {};
     connectedCallback() {
-
         this.parameters = this.getQueryParameters();
         console.log('prit parameter : ' + JSON.stringify(this.parameters));
         console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
@@ -24,8 +58,9 @@ export default class EventItems extends NavigationMixin(LightningElement)
         getAllEventItems({eventId:this.eventId})
 		.then(result => {
 			this.eventItems = result;
-            this.eventName = this.eventItems[0].hirebuddy__HiringEvent__r.Name;
-            console.log('Prit: eventName::'+ this.eventName);
+            console.log('Prit: eventItems : '+JSON.stringify(this.eventItems));
+            this.eventName = this.eventItems[0].hirebuddy__CandidateId__r.hirebuddy__HiringEventId__r.Name;
+            console.log('Prit: eventName:: '+ this.eventName);
 			this.error = undefined;
 		})
 		.catch(error => {
@@ -54,18 +89,8 @@ export default class EventItems extends NavigationMixin(LightningElement)
     openModal(event) {
         // to open modal set isModalOpen tarck value as true
         this.isModalOpen = true;
-        this.selectedEventItemId=event.target.dataset.id;
-        console.log('pp1: '+event.target.dataset.id);
-
-        /*getEventItem({eventItemId:this.selectedEventItemId})
-		.then(result => {
-			this.eventItemRecords = result;
-			this.error = undefined;
-		})
-		.catch(error => {
-			this.error = error;
-			this.eventItemRecords = undefined;
-		})*/
+        this.selectedEventItemId=event.detail.row.Id;//event.target.dataset.id;
+        console.log('pp1: '+this.selectedEventItemId);
         
         for (const key in this.eventItems) {
             console.log('Prit: key of eventItem: '+this.eventItems[key]);
@@ -73,6 +98,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
             if(this.eventItems[key].Id === this.selectedEventItemId);
             {
                 this.eventItemRecord = this.eventItems[key];
+                break;
             }
         }
     }
