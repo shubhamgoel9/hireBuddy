@@ -187,4 +187,20 @@ global with sharing class EventItemsController {
         insert newItem;
           
     }
+
+    @AuraEnabled
+    public static void deleteCandidateDetails(List<HiringEventItem__c> selectedEventItems){
+      System.debug('Inside deleteCandidateDetails: '+selectedEventItems);
+        List<SObject> toBeDeleted = new List<SObject>();
+        for(HiringEventItem__c item: selectedEventItems)
+        {
+          toBeDeleted.add(item.CandidateId__c.getSObjectType().newSObject(item.CandidateId__c));
+          if(item.R1Round__c != null) toBeDeleted.add(item.R1Round__c.getSObjectType().newSObject(item.R1Round__c));
+          if(item.R2Round__c != null) toBeDeleted.add(item.R2Round__c.getSObjectType().newSObject(item.R2Round__c));
+          if(item.R3Round__c != null) toBeDeleted.add(item.R3Round__c.getSObjectType().newSObject(item.R3Round__c));
+          toBeDeleted.add(item);
+        }
+        delete toBeDeleted;
+
+    }
 }

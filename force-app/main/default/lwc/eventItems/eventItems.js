@@ -3,6 +3,7 @@ import { NavigationMixin } from 'lightning/navigation' ;
 import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventItem';
 import setEventItem from '@salesforce/apex/EventItemsController.setEventItem';
 import setNewCandidateDetails from '@salesforce/apex/EventItemsController.setNewCandidateDetails';
+import deleteCandidateDetails from '@salesforce/apex/EventItemsController.deleteCandidateDetails';
 const columns = [
     { label: 'Candidate Name', fieldName: 'hirebuddy__CandidateName__c', initialWidth: 150 },
     { label: 'Role Evaluation', fieldName: 'hirebuddy__RoleEvaluation__c', initialWidth: 100},
@@ -27,7 +28,7 @@ const columns = [
     { label: 'R3 Round Status', fieldName: 'hirebuddy__R3RoundStatus__c',initialWidth: 100},
     { label: 'R3 SIFT Link', fieldName: 'hirebuddy__R3SiftLink__c',type:'url', initialWidth: 100},
     { label: 'R3 Feedback ', fieldName: 'hirebuddy__R3Feedback__c',initialWidth: 100},
-    {type: "button", intialWidht: 80,typeAttributes: {  
+    {label: 'Action', type: "button", initialWidth: 80, typeAttributes: {
         label: 'Edit',  
         name: 'Edit',  
         title: 'Edit',  
@@ -97,10 +98,14 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.isModalOpen = true;
             this.selectedEventItemId=event.detail.row.Id;
             console.log('Prit: eventItems:: '+JSON.stringify(this.eventItems));
+            console.log('Prit this.selectedEventItemId: '+this.selectedEventItemId);
             for (const key in this.eventItems) {
-                if(this.eventItems[key].Id === this.selectedEventItemId);
+                console.log('Prit: this.eventItems[key].Id: '+this.eventItems[key].Id);
+
+                if(this.eventItems[key].Id === this.selectedEventItemId)
                 {
                     this.eventItemRecord = this.eventItems[key];
+                    console.log('Prit: eventItemRecord: '+JSON.stringify(this.eventItemRecord));
                     break;
                 }
             } 
@@ -302,22 +307,63 @@ export default class EventItems extends NavigationMixin(LightningElement)
 
     }
     //Action to perform on clicking SAVE on Add New Candidate Modal
-    submitNewCandidateDetails(){
-        console.log('Prit: saving new candidate details:: ');
-        setNewCandidateDetails(
-            {
-                eventId:this.eventId,
-                newCandidateName:this.newCandidateName,
-                newCandidateEmail:this.newCandidateEmail,
-                newCandidateContact:this.newCandidateContact,
-                newCandidateResume:this.newCandidateResume,
-                newCandidateRoleEvaluation:this.newCandidateRoleEvaluation,
-                newCandidateInterviewLink:this.newCandidateInterviewLink,
-                newCandidateCodePairLink:this.newCandidateCodePairLink
-            }
+    submitNewCandidateDetails(event){
+        console.log('Prit: validating and saving new candidate details:: ');
+        console.log('Current value of the input: ' + event.target.value);
+
+        const allValid = [
+            ...this.template.querySelectorAll('lightning-input'),
+            ...this.template.querySelectorAll('lightning-combobox'),
+        ].reduce((validSoFar, inputCmp) => {
+            inputCmp.reportValidity();
+            return validSoFar && inputCmp.checkValidity();
+            }, true);
+        if (allValid) 
+        {
+            setNewCandidateDetails(
+                {
+                    eventId:this.eventId,
+                    newCandidateName:this.newCandidateName,
+                    newCandidateEmail:this.newCandidateEmail,
+                    newCandidateContact:this.newCandidateContact,
+                    newCandidateResume:this.newCandidateResume,
+                    newCandidateRoleEvaluation:this.newCandidateRoleEvaluation,
+                    newCandidateInterviewLink:this.newCandidateInterviewLink,
+                    newCandidateCodePairLink:this.newCandidateCodePairLink
+                }
+            )
+            window.location.reload();
+            this.isCandidateModalOpen = false;
+        }
+        else {
+            alert('Please fill the required form entries and try again.');
+        }
+    }
+
+    @track isDeleteCandidateHidden=true;
+    @track selectedEventItems=null;
+    showDeleteButton(event)
+    {
+        console.log('Prit: show delete button:: '+JSON.stringify(event));
+        this.selectedEventItems=event.detail.selectedRows;
+        console.log('Prit: this.selectedEventItems:: '+this.selectedEventItems);
+        if(this.selectedEventItems.length==0)
+        {
+            this.isDeleteCandidateHidden=true;
+        }
+        else{
+            this.isDeleteCandidateHidden=false;
+        }
+    }
+
+    deleteCandidate()
+    {
+        console.log('Prit: Delete candidate details:: '+JSON.stringify(this.selectedEventItems));
+        deleteCandidateDetails(
+            {selectedEventItems:this.selectedEventItems}
         )
         window.location.reload();
-        this.isCandidateModalOpen = false;
+        this.isDeleteCandidateHidden = true;
     }
     
     
