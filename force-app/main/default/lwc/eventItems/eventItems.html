@@ -12,168 +12,75 @@
           </div>
           <div class="slds-no-flex">
             <lightning-button 
-          class="slds-var-m-around_medium button" 
-          label="Add New Candidate"
-          onclick={navigateToNewHiringEventItem}
-          ></lightning-button>
+              class="slds-var-m-around_medium button" 
+              label="Add New Candidate"
+              onclick={openCandidateModal}
+            ></lightning-button>
           </div>
         </header>
-
       </div>
       <div class="slds-card__body">
-        <!--<table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
-          <thead>
-            <tr class="slds-line-height_reset" style="background-color: rgb(111, 162, 182)">
-              <th class="" scope="col" width="110">
-                <div class="slds-truncate" title="Candidate Name">Candidate Name</div>
-              </th>
-              <th class="" scope="col" width="90">
-                <div class="slds-truncate" title="Candidate Status">Candidate Status</div>
-              </th>
-              <th class="" scope="col" width="60">
-                <div class="slds-truncate" title="Role">Role Evaluation</div>
-              </th>
-              <th class="" scope="col" width="50">
-                <div class="slds-truncate" title="Codepair">Codepair</div>
-              </th>
-              <th class="" scope="col" width="50">
-                <div class="slds-truncate" title="Interview">Interview Link</div>
-              </th>
-              <th class="" scope="col" width="150">
-                <div class="slds-truncate" title="R1 Inteviewer">R1 Inteviewer</div>
-              </th>
-              <th class="" scope="col" width="80">
-                <div class="slds-truncate" title="R1 Observer">R1 Observer</div>
-              </th>
-              <th class="" scope="col" width="150">
-                <div class="slds-truncate" title="Time">R1 Time</div>
-              </th>
-              <th class="" scope="col" width="150">
-                <div class="slds-truncate" title="R1 SIFT">R1 SIFT</div>
-              </th>
-              <th class="" scope="col" width="100">
-                <div class="slds-truncate" title="R1 Comments">R1 Comments</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R2 Inteviewer">R2 Inteviewer</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R2 Observer">R2 Observer</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R2 Time">R2 Time</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="Title">R2 SIFT</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R2 SIFT">R2 Comments</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R3 Inteviewer">R3 Inteviewer</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R3 Observer">R3 Observer</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R3 Time">R3 Time</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R3 SIFT">R3 SIFT</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="R3 Comments">R3 Comments</div>
-              </th>
-              <th class="" scope="col">
-                <div class="slds-truncate" title="Edit"></div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <template if:true={eventItems}>
-            <template for:each={eventItems} for:item="item">
-                <tr class="slds-hint-parent" key={item.Id}>
-                  <td scope="row">
-                      <div class="slds-truncate" title={item.hirebuddy__Candidate__r.Name}>
-                        <a href='{item.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c}'>{item.hirebuddy__Candidate__r.Name}</a></div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title={item.hirebuddy__Candidate__r.hirebuddy__Status__c}>{item.hirebuddy__Candidate__r.hirebuddy__Status__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title={item.hirebuddy__Candidate__r.hirebuddy__Role__c}>{item.hirebuddy__Candidate__r.hirebuddy__Role__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="CodePair">
-                        <a href = '{item.hirebuddy__Candidate__r.hirebuddy__CodepairLink__c}'>
-                          Code
-                        </a>
-                      </div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Interview Link">
-                        <a href = '{item.hirebuddy__Candidate__r.hirebuddy__InterviewLink__c}'>
-                          Join
-                        </a>
-                      </div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title={item.hirebuddy__R1Interviewer__c}>{item.hirebuddy__R1Interviewer__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title={item.hirebuddy__R1Observer__c}>{item.hirebuddy__R1Observer__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title={item.hirebuddy__R1StartTime__c}>{item.hirebuddy__R1StartTime__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="SIFT"><a href={item.hirebuddy__R1SiftLink__c}>{item.hirebuddy__R1SiftLink__c}</a></div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Comments">{item.hirebuddy__R1Feedback__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Interviewer">{item.hirebuddy__R2Interviewer__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Observer">{item.hirebuddy__R2Observer__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Time">{item.hirebuddy__R2StartTime__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="SIFT">{item.hirebuddy__R2SiftLink__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Comments">{item.hirebuddy__R2Feedback__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Interviewer">{item.hirebuddy__R3Interviewer__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Observer">{item.hirebuddy__R3Observer__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Time">{item.hirebuddy__R3StartTime__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="SIFT">{item.hirebuddy__R3SiftLink__c}</div>
-                  </td>
-                  <td role="gridcell">
-                      <div class="slds-truncate" title="Comments">{item.hirebuddy__R3Feedback__c}</div>
-                  </td>
-                  <td><lightning-button variant="brand"
-                    label="Edit"
-                    title="Edit"
-                    onclick={openModal}
-                    data-id={item.Id}
-                    class="slds-m-left_x-small">
-                 </lightning-button></td>
-                </tr>
-            </template>
-            </template>
-          </tbody>
-        </table>-->
+        <div if:true={isCandidateModalOpen}>
+          <!-- Modal/Popup Box LWC starts here -->
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Add Candidate Details</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                  <table><tbody>
+                    <tr class="slds-hint-parent">
+                      <td>
+                        <lightning-input data-id="newCandidateName" type="text" onchange={handleNewCandidateChange} label="Name"></lightning-input>
+                      </td>
+                    </tr>
+                    <tr class="slds-hint-parent">
+                      <td>
+                        <lightning-input data-id="newCandidateEmail" type="email" onchange={handleNewCandidateChange} label="Email Id" placeholder="abc@salesforce.com"></lightning-input>
+                      </td>
+                    </tr>
+                    <tr class="slds-hint-parent">
+                      <td>
+                        <lightning-input data-id="newCandidateContact" type="tel" onchange={handleNewCandidateChange} label="Contact" placeholder="areacode-phone"></lightning-input>
+                      </td>
+                    </tr>
+                    <tr class="slds-hint-parent">
+                      <td>
+                        <lightning-input data-id="newCandidateResume" type="url" onchange={handleNewCandidateChange} label="Resume Link" placeholder="Enter valid URL here..."></lightning-input>
+                      </td>
+                    </tr>
+                    <tr class="slds-hint-parent">
+                      <td>
+                        <lightning-combobox data-id="newCandidateRoleEvaluation" type="text" onchange={handleNewCandidateChange} options={candidateRoleOptions} label="Role Evaluation "></lightning-combobox>
+                      </td>
+                    </tr>
+                    <tr class="slds-hint-parent">
+                      <td>
+                        <lightning-input data-id="newCandidateInterviewLink" type="url" onchange={handleNewCandidateChange} label="Interview Link" placeholder="Enter valid URL here..."></lightning-input>
+                      </td>
+                    </tr>
+                    <tr class="slds-hint-parent">
+                      <td>
+                        <lightning-input data-id="newCandidateCodePairLink" type="url" onchange={handleNewCandidateChange} label="CodePair Link" placeholder="Enter valid URL here..."></lightning-input>
+                      </td>
+                    </tr>
+                  </tbody></table>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitNewCandidateDetails} title="Save">Save</button>
+                </footer>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
         <div style="height: 300px;">
           <lightning-tree-grid
                   key-field="id"
