@@ -1,4 +1,5 @@
 global with sharing class EventItemsController {
+  /*Get all Event Items of a particular event*/
   @AuraEnabled(cacheable=true)
   public static List<HiringEventItem__c> getAllEventItem(String eventId) {
   System.debug('Prit: event id::'+eventId);
@@ -16,6 +17,7 @@ global with sharing class EventItemsController {
           R1Round__c,
           R1RoundStatus__c,
           R1Interviewer__c,
+          R1InterviewerEmail__c,
           R1StartTime__c,
           R1Feedback__c,
           R1SiftLink__c,
@@ -23,6 +25,7 @@ global with sharing class EventItemsController {
           R2Round__c,
           R2RoundStatus__c,
           R2Interviewer__c,
+          R2InterviewerEmail__c,
           R2StartTime__c,
           R2Feedback__c,
           R2SiftLink__c,
@@ -30,6 +33,7 @@ global with sharing class EventItemsController {
           R3Round__c,
           R3RoundStatus__c,
           R3Interviewer__c,
+          R3InterviewerEmail__c,
           R3StartTime__c,
           R3Feedback__c,
           R3SiftLink__c,
@@ -39,21 +43,22 @@ global with sharing class EventItemsController {
       return eventItemList;
   }
 
+  /*Modify the EventItem record based on the inputs from Edit screen */
   @AuraEnabled
   public static void setEventItem(
     Id selectedEventItemId,
     String candidateStatus,
-    String R1Interviewer,
+    String R1InterviewerEmail,
     String R1Observer,
     DateTime R1Time,
     String R1Sift,
     String R1Feedback,
-    String R2Interviewer,
+    String R2InterviewerEmail,
     String R2Observer,
     DateTime R2Time,
     String R2Sift,
     String R2Feedback,
-    String R3Interviewer,
+    String R3InterviewerEmail,
     String R3Observer,
     DateTime R3Time,
     String R3Sift,
@@ -78,68 +83,27 @@ global with sharing class EventItemsController {
       }
       if(items[0].R1Round__c != null)
       {
-        updateRound(items[0].R1Round__c,R1Interviewer,R1Observer,R1Time,R1Sift,R1Feedback,updateList);
+        updateRound(items[0].R1Round__c,R1InterviewerEmail,R1Observer,R1Time,R1Sift,R1Feedback,updateList);
       }
       if(items[0].R2Round__c != null)
       {
-        updateRound(items[0].R2Round__c,R2Interviewer,R2Observer,R2Time,R2Sift,R2Feedback,updateList);
+        updateRound(items[0].R2Round__c,R2InterviewerEmail,R2Observer,R2Time,R2Sift,R2Feedback,updateList);
       }
       if(items[0].R3Round__c != null)
       {
-        updateRound(items[0].R3Round__c,R3Interviewer,R3Observer,R3Time,R3Sift,R3Feedback,updateList);
+        updateRound(items[0].R3Round__c,R3InterviewerEmail,R3Observer,R3Time,R3Sift,R3Feedback,updateList);
       }
       if(!updateList.isEmpty()) 
       {
+        System.debug('Prit: updateList:: '+JSON.serialize(updateList));
         update updateList;
       }
     }
 
-    private static void updateRound(Id roundId,
-      String RInterviewer,
-      String RObserver,
-      DateTime RTime,
-      String RSift,
-      String RFeedback,
-      List<SObject> updateList)
-    {
-      List<Round__c> round = [Select Id, Interviewer__c, Interviewer__r.Email__c, Observer__c, StartTime__c, SiftLink__c, Feedback__c from Round__c where Id=:roundId];
-
-      if(RInterviewer != null) 
-      {
-        if(!round.isEmpty())
-        {
-          List<Interviewer__c> inter = [Select Id from Interviewer__c where Email__c = :RInterviewer LIMIT 1];
-          if(inter != null){
-            round[0].Interviewer__c = inter[0].Id;
-          }
-        }
-        sendEmail(RInterviewer,'IMPORTANT: You have an assignment','','Kindly check HireBuddy for more details');
-      }
-      if(RObserver != null) {
-        if(!round.isEmpty()) round[0].Observer__c = RObserver;
-        sendEmail(RObserver,'IMPORTANT: You have an assignment','','You are the observer for interviewer '+round[0].Interviewer__r.Email__c);
-      }
-      if(RSift != null) 
-      {
-        if(!round.isEmpty()) round[0].SiftLink__c = RSift;
-      }
-      if(RTime != null){
-        if(!round.isEmpty()) round[0].StartTime__c = RTime;
-      }
-      if(RFeedback != null) {
-        if(!round.isEmpty()) round[0].Feedback__c = RFeedback;
-      }
-      if(!round.isEmpty()) 
-      {
-        updateList.add(round[0]);
-      }
-    }
-
-    private static void sendEmail(String toEmail, String subject, String toName, String mailContent) {
-        EmailService.toMail = toEmail;
-        EmailService.sendMail(subject, toName, mailContent);
-    }
-
+    /*Add the following new records
+    1. Candidate
+    2. Three rounds of the candidate
+    3. Hiring Event Item*/
     @AuraEnabled
     public static void setNewCandidateDetails(
       Id eventId,
@@ -188,6 +152,9 @@ global with sharing class EventItemsController {
           
     }
 
+    /* Delete the following records along with the Event Item 
+    1. Candidate
+    2. Three rounds*/
     @AuraEnabled
     public static void deleteCandidateDetails(List<HiringEventItem__c> selectedEventItems){
       System.debug('Inside deleteCandidateDetails: '+selectedEventItems);
@@ -203,4 +170,63 @@ global with sharing class EventItemsController {
         delete toBeDeleted;
 
     }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Interviewer__c> getInterviewerList(){
+      try {
+        System.debug('Prit: Getting interviewer list');
+        return [SELECT Id, Name, Email__c FROM Interviewer__c WHERE Email__c != NULL ];
+        
+      } catch (Exception e) {
+        throw new AuraHandledException(e.getMessage());
+      }
+    }
+
+    /* --------------HELPER METHODS----------------*/
+    private static void updateRound(Id roundId,
+      String RInterviewer,
+      String RObserver,
+      DateTime RTime,
+      String RSift,
+      String RFeedback,
+      List<SObject> updateList)
+    {
+      List<Round__c> round = [Select Id, Interviewer__c, Interviewer__r.Email__c, Observer__c, StartTime__c, SiftLink__c, Feedback__c from Round__c where Id=:roundId];
+      System.debug('Prit: RInterviewer:: '+RInterviewer);
+      if(RInterviewer != null) 
+      {
+        if(!round.isEmpty())
+        {
+          List<Interviewer__c> inter = [Select Id from Interviewer__c where Email__c = :RInterviewer LIMIT 1];
+          if(inter != null){
+            round[0].Interviewer__c = inter[0].Id;
+          }
+        }
+        sendEmail(RInterviewer,'IMPORTANT: You have an assignment','','Kindly check HireBuddy for more details');
+      }
+      if(RObserver != null) {
+        if(!round.isEmpty()) round[0].Observer__c = RObserver;
+        sendEmail(RObserver,'IMPORTANT: You have an assignment','','You are the observer for interviewer '+round[0].Interviewer__r.Email__c);
+      }
+      if(RSift != null) 
+      {
+        if(!round.isEmpty()) round[0].SiftLink__c = RSift;
+      }
+      if(RTime != null){
+        if(!round.isEmpty()) round[0].StartTime__c = RTime;
+      }
+      if(RFeedback != null) {
+        if(!round.isEmpty()) round[0].Feedback__c = RFeedback;
+      }
+      if(!round.isEmpty()) 
+      {
+        updateList.add(round[0]);
+      }
+    }
+
+    private static void sendEmail(String toEmail, String subject, String toName, String mailContent) {
+        EmailService.toMail = toEmail;
+        EmailService.sendMail(subject, toName, mailContent);
+    }
+
 }

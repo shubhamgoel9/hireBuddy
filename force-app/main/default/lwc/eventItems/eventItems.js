@@ -4,8 +4,9 @@ import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventI
 import setEventItem from '@salesforce/apex/EventItemsController.setEventItem';
 import setNewCandidateDetails from '@salesforce/apex/EventItemsController.setNewCandidateDetails';
 import deleteCandidateDetails from '@salesforce/apex/EventItemsController.deleteCandidateDetails';
+import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList'
 const columns = [
-    { label: 'Candidate Name', fieldName: 'hirebuddy__CandidateName__c', initialWidth: 150 },
+    { label: 'Candidate Name', fieldName: 'hirebuddy__CandidateName__c', initialWidth: 100 },
     { label: 'Role Evaluation', fieldName: 'hirebuddy__RoleEvaluation__c', initialWidth: 100},
     { label: 'Candidate Status', fieldName: 'hirebuddy__CandidateStatus__c', initialWidth: 100},
     { label: 'Codepair Link', fieldName: 'hirebuddy__CodepairLink__c', type:'url', initialWidth: 80},
@@ -134,12 +135,43 @@ export default class EventItems extends NavigationMixin(LightningElement)
         ];
     }
 
+    //method to get the interviewer list options in combo-box
+    @wire(getInterviewerList) interviewerList;
+    get interviewerListOptions()
+    {
+        console.log('Prit: interviewerLIst:: '+JSON.stringify(this.interviewerList.data));
+        let picklistoptions = [];
+        if(this.interviewerList.data)
+        {
+            for(const key in this.interviewerList.data)
+            {
+                picklistoptions.push({
+                    label:this.interviewerList.data[key].Name,
+                    value:this.interviewerList.data[key].hirebuddy__Email__c
+                });
+            }
+        }
+        console.log('Prit: picklistoptions :: '+ JSON.stringify(picklistoptions));
+        return picklistoptions;
+            
+    }
+
     @track candidateStatus;
-    @track R1Interviewer;
+    @track R1InterviewerEmail;
     @track R1Observer;
     @track R1Time;
     @track R1Sift;
     @track R1Feedback;
+    @track R2InterviewerEmail;
+    @track R2Observer;
+    @track R2Time;
+    @track R2Sift;
+    @track R2Feedback;
+    @track R3InterviewerEmail;
+    @track R3Observer;
+    @track R3Time;
+    @track R3Sift;
+    @track R3Feedback;
 
     //method to set the selected values in the Modify Candidate Modal box
     handleChange(event) {
@@ -153,7 +185,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
         else if(event.target.dataset.id === 'R1Interviewer')
         {
-            this.R1Interviewer = value;
+            this.R1InterviewerEmail = value;
             console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R1Observer')
@@ -173,7 +205,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
         else if(event.target.dataset.id === 'R2Interviewer')
         {
-            this.R2Interviewer = value;
+            this.R2InterviewerEmail = value;
             console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R2Observer')
@@ -193,7 +225,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
         else if(event.target.dataset.id === 'R3Interviewer')
         {
-            this.R3Interviewer = value;
+            this.R3InterviewerEmail = value;
             console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R3Observer')
@@ -220,17 +252,17 @@ export default class EventItems extends NavigationMixin(LightningElement)
         //update Event Item Record
         setEventItem({selectedEventItemId:this.selectedEventItemId,
             candidateStatus:this.candidateStatus,
-            R1Interviewer:this.R1Interviewer,
+            R1InterviewerEmail:this.R1InterviewerEmail,
             R1Observer:this.R1Observer,
             R1Time:this.R1Time,
             R1Sift:this.R1Sift,
             R1Feedback:this.R1Feedback,
-            R2Interviewer:this.R2Interviewer,
+            R2InterviewerEmail:this.R2InterviewerEmail,
             R2Observer:this.R2Observer,
             R2Time:this.R2Time,
             R2Sift:this.R2Sift,
             R2Feedback:this.R2Feedback,
-            R3Interviewer:this.R3Interviewer,
+            R3InterviewerEmail:this.R3InterviewerEmail,
             R3Observer:this.R3Observer,
             R3Time:this.R3Time,
             R3Sift:this.R3Sift,
@@ -342,6 +374,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
 
     @track isDeleteCandidateHidden=true;
     @track selectedEventItems=null;
+    //Method to make delete Button Hide/Unhide based on the row select/unselect
     showDeleteButton(event)
     {
         console.log('Prit: show delete button:: '+JSON.stringify(event));
@@ -356,6 +389,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
     }
 
+    //Action to perform on clicking delete button
     deleteCandidate()
     {
         console.log('Prit: Delete candidate details:: '+JSON.stringify(this.selectedEventItems));
