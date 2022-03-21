@@ -10,6 +10,7 @@ global with sharing class EventItemsController {
           CandidateName__c,
           CodepairLink__c,
           CandidateId__r.HiringEventId__r.Name,
+          CandidateId__r.HiringEventId__r.Panel__c,
           InterviewLink__c,
           ResumeLink__c,
           RoleEvaluation__c,
@@ -171,11 +172,20 @@ global with sharing class EventItemsController {
 
     }
 
+    @AuraEnabled
+    public static Id getPanelId(Id eventId){
+      try {
+        List<Hiring_Event__c> events = [SELECT Id, Panel__c FROM Hiring_Event__c WHERE Id = :eventId LIMIT 1];
+        return events[0].Panel__c;
+      } catch (Exception e) {
+        throw new AuraHandledException(e.getMessage());
+      }
+    }
     @AuraEnabled(cacheable=true)
-    public static List<Interviewer__c> getInterviewerList(){
+    public static List<Interviewer__c> getInterviewerList(Id panelId){
       try {
         System.debug('Prit: Getting interviewer list');
-        return [SELECT Id, Name, Email__c FROM Interviewer__c WHERE Email__c != NULL ];
+        return [SELECT Id, Name, Email__c,InterviewerStatus__c FROM Interviewer__c WHERE Email__c != NULL AND Panel__r.Id =:panelId];
         
       } catch (Exception e) {
         throw new AuraHandledException(e.getMessage());

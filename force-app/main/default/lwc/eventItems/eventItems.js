@@ -4,7 +4,8 @@ import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventI
 import setEventItem from '@salesforce/apex/EventItemsController.setEventItem';
 import setNewCandidateDetails from '@salesforce/apex/EventItemsController.setNewCandidateDetails';
 import deleteCandidateDetails from '@salesforce/apex/EventItemsController.deleteCandidateDetails';
-import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList'
+import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
+import getPanelId from '@salesforce/apex/EventItemsController.getPanelId';
 const columns = [
     { label: 'Candidate Name', fieldName: 'hirebuddy__CandidateName__c', initialWidth: 100 },
     { label: 'Role Evaluation', fieldName: 'hirebuddy__RoleEvaluation__c', initialWidth: 100},
@@ -49,6 +50,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track eventId;
     @track eventName;
     @track eventItems=[];
+    @track panelId;
     //@wire(getAllEventItems, {eventId: '$eventId'}) eventItems;
     
     //Get All Event Items to display in dashboard
@@ -71,6 +73,18 @@ export default class EventItems extends NavigationMixin(LightningElement)
 			this.error = error;
 			this.eventItems = undefined;
 		})
+
+        getPanelId({eventId:this.eventId})
+		.then(result => {
+			this.panelId = result;
+            console.log('Prit: panelId:: '+ this.panelId);
+            this.getInterviewerListFromPanel();
+			this.error = undefined;
+		})
+		.catch(error => {
+			this.error = error;
+			this.panelId = undefined;
+		})
         
     }
     
@@ -89,6 +103,19 @@ export default class EventItems extends NavigationMixin(LightningElement)
         return params;
     }
 
+    getInterviewerListFromPanel()
+    {
+        getInterviewerList({panelId:this.panelId})
+		.then(result => {
+            console.log('Prit: interviewer list result: '+JSON.stringify(result));
+            this.interviewerList = result;
+		})
+		.catch(error => {
+            console.log('Prit: interviewer list error: '+error);
+			this.error = error;
+			this.interviewerList = undefined;
+		})
+    }
     //Action to perfrom when modal box is opened
     openModal(event) {
         // to open modal set isModalOpen tarck value as true
@@ -135,19 +162,17 @@ export default class EventItems extends NavigationMixin(LightningElement)
         ];
     }
 
-    //method to get the interviewer list options in combo-box
-    @wire(getInterviewerList) interviewerList;
+    //method to get the interviewer list options in combo-box based on panel
     get interviewerListOptions()
     {
-        console.log('Prit: interviewerLIst:: '+JSON.stringify(this.interviewerList.data));
         let picklistoptions = [];
-        if(this.interviewerList.data)
+        if(this.interviewerList)
         {
-            for(const key in this.interviewerList.data)
+            for(const key in this.interviewerList)
             {
                 picklistoptions.push({
-                    label:this.interviewerList.data[key].Name,
-                    value:this.interviewerList.data[key].hirebuddy__Email__c
+                    label:this.interviewerList[key].Name+'('+this.interviewerList[key].hirebuddy__InterviewerStatus__c+')',
+                    value:this.interviewerList[key].hirebuddy__Email__c
                 });
             }
         }
