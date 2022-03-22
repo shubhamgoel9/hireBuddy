@@ -3,19 +3,19 @@
     <label></label>
     <name>Role__c</name>
     <picklistValues>
-        <masterLabel>Software Engineering AMTS</masterLabel>
+        <masterLabel>AMTS</masterLabel>
         <translation></translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Software Engineering LMTS</masterLabel>
+        <masterLabel>LMTS</masterLabel>
         <translation></translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Software Engineering MTS</masterLabel>
+        <masterLabel>MTS</masterLabel>
         <translation></translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Software Engineering SMTS</masterLabel>
+        <masterLabel>SMTS</masterLabel>
         <translation></translation>
     </picklistValues>
 </CustomFieldTranslation>

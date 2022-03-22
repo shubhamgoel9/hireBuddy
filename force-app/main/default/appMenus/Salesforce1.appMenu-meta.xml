@@ -21,7 +21,7 @@
         <type>StandardAppMenuItem</type>
     </appMenuItems>
     <appMenuItems>
-        <name>hirebuddy__Home</name>
+        <name>Home</name>
         <type>CustomTab</type>
     </appMenuItems>
     <appMenuItems>

@@ -1,4 +1,4 @@
-public class CalendarInvites {
+public class CalenderInvite {
     
     public static void sendinvite() {        
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage(); 

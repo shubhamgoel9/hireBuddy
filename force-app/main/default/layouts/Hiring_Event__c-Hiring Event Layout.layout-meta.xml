@@ -16,7 +16,7 @@
                 <field>Date__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Panel__c</field>
             </layoutItems>
         </layoutColumns>

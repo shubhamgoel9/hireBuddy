@@ -2,8 +2,11 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>R2SiftLink__c</fullName>
     <externalId>false</externalId>
+    <formula>R2Round__r.SiftLink__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>R2 SIFT Link</label>
     <required>false</required>
     <trackTrending>false</trackTrending>
-    <type>Url</type>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>

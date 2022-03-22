@@ -1,4 +1,17 @@
 global with sharing class EventItemsController {
+
+  private static String plainNamespace = null;
+  private static String namespacePrefix = null;
+
+  /*Get profile name of current user*/
+  @AuraEnabled(cacheable = true)
+  public static String getProfile(){
+      Id profileId = UserInfo.getProfileId();
+      String profileName =[Select Id, Name from Profile where Id=:profileId].Name;
+      system.debug('Profile Name'+profileName);
+      return profileName;
+  }
+
   /*Get all Event Items of a particular event*/
   @AuraEnabled(cacheable=true)
   public static List<HiringEventItem__c> getAllEventItem(String eventId) {
@@ -19,6 +32,7 @@ global with sharing class EventItemsController {
           R1RoundStatus__c,
           R1Interviewer__c,
           R1InterviewerEmail__c,
+          R1ProxyInterviewer__c,
           R1StartTime__c,
           R1Feedback__c,
           R1SiftLink__c,
@@ -27,6 +41,7 @@ global with sharing class EventItemsController {
           R2RoundStatus__c,
           R2Interviewer__c,
           R2InterviewerEmail__c,
+          R2ProxyInterviewer__c,
           R2StartTime__c,
           R2Feedback__c,
           R2SiftLink__c,
@@ -35,6 +50,7 @@ global with sharing class EventItemsController {
           R3RoundStatus__c,
           R3Interviewer__c,
           R3InterviewerEmail__c,
+          R3ProxyInterviewer__c,
           R3StartTime__c,
           R3Feedback__c,
           R3SiftLink__c,
@@ -50,16 +66,19 @@ global with sharing class EventItemsController {
     Id selectedEventItemId,
     String candidateStatus,
     String R1InterviewerEmail,
+    String R1ProxyInterviewer,
     String R1Observer,
     DateTime R1Time,
     String R1Sift,
     String R1Feedback,
     String R2InterviewerEmail,
+    String R2ProxyInterviewer,
     String R2Observer,
     DateTime R2Time,
     String R2Sift,
     String R2Feedback,
     String R3InterviewerEmail,
+    String R3ProxyInterviewer,
     String R3Observer,
     DateTime R3Time,
     String R3Sift,
@@ -84,15 +103,15 @@ global with sharing class EventItemsController {
       }
       if(items[0].R1Round__c != null)
       {
-        updateRound(items[0].R1Round__c,R1InterviewerEmail,R1Observer,R1Time,R1Sift,R1Feedback,updateList);
+        updateRound(items[0].R1Round__c,R1InterviewerEmail,R1ProxyInterviewer,R1Observer,R1Time,R1Sift,R1Feedback,updateList);
       }
       if(items[0].R2Round__c != null)
       {
-        updateRound(items[0].R2Round__c,R2InterviewerEmail,R2Observer,R2Time,R2Sift,R2Feedback,updateList);
+        updateRound(items[0].R2Round__c,R2InterviewerEmail,R2ProxyInterviewer,R2Observer,R2Time,R2Sift,R2Feedback,updateList);
       }
       if(items[0].R3Round__c != null)
       {
-        updateRound(items[0].R3Round__c,R3InterviewerEmail,R3Observer,R3Time,R3Sift,R3Feedback,updateList);
+        updateRound(items[0].R3Round__c,R3InterviewerEmail,R3ProxyInterviewer,R3Observer,R3Time,R3Sift,R3Feedback,updateList);
       }
       if(!updateList.isEmpty()) 
       {
@@ -194,39 +213,67 @@ global with sharing class EventItemsController {
 
     /* --------------HELPER METHODS----------------*/
     private static void updateRound(Id roundId,
-      String RInterviewer,
-      String RObserver,
-      DateTime RTime,
-      String RSift,
-      String RFeedback,
+      String Interviewer,
+      String ProxyInterviewer,
+      String Observer,
+      DateTime InterviewTime,
+      String Sift,
+      String Feedback,
       List<SObject> updateList)
     {
-      List<Round__c> round = [Select Id, Interviewer__c, Interviewer__r.Email__c, Observer__c, StartTime__c, SiftLink__c, Feedback__c from Round__c where Id=:roundId];
-      System.debug('Prit: RInterviewer:: '+RInterviewer);
-      if(RInterviewer != null) 
+      List<Round__c> round = [Select Id, Interviewer__c, ProxyInterviewer__c, Interviewer__r.Name, Observer__c, StartTime__c, SiftLink__c, Feedback__c from Round__c where Id=:roundId];
+      
+      if(InterviewTime != null){
+        if(!round.isEmpty()) round[0].StartTime__c = InterviewTime;
+      }
+
+      System.debug('Prit: Interviewer:: '+Interviewer);
+      if(Interviewer != null || ProxyInterviewer != null) 
       {
-        if(!round.isEmpty())
+        String toEmail;
+        if(!round.isEmpty() && Interviewer != null && !Interviewer.equalsIgnoreCase('Proxy'))
         {
-          List<Interviewer__c> inter = [Select Id from Interviewer__c where Email__c = :RInterviewer LIMIT 1];
-          if(inter != null){
-            round[0].Interviewer__c = inter[0].Id;
+          if(Interviewer.equalsIgnoreCase('None'))
+          {
+            round[0].Interviewer__c = null;
+          }
+          else
+          {
+            List<Interviewer__c> inter = [Select Id from Interviewer__c where Email__c = :Interviewer LIMIT 1];
+            if(inter != null){
+              round[0].Interviewer__c = inter[0].Id;
+              round[0].ProxyInterviewer__c = null;
+              toEmail = Interviewer;
+            }
           }
         }
-        sendEmail(RInterviewer,'IMPORTANT: You have an assignment','','Kindly check HireBuddy for more details');
+        else if(!round.isEmpty() && ProxyInterviewer != null && Interviewer.equalsIgnoreCase('Proxy'))
+        {
+          round[0].ProxyInterviewer__c = ProxyInterviewer;
+          round[0].Interviewer__c = null;
+          toEmail = ProxyInterviewer;
+        }
+        if(String.IsNotBlank(toEmail))
+        {
+          String emailBody = 'An interview of a candidate is scheduled at: '+round[0].StartTime__c+'. Kindly check HireBuddy for more details.';
+          sendEmail(toEmail,'IMPORTANT: You have an assignment','',emailBody);
+        }
       }
-      if(RObserver != null) {
-        if(!round.isEmpty()) round[0].Observer__c = RObserver;
-        sendEmail(RObserver,'IMPORTANT: You have an assignment','','You are the observer for interviewer '+round[0].Interviewer__r.Email__c);
-      }
-      if(RSift != null) 
+      if(Observer != null) 
       {
-        if(!round.isEmpty()) round[0].SiftLink__c = RSift;
+        if(!round.isEmpty() && String.IsNotBlank(Observer))
+        {
+          round[0].Observer__c = Observer;
+          String emailBody =  'An interview of a candidate is scheduled at: '+round[0].StartTime__c+'. You are an observer for interviewer '+round[0].Interviewer__r.Name;
+          sendEmail(Observer,'IMPORTANT: You have an assignment','',emailBody);
+        }
       }
-      if(RTime != null){
-        if(!round.isEmpty()) round[0].StartTime__c = RTime;
+      if(Sift != null) 
+      {
+        if(!round.isEmpty()) round[0].SiftLink__c = Sift;
       }
-      if(RFeedback != null) {
-        if(!round.isEmpty()) round[0].Feedback__c = RFeedback;
+      if(Feedback != null) {
+        if(!round.isEmpty()) round[0].Feedback__c = Feedback;
       }
       if(!round.isEmpty()) 
       {

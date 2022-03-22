@@ -4,16 +4,17 @@
       <div class="slds-card__header slds-grid">
         <header class="slds-media slds-media_center slds-has-flexi-truncate">
           <div class="slds-media__body">
-            <h2 class="slds-card__header-title">
+            <h1 class="slds-card__header-title">
               <a href="#" class="slds-card__header-link slds-truncate" title="Hiring Event">
                 <span>Welcome to Event: {eventName}</span>
               </a>
-            </h2>
+            </h1>
           </div>
           <div class="slds-no-flex">
             <lightning-button 
               class="slds-var-m-around_medium button" 
               label="Add New Candidate"
+              hidden={isInterviewer}
               onclick={openCandidateModal}
             ></lightning-button>
           </div>
@@ -118,90 +119,105 @@
                   <template if:true={eventItemRecord}>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="candidateName" type="text" read-only="true" label="Candidate Name" value={eventItemRecord.hirebuddy__CandidateName__c}></lightning-input>
+                          <lightning-input data-id="candidateName" type="text" read-only="true" label="Candidate Name" value={eventItemRecord.CandidateName__c}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="candidateStatus" type="text" onchange={handleChange} label="Candidate Status" options={candidateStatusOptions} value={eventItemRecord.hirebuddy__CandidateStatus__c}></lightning-combobox>
+                          <lightning-combobox data-id="candidateStatus" type="text" onchange={handleChange} label="Candidate Status" options={candidateStatusOptions} value={eventItemRecord.CandidateStatus__c}></lightning-combobox>
                         </td>
                       </tr>
                       <br><div class ="row"><h2 class="header"><b>Round 1 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="R1Interviewer" type="text" onchange={handleChange} label="R1 Interviewer" options={interviewerListOptions} value={eventItemRecord.hirebuddy__R1InterviewerEmail__c}></lightning-combobox>
+                          <lightning-combobox data-id="R1Interviewer" type="text" onchange={handleChange} label="R1 Interviewer" options={interviewerListOptions} value={eventItemRecord.R1InterviewerEmail__c} ></lightning-combobox>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R1Observer" type="email" onchange={handleChange} label="R1 Observer Email" value={eventItemRecord.hirebuddy__R1Observer__c}></lightning-input>
+                          <lightning-input data-id="R1ProxyInterviewer" type="email" onchange={handleChange} label="Enter R1 Proxy Interviewer Email" value={eventItemRecord.R1ProxyInterviewer__c} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email" disabled={disableR1ProxyInterviewer}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R1Time" type="datetime" onchange={handleChange} label="R1 Time" value={eventItemRecord.hirebuddy__R1StartTime__c}></lightning-input>
+                          <lightning-input data-id="R1Observer" type="email" onchange={handleChange} label="Enter R1 Observer Email" value={eventItemRecord.R1Observer__c} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email"></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R1Sift" type="url" onchange={handleChange} label="R1 SIFT" value={eventItemRecord.hirebuddy__R1SiftLink__c}></lightning-input>
+                          <lightning-input data-id="R1Time" type="datetime" onchange={handleChange} label="R1 Time" value={eventItemRecord.R1StartTime__c}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-textarea data-id="R1Feedback" onchange={handleChange} label="R1 Feedback" value={eventItemRecord.hirebuddy__R1Feedback__c}></lightning-textarea>
+                          <lightning-input data-id="R1Sift" type="url" onchange={handleChange} label="R1 SIFT" value={eventItemRecord.R1SiftLink__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-textarea data-id="R1Feedback" onchange={handleChange} label="R1 Feedback" value={eventItemRecord.R1Feedback__c}></lightning-textarea>
                         </td>
                       </tr>
                       <br><div class ="row"><h2 class="header"><b>Round 2 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="R2Interviewer" type="text" onchange={handleChange} label="R2 Interviewer" options={interviewerListOptions} value={eventItemRecord.hirebuddy__R2InterviewerEmail__c}></lightning-combobox>
+                          <lightning-combobox data-id="R2Interviewer" type="text" onchange={handleChange} label="R2 Interviewer" options={interviewerListOptions} value={eventItemRecord.R2InterviewerEmail__c}  ></lightning-combobox>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R2Observer" type="email" onchange={handleChange} label="R2 Observer Email" value={eventItemRecord.hirebuddy__R2Observer__c}></lightning-input>
+                          <lightning-input data-id="R2ProxyInterviewer" type="email" onchange={handleChange} label="Enter R2 Proxy Interviewer Email" value={eventItemRecord.R2ProxyInterviewer__c} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email" disabled={disableR2ProxyInterviewer}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R2Time" type="datetime" onchange={handleChange} label="R2 Time" value={eventItemRecord.hirebuddy__R2StartTime__c}></lightning-input>
+                          <lightning-input data-id="R2Observer" type="email" onchange={handleChange} label="Enter R2 Observer Email" value={eventItemRecord.R2Observer__c} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email"></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R2Sift" type="url" onchange={handleChange} label="R2 SIFT" value={eventItemRecord.hirebuddy__R2SiftLink__c}></lightning-input>
+                          <lightning-input data-id="R2Time" type="datetime" onchange={handleChange} label="R2 Time" value={eventItemRecord.R2StartTime__c}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-textarea data-id="R2Feedback" onchange={handleChange} label="R2 Feedback" value={eventItemRecord.hirebuddy__R2Feedback__c}></lightning-textarea>
+                          <lightning-input data-id="R2Sift" type="url" onchange={handleChange} label="R2 SIFT" value={eventItemRecord.R2SiftLink__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-textarea data-id="R2Feedback" onchange={handleChange} label="R2 Feedback" value={eventItemRecord.R2Feedback__c}></lightning-textarea>
                         </td>
                       </tr>
                       <br><div class ="row"><h2 class="header"><b>Round 3 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="R3Interviewer" type="text" onchange={handleChange} label="R3 Interviewer" options={interviewerListOptions} value={eventItemRecord.hirebuddy__R3InterviewerEmail__c}></lightning-combobox>
+                          <lightning-combobox data-id="R3Interviewer" type="text" onchange={handleChange} label="R3 Interviewer" options={interviewerListOptions} value={eventItemRecord.R3InterviewerEmail__c}  ></lightning-combobox>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R3Observer" type="email" onchange={handleChange} label="R3 Observer Email" value={eventItemRecord.hirebuddy__R3Observer__c}></lightning-input>
+                          <lightning-input data-id="R3ProxyInterviewer" type="email" onchange={handleChange} label="Enter R3Proxy Interviewer Email" value={eventItemRecord.R3ProxyInterviewer__c} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email" disabled={disableR3ProxyInterviewer}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R3Time" type="datetime" onchange={handleChange} label="R3 Time" value={eventItemRecord.hirebuddy__R3StartTime__c}></lightning-input>
+                          <lightning-input data-id="R3Observer" type="email" onchange={handleChange} label="Enter R3 Observer Email" value={eventItemRecord.R3Observer__c} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email"></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R3Sift" type="url" onchange={handleChange} label="R3 SIFT" value={eventItemRecord.hirebuddy__R3SiftLink__c}></lightning-input>
+                          <lightning-input data-id="R3Time" type="datetime" onchange={handleChange} label="R3 Time" value={eventItemRecord.R3StartTime__c}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-textarea data-id="R3Feedback" onchange={handleChange} label="R3 Feedback" value={eventItemRecord.hirebuddy__R3Feedback__c}></lightning-textarea>
+                          <lightning-input data-id="R3Sift" type="url" onchange={handleChange} label="R3 SIFT" value={eventItemRecord.R3SiftLink__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-textarea data-id="R3Feedback" onchange={handleChange} label="R3 Feedback" value={eventItemRecord.R3Feedback__c}></lightning-textarea>
                         </td>
                       </tr>
                       

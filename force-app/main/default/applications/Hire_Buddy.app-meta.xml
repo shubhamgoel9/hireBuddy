@@ -27,7 +27,7 @@
         <formFactor>Large</formFactor>
         <pageOrSobjectType>standard-home</pageOrSobjectType>
         <type>Flexipage</type>
-        <profile>Recruiter</profile>
+        <profile>Admin</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>Tab</actionName>
@@ -35,11 +35,13 @@
         <formFactor>Large</formFactor>
         <pageOrSobjectType>standard-home</pageOrSobjectType>
         <type>Flexipage</type>
-        <profile>Admin</profile>
+        <profile>Recruiter</profile>
     </profileActionOverrides>
     <tabs>Home</tabs>
-    <tabs>Hiring_Event__c</tabs>
+    <tabs>Interviewer_Screen</tabs>
+    <tabs>Event_Screen</tabs>
     <tabs>HireBuddy</tabs>
+    <tabs>HiringEventItem__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Hire_Buddy_UtilityBar</utilityBar>
 </CustomApplication>

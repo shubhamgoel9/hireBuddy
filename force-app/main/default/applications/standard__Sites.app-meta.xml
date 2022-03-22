@@ -7,7 +7,7 @@
     <tabs>standard-Sites</tabs>
     <tabs>Candidate__c</tabs>
     <tabs>Round__c</tabs>
-    <tabs>Hiring_Event__c</tabs>
     <tabs>Panel__c</tabs>
     <tabs>Interviewer__c</tabs>
+    <tabs>HiringEventItem__c</tabs>
 </CustomApplication>

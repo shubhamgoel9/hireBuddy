@@ -5,7 +5,7 @@
     <externalId>false</externalId>
     <label>R2 Round</label>
     <referenceTo>Round__c</referenceTo>
-    <relationshipLabel>HiringEventItems (Round 2)</relationshipLabel>
+    <relationshipLabel>HiringEventItems (R2 Round)</relationshipLabel>
     <relationshipName>HiringEventItems1</relationshipName>
     <required>false</required>
     <trackTrending>false</trackTrending>

@@ -17,7 +17,7 @@ public with sharing class EmailService {
         
         email.setSubject(subject);
         
-        email.setHtmlBody('Hello ' + name + ' ,' + '<br/><br/>' + mailContent + '<br/><br/>Regards<br/> HireBuddy');
+        email.setHtmlBody('Hello' + name + ' ,' + '<br/><br/>' + mailContent + '<br/><br/>Regards<br/> HireBuddy');
         try{
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });
         }catch(exception e){

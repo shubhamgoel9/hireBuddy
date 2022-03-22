@@ -80,7 +80,7 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>HiringEventItem__c.Candidate__c</relatedList>
+        <relatedList>HiringEventItem__c.CandidateId__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

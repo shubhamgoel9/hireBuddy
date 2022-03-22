@@ -13,16 +13,16 @@
     <tabs>standard-Order</tabs>
     <tabs>Candidate__c</tabs>
     <tabs>Round__c</tabs>
-    <tabs>Hiring_Event__c</tabs>
     <tabs>Panel__c</tabs>
     <tabs>Interviewer__c</tabs>
+    <tabs>HiringEventItem__c</tabs>
     <uiType>Lightning</uiType>
     <workspaceConfig>
         <mappings>
             <tab>Candidate__c</tab>
         </mappings>
         <mappings>
-            <tab>Hiring_Event__c</tab>
+            <tab>HiringEventItem__c</tab>
         </mappings>
         <mappings>
             <tab>Interviewer__c</tab>

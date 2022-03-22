@@ -2,8 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>R2RoundStatus__c</fullName>
     <externalId>false</externalId>
+    <formula>TEXT( R2Round__r.RoundStatus__c )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>R2 Round Status</label>
-    <length>255</length>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Text</type>

@@ -6,30 +6,34 @@ import setNewCandidateDetails from '@salesforce/apex/EventItemsController.setNew
 import deleteCandidateDetails from '@salesforce/apex/EventItemsController.deleteCandidateDetails';
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
 import getPanelId from '@salesforce/apex/EventItemsController.getPanelId';
+import getProfile from '@salesforce/apex/EventItemsController.getProfile';
 const columns = [
-    { label: 'Candidate Name', fieldName: 'hirebuddy__CandidateName__c', initialWidth: 100 },
-    { label: 'Role Evaluation', fieldName: 'hirebuddy__RoleEvaluation__c', initialWidth: 100},
-    { label: 'Candidate Status', fieldName: 'hirebuddy__CandidateStatus__c', initialWidth: 100},
-    { label: 'Codepair Link', fieldName: 'hirebuddy__CodepairLink__c', type:'url', initialWidth: 80},
-    { label: 'Interview Link', fieldName: 'hirebuddy__InterviewLink__c', type:'url',initialWidth: 80},
-    { label: 'R1 Start Time ', fieldName: 'hirebuddy__R1StartTime__c',initialWidth: 100},
-    { label: 'R1 Interviewer ', fieldName: 'hirebuddy__R1Interviewer__c',initialWidth: 100},
-    { label: 'R1 Observer ', fieldName: 'hirebuddy__R1Observer__c',initialWidth: 100},
-    { label: 'R1 Round Status', fieldName: 'hirebuddy__R1RoundStatus__c',initialWidth: 100},
-    { label: 'R1 SIFT Link', fieldName: 'hirebuddy__R1SiftLink__c',type:'url', initialWidth: 100},
-    { label: 'R1 Feedback ', fieldName: 'hirebuddy__R1Feedback__c',initialWidth: 100},
-    { label: 'R2 Start Time ', fieldName: 'hirebuddy__R2StartTime__c',initialWidth: 100},
-    { label: 'R2 Interviewer ', fieldName: 'hirebuddy__R2Interviewer__c',initialWidth: 100},
-    { label: 'R2 Observer ', fieldName: 'hirebuddy__R2Observer__c',initialWidth: 100},
-    { label: 'R2 Round Status', fieldName: 'hirebuddy__R2RoundStatus__c',initialWidth: 100},
-    { label: 'R2 SIFT Link', fieldName: 'hirebuddy__R2SiftLink__c',type:'url', initialWidth: 100},
-    { label: 'R2 Feedback ', fieldName: 'hirebuddy__R2Feedback__c',initialWidth: 100},
-    { label: 'R3 Start Time ', fieldName: 'hirebuddy__R3StartTime__c',initialWidth: 100},
-    { label: 'R3 Interviewer ', fieldName: 'hirebuddy__R3Interviewer__c',initialWidth: 100},
-    { label: 'R3 Observer ', fieldName: 'hirebuddy__R3Observer__c',initialWidth: 100},
-    { label: 'R3 Round Status', fieldName: 'hirebuddy__R3RoundStatus__c',initialWidth: 100},
-    { label: 'R3 SIFT Link', fieldName: 'hirebuddy__R3SiftLink__c',type:'url', initialWidth: 100},
-    { label: 'R3 Feedback ', fieldName: 'hirebuddy__R3Feedback__c',initialWidth: 100},
+    { label: 'Candidate Name', fieldName: 'CandidateName__c', initialWidth: 100 },
+    { label: 'Role Evaluation', fieldName: 'RoleEvaluation__c', initialWidth: 100},
+    { label: 'Candidate Status', fieldName: 'CandidateStatus__c', initialWidth: 100},
+    { label: 'Codepair Link', fieldName: 'CodepairLink__c', type:'url', initialWidth: 80},
+    { label: 'Interview Link', fieldName: 'InterviewLink__c', type:'url',initialWidth: 80},
+    { label: 'R1 Start Time ', fieldName: 'R1StartTime__c',initialWidth: 100},
+    { label: 'R1 Interviewer ', fieldName: 'R1Interviewer__c',initialWidth: 100},
+    { label: 'R1 Proxy Interviewer ', fieldName: 'R1ProxyInterviewer__c',type:'email', initialWidth: 100},
+    { label: 'R1 Observer ', fieldName: 'R1Observer__c',initialWidth: 100, type:'email'},
+    { label: 'R1 Round Status', fieldName: 'R1RoundStatus__c',initialWidth: 100},
+    { label: 'R1 SIFT Link', fieldName: 'R1SiftLink__c',type:'url', initialWidth: 100},
+    { label: 'R1 Feedback ', fieldName: 'R1Feedback__c',initialWidth: 100},
+    { label: 'R2 Start Time ', fieldName: 'R2StartTime__c',initialWidth: 100},
+    { label: 'R2 Interviewer ', fieldName: 'R2Interviewer__c',initialWidth: 100},
+    { label: 'R2 Proxy Interviewer ', fieldName: 'R2ProxyInterviewer__c',type:'email',initialWidth: 100},
+    { label: 'R2 Observer ', fieldName: 'R2Observer__c',type:'email', initialWidth: 100},
+    { label: 'R2 Round Status', fieldName: 'R2RoundStatus__c',initialWidth: 100},
+    { label: 'R2 SIFT Link', fieldName: 'R2SiftLink__c',type:'url', initialWidth: 100},
+    { label: 'R2 Feedback ', fieldName: 'R2Feedback__c',initialWidth: 100},
+    { label: 'R3 Start Time ', fieldName: 'R3StartTime__c',initialWidth: 100},
+    { label: 'R3 Interviewer ', fieldName: 'R3Interviewer__c',initialWidth: 100},
+    { label: 'R3 Proxy Interviewer ', fieldName: 'R3ProxyInterviewer__c',type:'email', initialWidth: 100},
+    { label: 'R3 Observer ', fieldName: 'R3Observer__c',type:'email', initialWidth: 100},
+    { label: 'R3 Round Status', fieldName: 'R3RoundStatus__c',initialWidth: 100},
+    { label: 'R3 SIFT Link', fieldName: 'R3SiftLink__c',type:'url', initialWidth: 100},
+    { label: 'R3 Feedback ', fieldName: 'R3Feedback__c',initialWidth: 100},
     {label: 'Action', type: "button", initialWidth: 80, typeAttributes: {
         label: 'Edit',  
         name: 'Edit',  
@@ -51,8 +55,17 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track eventName;
     @track eventItems=[];
     @track panelId;
-    //@wire(getAllEventItems, {eventId: '$eventId'}) eventItems;
     
+    @wire(getProfile) profileName;
+    get isInterviewer()
+    {
+        console.log('Prit: profileName:: '+this.profileName.data);
+        if(this.profileName.data === 'Interviewer')
+            return true;
+        else
+            return false;
+    }
+
     //Get All Event Items to display in dashboard
     parameters = {};
     connectedCallback() {
@@ -65,7 +78,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
 		.then(result => {
 			this.eventItems = result;
             console.log('Prit: eventItems : '+JSON.stringify(this.eventItems));
-            this.eventName = this.eventItems[0].hirebuddy__CandidateId__r.hirebuddy__HiringEventId__r.Name;
+            this.eventName = this.eventItems[0].CandidateId__r.HiringEventId__r.Name;
             console.log('Prit: eventName:: '+ this.eventName);
 			this.error = undefined;
 		})
@@ -103,6 +116,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
         return params;
     }
 
+    //method to get Interviewerlist from panel
     getInterviewerListFromPanel()
     {
         getInterviewerList({panelId:this.panelId})
@@ -116,10 +130,20 @@ export default class EventItems extends NavigationMixin(LightningElement)
 			this.interviewerList = undefined;
 		})
     }
+    
     //Action to perfrom when modal box is opened
+    @track disableR1ProxyInterviewer;
+    @track disableR2ProxyInterviewer;
+    @track disableR3ProxyInterviewer;
     openModal(event) {
         // to open modal set isModalOpen tarck value as true
         console.log('Prit: openModal entry:: event : '+JSON.stringify(event));
+        if(this.isInterviewer)
+        {
+            alert('You are not authorized to perform this action');
+            this.isModalOpen = false;
+            return;
+        }
         const actionName = event.detail.action.name;
         console.log('actionName: '+actionName);
         if ( actionName === 'Edit' ) {
@@ -134,6 +158,34 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 {
                     this.eventItemRecord = this.eventItems[key];
                     console.log('Prit: eventItemRecord: '+JSON.stringify(this.eventItemRecord));
+                    console.log('Prit: this.eventItemRecord.R1InterviewerEmail: '+this.eventItemRecord.R1InterviewerEmail__c);
+                    if(this.eventItemRecord.R1InterviewerEmail__c)
+                    {
+                        this.disableR1ProxyInterviewer = true;
+                    }
+                    else
+                    {
+                        this.disableR1ProxyInterviewer = false;
+                    }
+                    console.log('Prit: this.eventItemRecord.R2InterviewerEmail: '+this.eventItemRecord.R2InterviewerEmail__c);
+                    if(this.eventItemRecord.R2InterviewerEmail__c)
+                    {
+                        this.disableR2ProxyInterviewer = true;
+                    }
+                    else
+                    {
+                        this.disableR2ProxyInterviewer = false;
+                    }
+                    console.log('Prit: this.eventItemRecord.R3InterviewerEmail: '+this.eventItemRecord.R3InterviewerEmail__c);
+                    if(this.eventItemRecord.R3InterviewerEmail__c)
+                    {
+                        console.log('Prit: setting R3 interviewer enable/disable');
+                        this.disableR3ProxyInterviewer = true;
+                    }
+                    else
+                    {
+                        this.disableR3ProxyInterviewer = false;
+                    }
                     break;
                 }
             } 
@@ -165,14 +217,14 @@ export default class EventItems extends NavigationMixin(LightningElement)
     //method to get the interviewer list options in combo-box based on panel
     get interviewerListOptions()
     {
-        let picklistoptions = [];
+        let picklistoptions = [{label:'---None---',value:'None'},{label:'Proxy Interviewer',value:'Proxy'}];
         if(this.interviewerList)
         {
             for(const key in this.interviewerList)
             {
                 picklistoptions.push({
-                    label:this.interviewerList[key].Name+'('+this.interviewerList[key].hirebuddy__InterviewerStatus__c+')',
-                    value:this.interviewerList[key].hirebuddy__Email__c
+                    label:this.interviewerList[key].Name+'('+this.interviewerList[key].InterviewerStatus__c+')',
+                    value:this.interviewerList[key].Email__c
                 });
             }
         }
@@ -183,6 +235,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
 
     @track candidateStatus;
     @track R1InterviewerEmail;
+    @track R1ProxyInterviewer;
     @track R1Observer;
     @track R1Time;
     @track R1Sift;
@@ -210,8 +263,20 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
         else if(event.target.dataset.id === 'R1Interviewer')
         {
+            if(value === 'Proxy')
+            {
+                this.disableR1ProxyInterviewer=false;
+            }
+            else
+            {
+                this.disableR1ProxyInterviewer=true;
+            }
             this.R1InterviewerEmail = value;
-            console.log('handle change::'+value);
+            console.log('handle change:: disableR1ProxyInterviewer '+this.disableR1ProxyInterviewer);
+        }
+        else if(event.target.dataset.id === 'R1ProxyInterviewer')
+        {
+            this.R1ProxyInterviewer = value;
         }
         else if(event.target.dataset.id === 'R1Observer')
         {
@@ -230,8 +295,20 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
         else if(event.target.dataset.id === 'R2Interviewer')
         {
+            if(value === 'Proxy')
+            {
+                this.disableR2ProxyInterviewer=false;
+            }
+            else
+            {
+                this.disableR2ProxyInterviewer=true;
+            }
             this.R2InterviewerEmail = value;
-            console.log('handle change::'+value);
+            console.log('handle change:: disableR2ProxyInterviewer '+this.disableR2ProxyInterviewer);
+        }
+        else if(event.target.dataset.id === 'R2ProxyInterviewer')
+        {
+            this.R2ProxyInterviewer = value;
         }
         else if(event.target.dataset.id === 'R2Observer')
         {
@@ -250,8 +327,20 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
         else if(event.target.dataset.id === 'R3Interviewer')
         {
+            if(value === 'Proxy')
+            {
+                this.disableR3ProxyInterviewer=false;
+            }
+            else
+            {
+                this.disableR3ProxyInterviewer=true;
+            }
             this.R3InterviewerEmail = value;
-            console.log('handle change::'+value);
+            console.log('handle change:: disableR3ProxyInterviewer '+this.disableR3ProxyInterviewer);
+        }
+        else if(event.target.dataset.id === 'R3ProxyInterviewer')
+        {
+            this.R3ProxyInterviewer = value;
         }
         else if(event.target.dataset.id === 'R3Observer')
         {
@@ -278,16 +367,19 @@ export default class EventItems extends NavigationMixin(LightningElement)
         setEventItem({selectedEventItemId:this.selectedEventItemId,
             candidateStatus:this.candidateStatus,
             R1InterviewerEmail:this.R1InterviewerEmail,
+            R1ProxyInterviewer:this.R1ProxyInterviewer,
             R1Observer:this.R1Observer,
             R1Time:this.R1Time,
             R1Sift:this.R1Sift,
             R1Feedback:this.R1Feedback,
             R2InterviewerEmail:this.R2InterviewerEmail,
+            R2ProxyInterviewer:this.R2ProxyInterviewer,
             R2Observer:this.R2Observer,
             R2Time:this.R2Time,
             R2Sift:this.R2Sift,
             R2Feedback:this.R2Feedback,
             R3InterviewerEmail:this.R3InterviewerEmail,
+            R3ProxyInterviewer:this.R3ProxyInterviewer,
             R3Observer:this.R3Observer,
             R3Time:this.R3Time,
             R3Sift:this.R3Sift,
@@ -405,7 +497,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
         console.log('Prit: show delete button:: '+JSON.stringify(event));
         this.selectedEventItems=event.detail.selectedRows;
         console.log('Prit: this.selectedEventItems:: '+this.selectedEventItems);
-        if(this.selectedEventItems.length==0)
+        if(this.selectedEventItems.length==0 || this.profileName.data === 'Interviewer')
         {
             this.isDeleteCandidateHidden=true;
         }

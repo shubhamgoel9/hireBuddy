@@ -31,18 +31,18 @@
           <tbody>
 
 
-            <template if:true={accounts.data}>
-              <template for:each={accounts.data} for:item="acc"> 
+            <template if:true={accounts}>
+              <template for:each={accounts} for:item="acc"> 
                 <tr key={acc.id}>
                   <td><strong>Candidate Name</strong></td>
                   
                    <td>
-                    {acc.hirebuddy__Candidate__r.Name}
+                    {acc.Candidate__r.Name}
                   </td>
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Candidate Resume </strong></td> 
-                   <td > <div class="slds-truncate" title="Name"> <a href='\${acc.hirebuddy__ResumeLink__c}'> {acc.hirebuddy__Candidate__r.hirebuddy__ResumeLink__c} </a></div></td> 
+                   <td > <div class="slds-truncate" title="Name"> <a href='\${acc.ResumeLink__c}'> {acc.Candidate__r.ResumeLink__c} </a></div></td> 
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Round Number</strong></td> 
@@ -50,23 +50,23 @@
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Sift Link </strong></td> 
-                   <td > <div class="slds-truncate" title="Name"> <a href='\${acc.hirebuddy__SiftLink__c}'> {acc.hirebuddy__SiftLink__c} </a></div></td> 
+                   <td > <div class="slds-truncate" title="Name"> <a href='\${acc.SiftLink__c}'> {acc.SiftLink__c} </a></div></td> 
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Role evaluation</strong> </td>
                   <td> 
-                    {acc.hirebuddy__Candidate__r.hirebuddy__Role__c}
+                    {acc.Candidate__r.Role__c}
                   </td>
                 </tr> 
                 <tr key={acc.id}>
                    <td> <strong>Interview Link</strong></td>
                   <td>
-                    <div class="slds-truncate" title="Name"> <a href='{acc.hirebuddy__InterviewLink__c}'>{acc.hirebuddy__Candidate__r.hirebuddy__InterviewLink__c}</a></div>
+                    <div class="slds-truncate" title="Name"> <a href='{acc.InterviewLink__c}'>{acc.Candidate__r.InterviewLink__c}</a></div>
                  </td>
                 </tr>
                 <tr key={acc.id}> <td><strong>Code pair link</strong></td>
                   <td>
-                    <div class="slds-truncate" title="Name"> <a href='{acc.hirebuddy__CodepairLink__c}'>{acc.hirebuddy__Candidate__r.hirebuddy__CodepairLink__c}</a></div>
+                    <div class="slds-truncate" title="Name"> <a href='{acc.CodepairLink__c}'>{acc.Candidate__r.CodepairLink__c}</a></div>
                     </td></tr>
                  
               </template>

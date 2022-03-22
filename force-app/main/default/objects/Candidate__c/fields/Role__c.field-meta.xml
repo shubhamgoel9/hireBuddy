@@ -11,24 +11,48 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
+                <fullName>AMTS</fullName>
+                <default>false</default>
+                <label>AMTS</label>
+            </value>
+            <value>
+                <fullName>MTS</fullName>
+                <default>false</default>
+                <label>MTS</label>
+            </value>
+            <value>
+                <fullName>SMTS</fullName>
+                <default>false</default>
+                <label>SMTS</label>
+            </value>
+            <value>
+                <fullName>LMTS</fullName>
+                <default>false</default>
+                <label>LMTS</label>
+            </value>
+            <value>
                 <fullName>Software Engineering AMTS</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Software Engineering AMTS</label>
+            </value>
+            <value>
+                <fullName>Software Engineering LMTS</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Software Engineering LMTS</label>
             </value>
             <value>
                 <fullName>Software Engineering MTS</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Software Engineering MTS</label>
             </value>
             <value>
                 <fullName>Software Engineering SMTS</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Software Engineering SMTS</label>
-            </value>
-            <value>
-                <fullName>Software Engineering LMTS</fullName>
-                <default>false</default>
-                <label>Software Engineering LMTS</label>
             </value>
         </valueSetDefinition>
     </valueSet>

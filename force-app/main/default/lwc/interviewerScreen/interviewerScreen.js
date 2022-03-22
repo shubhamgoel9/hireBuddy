@@ -4,7 +4,8 @@ import getMyUpcomingRound from '@salesforce/apex/HireBuddyController.getMyUpcomi
 import getMyTodayEvent from '@salesforce/apex/HireBuddyController.getMyTodayEvent';
 import getCurrentUserName from '@salesforce/apex/HireBuddyController.getCurrentUserName';
 
-export default class InterviewerScreen extends LightningElement {
+export default class InterviewerScreen extends NavigationMixin(LightningElement) {
+
     @wire(getMyUpcomingRound) roundList;
     @wire(getMyTodayEvent) myTodayEvent;
     @wire(getCurrentUserName) currentUser;
@@ -28,10 +29,15 @@ export default class InterviewerScreen extends LightningElement {
     }
 
     handleEventBoardNavigate(event){
+        var EventID = event.currentTarget.dataset.id;
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: 'hirebuddy__Event_Screen',
+                apiName: 'Event_Screen',
+            },
+            state: {
+                c__recordId: EventID,
+                c__objectType: 'HiringEventItem__c'
             }
         });
     }
@@ -44,12 +50,17 @@ export default class InterviewerScreen extends LightningElement {
             type: 'standard__navItemPage',
             attributes: {
                 //recordId: funActID,
-                apiName: 'hirebuddy__Assigned_Rounds',
+                apiName: 'Assigned_Rounds',
                 //actionName: 'view',
             },
+            state: {
+                c__recordId: funActID,
+                c__objectType: 'Round__c'
+            }
         }).then((url) => {
             this.recordPageUrl = url;
-        });
+        })
+        ;
     }
 
     handleRoundNavigation(event){
@@ -60,7 +71,7 @@ export default class InterviewerScreen extends LightningElement {
             type: 'standard__recordPage',
             attributes: {
                 recordId: funActID,
-                objectApiName: 'hirebuddy__Round__c',
+                objectApiName: 'Round__c',
                 actionName: 'view'
             }
         });

@@ -2,6 +2,13 @@
     <lightning-card icon-name="custom:custom14">
       <h1 slot="title">Welcome {currentUser.FirstName}</h1>
                    <br>
+                   <!--lightning-input
+                       value={greeting}
+                       value={loggedInInterviewer}
+                       >
+                  </lightning-input-->
+                  <!--table class="slds-table slds-table_cell-buffer slds-table_fixed-layout slds-align_absolute-center" role="grid" aria-label="Example table in a Card"-->
+   
                   <div class="slds-truncate" title="Status">
                           <lightning-radio-group name="Status"
                            label="Status"
@@ -12,7 +19,21 @@
                            type="button"></lightning-radio-group>
                            </div>
                            <br>
-
+                        <!--/td>
+                      </tr-->
+                      <!--tr class="slds-hint-parent">
+                        <td role="gridcell">
+                          <div class="slds-text-align_right slds-text-heading_medium">
+                            <lightning-button
+                                name="new-with-defaults"
+                                label="Fetch Assignments"
+                                class="slds-var-m-around_medium button"
+                                onclick={fetchAssignedInterviews}
+                                variant="outline">
+                            </lightning-button>
+                        </div>
+                        </td>
+                        <td role="gridcell"-->
                           <div class="slds-text-heading_small">
                             <lightning-button
                                 variant="brand"
@@ -22,6 +43,10 @@
                                 onclick={handleEventBoardNavigate}>
                             </lightning-button>
                         </div>
+                        <!--/td>
+                      </tr>
+                    </tbody>
+                  </table--> 
                   <br>
                   <div class="slds-card">
                     <div class="slds-card__header slds-grid">
@@ -41,7 +66,7 @@
                       <template for:each={roundList.data} for:item="round">
                       <tr class="slds-hint-parent" key={round.index}>
                         <td role="gridcell">
-                          <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>{round.hirebuddy__StartTime__c}</a></div>
+                          <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>{round.StartTime__c}</a></div>
                         </td>
                       </tr>
                     </template>
@@ -58,6 +83,3 @@
                  </div>                                        
     </lightning-card>
 </template>
-
-  
-
