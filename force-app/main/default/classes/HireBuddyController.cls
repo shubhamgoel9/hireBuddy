@@ -15,6 +15,7 @@ global with sharing class HireBuddyController {
           CreatedById,
           CreatedDate,
           Candidate__c,
+          Candidate__r.Name,
           EndTime__c,
           Feedback__c,
           HiringEvent__c,
@@ -38,10 +39,9 @@ global with sharing class HireBuddyController {
 
   @AuraEnabled(cacheable=true)
   public static List<Round__c> getCandiateByRoundId(String roundId) {
-    List<Candidate__c> candidates = new List<Candidate__c>();
     List<Round__c> roundList = [
       SELECT
-        Id,
+        Id, Name,SiftLink__c,
         Candidate__r.Id,
         Candidate__r.Name,
         Candidate__r.CodepairLink__c,
@@ -55,11 +55,6 @@ global with sharing class HireBuddyController {
       FROM Round__c
       WHERE Id = :roundId
     ];
-    if (roundList != null && roundList.size() > 0) {
-      Candidate__c candidate = (Candidate__c) roundList[0]
-        .getSObject(Round__c.Candidate__c.getDescribe().getRelationshipName());
-      candidates.add(candidate);
-    }
     return roundList;
   }
 

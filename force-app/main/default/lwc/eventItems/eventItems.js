@@ -293,6 +293,11 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.R1Time = value;
             console.log('handle change::'+value);
         }
+        else if(event.target.dataset.id === 'R1Sift')
+        {
+            this.R1Sift = value;
+            console.log('handle change::'+value);
+        }
         else if(event.target.dataset.id === 'R1Feedback')
         {
             this.R1Feedback = value;
@@ -325,6 +330,11 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.R2Time = value;
             console.log('handle change::'+value);
         }
+        else if(event.target.dataset.id === 'R2Sift')
+        {
+            this.R2Sift = value;
+            console.log('handle change::'+value);
+        }
         else if(event.target.dataset.id === 'R2Feedback')
         {
             this.R2Feedback = value;
@@ -355,6 +365,11 @@ export default class EventItems extends NavigationMixin(LightningElement)
         else if(event.target.dataset.id === 'R3Time')
         {
             this.R3Time = value;
+            console.log('handle change::'+value);
+        }
+        else if(event.target.dataset.id === 'R3Sift')
+        {
+            this.R3Sift = value;
             console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R3Feedback')
