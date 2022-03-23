@@ -29,15 +29,14 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     }
 
     handleEventBoardNavigate(event){
-        var EventID = event.currentTarget.dataset.id;
+        console.log('EventId: '+this.myTodayEvent.data);
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: 'Event_Screen',
+                apiName: 'Event_Dashboard',
             },
             state: {
-                c__recordId: EventID,
-                c__objectType: 'HiringEventItem__c'
+                c__recordId: this.myTodayEvent.data
             }
         });
     }
@@ -54,9 +53,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
                 //actionName: 'view',
             },
             state: {
-                c__recordId: funActID,
-                c__objectType: 'Round__c'
-            }
+                c__recordId: funActID            }
         }).then((url) => {
             this.recordPageUrl = url;
         })

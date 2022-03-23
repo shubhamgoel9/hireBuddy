@@ -48,7 +48,6 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 			},
             state: {
                 c__recordId: funEventID,
-                c__objectType: 'hirebuddy_Hiring_Event__c'
             }
 		});
     }
@@ -57,7 +56,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
         this[NavigationMixin.Navigate]({
             type: 'standard__objectPage',
             attributes: {
-                objectApiName: "Hiring_Event__c",
+                objectApiName: "hirebuddy__Hiring_Event__c",
                 actionName: 'new'
             },
             // state: {

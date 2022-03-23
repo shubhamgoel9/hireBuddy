@@ -8,7 +8,12 @@ import getInterviewerList from '@salesforce/apex/EventItemsController.getIntervi
 import getPanelId from '@salesforce/apex/EventItemsController.getPanelId';
 import getProfile from '@salesforce/apex/EventItemsController.getProfile';
 const columns = [
-    { label: 'Candidate Name', fieldName: 'CandidateName__c', initialWidth: 100 },
+    { label: 'Candidate Name', fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
+    typeAttributes:{
+        label: {
+            fieldName: 'CandidateName__c'
+        }
+    }},
     { label: 'Role Evaluation', fieldName: 'RoleEvaluation__c', initialWidth: 100},
     { label: 'Candidate Status', fieldName: 'CandidateStatus__c', initialWidth: 100},
     { label: 'Codepair Link', fieldName: 'CodepairLink__c', type:'url', initialWidth: 80},

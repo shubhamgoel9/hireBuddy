@@ -3,8 +3,9 @@
     <fullName>Feedback__c</fullName>
     <externalId>false</externalId>
     <label>Feedback</label>
-    <length>32768</length>
+    <length>255</length>
+    <required>false</required>
     <trackTrending>false</trackTrending>
-    <type>LongTextArea</type>
-    <visibleLines>5</visibleLines>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>

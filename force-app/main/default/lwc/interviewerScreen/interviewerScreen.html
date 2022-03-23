@@ -1,72 +1,75 @@
 <template>
     <lightning-card icon-name="custom:custom14">
-      <h1 slot="title">Welcome {currentUser.FirstName}</h1>
+      <h1 slot="title">Welcome, {currentUser.data}</h1>
                    <br>
-                   <!--lightning-input
-                       value={greeting}
-                       value={loggedInInterviewer}
-                       >
-                  </lightning-input-->
-                  <!--table class="slds-table slds-table_cell-buffer slds-table_fixed-layout slds-align_absolute-center" role="grid" aria-label="Example table in a Card"-->
-   
-                  <div class="slds-truncate" title="Status">
-                          <lightning-radio-group name="Status"
-                           label="Status"
-                           options={options}
-                           value={value}
-                           required
-                           onchange={handleChange}
-                           type="button"></lightning-radio-group>
-                           </div>
-                           <br>
-                        <!--/td>
-                      </tr-->
-                      <!--tr class="slds-hint-parent">
-                        <td role="gridcell">
-                          <div class="slds-text-align_right slds-text-heading_medium">
-                            <lightning-button
-                                name="new-with-defaults"
-                                label="Fetch Assignments"
-                                class="slds-var-m-around_medium button"
-                                onclick={fetchAssignedInterviews}
-                                variant="outline">
-                            </lightning-button>
-                        </div>
+                   <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+                      <tr>
+                        <td>
+                                <lightning-radio-group name="Status"
+                                label=" Set your Status"
+                                options={options}
+                                value={value}
+                                required
+                                onchange={handleChange}
+                                type="button"></lightning-radio-group>
                         </td>
-                        <td role="gridcell"-->
-                          <div class="slds-text-heading_small">
-                            <lightning-button
-                                variant="brand"
-                                name="new-with-defaults"
-                                label="Event Board"
-                                class="slds-var-m-around_small button"
-                                onclick={handleEventBoardNavigate}>
-                            </lightning-button>
-                        </div>
-                        <!--/td>
+                      
+                       
+                          
+                          <template if:true={myTodayEvent.data}>
+                            <td>
+                              <lightning-button
+                                  variant="brand"
+                                  name="new-with-defaults"
+                                  label="Navigate To Event Board"
+                                  class="slds-var-m-around_small button"
+                                  onclick={handleEventBoardNavigate}>
+                              </lightning-button>
+                            </td>
+                          </template>
+                          <template if:false={myTodayEvent.data}>
+                            <td>
+                              <h1><strong> No Events schduled for today!</strong></h1>
+                            </td>
+                          </template>
                       </tr>
-                    </tbody>
-                  </table--> 
-                  <br>
+                      </table>
                   <div class="slds-card">
-                    <div class="slds-card__header slds-grid">
+                    
+
+                    <div class="slds-card">
+                      <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                          <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-contact" title="contact">
+                              <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#contact"></use>
+                              </svg>
+                              <span class="slds-assistive-text">Past Events</span>
+                            </span>
+                          </div>
+                          <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                              <a href="#" class="slds-card__header-link slds-truncate" title="Contacts (1)">
+                                <span>Upcoming Interviews</span>
+                              </a>
+                            </h2>
+                          </div> 
+                        </header>
+                      </div>
                     </div>
+                    </div>
+                    
                   <div class="slds-card__body">
                   <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
                   <template for:each={upcomingRounds} for:item="round"></template>
-                    <thead>
-                      <tr class="slds-line-height_reset">
-                        <th class="" scope="col">
-                          <div class="slds-truncate" title="Name">Upcoming Interviews</div>
-                        </th>
-                      </tr>
-                    </thead>
+                    
                     <tbody>
                       <template if:true={roundList.data}></template>
                       <template for:each={roundList.data} for:item="round">
                       <tr class="slds-hint-parent" key={round.index}>
                         <td role="gridcell">
-                          <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>{round.StartTime__c}</a></div>
+                          <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>{round.Name} - {round.StartTime__c}</a></div>
                         </td>
                       </tr>
                     </template>
@@ -80,6 +83,6 @@
                     </tbody>
                   </table> 
                  </div> 
-                 </div>                                        
+                                                        
     </lightning-card>
 </template>

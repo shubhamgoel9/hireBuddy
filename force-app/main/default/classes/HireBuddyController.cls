@@ -74,53 +74,33 @@ global with sharing class HireBuddyController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<Hiring_Event__c> getMyTodayEvent() {
-    List<Hiring_Event__c> hiringEventList = null;
+  public static Id getMyTodayEvent() {
     Id userId = UserInfo.getUserId();
+    Id eventId;
     List<Interviewer__c> interviwerList = [
-      SELECT Id
+      SELECT Id,Name
       FROM Interviewer__c
       WHERE User__c = :userId
     ];
     if (interviwerList != null && interviwerList.size() > 0) {
-      Id interviewerId = interviwerList[0].Id;
+      String interviewer = interviwerList[0].Name;
       List<HiringEventItem__c> heiList = [
         SELECT
-          Id,
-          HiringEvent__c,
-          HiringEvent__r.CreatedById,
-          HiringEvent__r.CreatedDate,
-          HiringEvent__r.Date__c,
-          HiringEvent__r.Panel__c,
-          HiringEvent__r.Id,
-          HiringEvent__r.IsDeleted,
-          HiringEvent__r.LastModifiedById,
-          HiringEvent__r.LastModifiedDate,
-          /*HiringEvent__r.LastReferencedDate,
-          HiringEvent__r.LastViewedDate,*/
-          HiringEvent__r.Name,
-          HiringEvent__r.OwnerId
+          Id,HiringEvent__c,R1StartTime__c
         FROM HiringEventItem__c
         WHERE
-          (R1Interviewer__c = :interviewerId
-          AND R1StartTime__c = TODAY)
-          OR (R2Interviewer__c = :interviewerId
-          AND R2StartTime__c = TODAY)
-          OR (R3Interviewer__c = :interviewerId
-          AND R3StartTime__c = TODAY)
+          (R1Interviewer__c = :interviewer
+            AND (R1StartTime__c = TODAY OR R1StartTime__c = TOMORROW))
+          OR (R2Interviewer__c = :interviewer
+            AND (R2StartTime__c = TODAY OR R2StartTime__c = TOMORROW))
+          OR (R3Interviewer__c = :interviewer
+            AND (R3StartTime__c = TODAY OR R3StartTime__c = TOMORROW))
       ];
-
-      if (heiList != null && heiList.size() > 0) {
-        for (HiringEventItem__c heItem : heiList) {
-          Hiring_Event__c hiringEvent = (Hiring_Event__c) heItem.getSObject(
-            HiringEventItem__c.HiringEvent__c.getDescribe()
-              .getRelationshipName()
-          );
-          hiringEventList.add(hiringEvent);
-        }
-      }
+      System.debug('R1StartTime__c '+heiList[0].R1StartTime__c+'today'+Date.Today().format()+' list::'+heiList);
+      if(heiList != null && !heiList.isEmpty())
+        eventId=heiList[0].HiringEvent__c;
     }
-    return hiringEventList;
+    return eventId;
   }
   @AuraEnabled(cacheable=true)
   public static String setInterviewerStatus(String interviewId, String status) {

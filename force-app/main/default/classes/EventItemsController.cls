@@ -148,12 +148,15 @@ global with sharing class EventItemsController {
         insert newCandidate;
 
         Round__c R1Round = new Round__c(
+          Name='Round1',
           HiringEvent__c=eventId,
           Candidate__c = newCandidate.Id);
         Round__c R2Round = new Round__c(
+          Name = 'Round2',
           HiringEvent__c=eventId,
           Candidate__c = newCandidate.Id);
         Round__c R3Round = new Round__c(
+          Name='Round3',
           HiringEvent__c=eventId,
           Candidate__c = newCandidate.Id);
 
