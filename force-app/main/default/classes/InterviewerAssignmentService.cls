@@ -7,16 +7,7 @@ global with sharing class InterviewerAssignmentService {
             throw new AuraHandledException(e.getMessage());
         }
     }
-    @AuraEnabled(cacheable=true)
-    public static List<Interviewer__c> getInterviewerList(){
-      try {
-        System.debug('Prit: Getting interviewer list');
-        return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c,Panel__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL];
-        
-      } catch (Exception e) {
-        throw new AuraHandledException(e.getMessage());
-      }
-    }
+    
     @AuraEnabled
     public static void assignInterviewerToPanel(String userEmail, Id panelId){
         try {
@@ -24,7 +15,7 @@ global with sharing class InterviewerAssignmentService {
             Interviewer__c interviewer = new Interviewer__c(User__c=user[0].Id, Panel__c=panelId);
             insert interviewer;
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            throw new AuraHandledException('Assignment of Interviewer failed! User not found in the org database.');
         }
     }
 }

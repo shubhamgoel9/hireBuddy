@@ -4,9 +4,10 @@ import getPanelList from '@salesforce/apex/InterviewerAssignmentService.getPanel
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
 const columns = [
     { label: 'Name', fieldName: 'InterviewerName__c', type:'text' },
-    { label: 'EmailId', fieldName: 'InterviewerEmail__c', type:'text' }
+    { label: 'Email', fieldName: 'InterviewerEmail__c', type:'email' }
 ];
 export default class InterviewerAssignment extends LightningElement {
+    columns=columns;
     @track userEmail;
     @track panelId;
     @track panelList;
@@ -92,22 +93,28 @@ export default class InterviewerAssignment extends LightningElement {
 
         for(const key in this.interviewerList)
         {
-            console.log('Prit: Interviewer email:: '+this.interviewerList[key].InterviewerEmail__c+' userEmail::'+this.userEmail);
             if(this.interviewerList[key].InterviewerEmail__c === this.userEmail)
             {
-                console.log('Prit: allValid: '+allValid);
                 allValid = false;
                 this.errorMessage = 'Interviewer already exists!';
                 break;
             }
         }
-        console.log('Prit: AllValid: '+allValid);
         if (allValid) 
         {
             assignInterviewerToPanel({userEmail:this.userEmail, panelId:this.panelId})
+            .then(result => {
+                this.errorMessage = "Assignment Successful!";
+            })
+            .catch(error => {
+                console.log('error: '+JSON.stringify(error));
+                this.errorMessage = error.body.message;
+            });
             this.userEmail=null;
             this.panelId=null;
-            window.location.reload();
+            this.isDataEmpty=true;
+            console.log('Prit: '+JSON.stringify(this.errorMessage));
+            this.openModal();
 
         }
         else
@@ -128,5 +135,6 @@ export default class InterviewerAssignment extends LightningElement {
     closeModal() {
         // to close modal set isModalOpen tarck value as false
         this.isModalOpen = false;
+        window.location.reload();
     }
 }
