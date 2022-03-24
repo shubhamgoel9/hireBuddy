@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>R3Interviewer__c</fullName>
     <externalId>false</externalId>
-    <formula>R3Round__r.Interviewer__r.Name</formula>
+    <formula>R3Round__r.Interviewer__r.InterviewerName__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>R3 Interviewer</label>
     <required>false</required>

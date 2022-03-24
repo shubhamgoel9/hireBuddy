@@ -60,12 +60,9 @@ global with sharing class HireBuddyController {
 
   @AuraEnabled(cacheable=true)
   public static String getCurrentUserName() {
-    List<User> userList = [
-      SELECT FirstName, LastName
-      FROM User
-      WHERE Id = :UserInfo.getUserId()
-    ];
-    return userList[0].FirstName + ' ' + userList[0].LastName;
+    Id userId = UserInfo.getUserId();
+    List<Interviewer__c> interviewer =  [SELECT Id, InterviewerName__c FROM Interviewer__c WHERE User__c = :userId LIMIT 1];
+    return interviewer[0].InterviewerName__c;
   }
 
   @AuraEnabled(cacheable=true)
@@ -73,38 +70,49 @@ global with sharing class HireBuddyController {
     Id userId = UserInfo.getUserId();
     Id eventId;
     List<Interviewer__c> interviwerList = [
-      SELECT Id,Name
+      SELECT Id,InterviewerEmail__c
       FROM Interviewer__c
-      WHERE User__c = :userId
+      WHERE User__c = :userId LIMIT 1
     ];
     if (interviwerList != null && interviwerList.size() > 0) {
-      String interviewer = interviwerList[0].Name;
+      String interviewer = interviwerList[0].InterviewerEmail__c;
       List<HiringEventItem__c> heiList = [
         SELECT
           Id,HiringEvent__c,R1StartTime__c
         FROM HiringEventItem__c
         WHERE
-          (R1Interviewer__c = :interviewer
+          (R1InterviewerEmail__c = :interviewer
             AND (R1StartTime__c = TODAY OR R1StartTime__c = TOMORROW))
-          OR (R2Interviewer__c = :interviewer
+          OR (R2InterviewerEmail__c = :interviewer
             AND (R2StartTime__c = TODAY OR R2StartTime__c = TOMORROW))
-          OR (R3Interviewer__c = :interviewer
+          OR (R3InterviewerEmail__c = :interviewer
             AND (R3StartTime__c = TODAY OR R3StartTime__c = TOMORROW))
       ];
-      System.debug('R1StartTime__c '+heiList[0].R1StartTime__c+'today'+Date.Today().format()+' list::'+heiList);
       if(heiList != null && !heiList.isEmpty())
+      {
         eventId=heiList[0].HiringEvent__c;
+      }
     }
     return eventId;
   }
+  
   @AuraEnabled(cacheable=true)
-  public static String setInterviewerStatus(String interviewId, String status) {
-    Interviewer__c interviewer = new Interviewer__c(
-      Id = interviewId,
-      InterviewerStatus__c = status
-    );
-    insert interviewer;
-    return 'success';
+  public static String getInterviewerStatus(){
+    try {
+      Id userId = UserInfo.getUserId();
+      List<Interviewer__c> interviewer = [SELECT Id, InterviewerStatus__c FROM Interviewer__c WHERE User__c = :userId LIMIT 1 ];
+      System.debug('Prit: interviewerStatus: '+ interviewer[0]);
+      return interviewer[0].InterviewerStatus__c;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+  @AuraEnabled
+  public static void setInterviewerStatus(String status) {
+    Id userId = UserInfo.getUserId();
+    List<Interviewer__c> interviewer = [SELECT Id, InterviewerStatus__c FROM Interviewer__c WHERE User__c = :userId LIMIT 1];
+    interviewer[0].InterviewerStatus__c = status;
+    update interviewer;
   }
 
   @AuraEnabled(cacheable=true)

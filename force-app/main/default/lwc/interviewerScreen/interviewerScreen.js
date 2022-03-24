@@ -3,29 +3,29 @@ import { NavigationMixin } from 'lightning/navigation';
 import getMyUpcomingRound from '@salesforce/apex/HireBuddyController.getMyUpcomingRound';
 import getMyTodayEvent from '@salesforce/apex/HireBuddyController.getMyTodayEvent';
 import getCurrentUserName from '@salesforce/apex/HireBuddyController.getCurrentUserName';
-
+import setInterviewerStatus from '@salesforce/apex/HireBuddyController.setInterviewerStatus';
+import getInterviewerStatus from '@salesforce/apex/HireBuddyController.getInterviewerStatus';
 export default class InterviewerScreen extends NavigationMixin(LightningElement) {
 
     @wire(getMyUpcomingRound) roundList;
     @wire(getMyTodayEvent) myTodayEvent;
     @wire(getCurrentUserName) currentUser;
+    @wire(getInterviewerStatus) currentStatus;
    
     options = [
-        { label: '     Unavailable', value: 'option1' },
-        { label: '     Available', value: 'option2' },
-        { label: '     Interviewing', value: 'option3' },
+        { label: '     Unavailable', value: 'Unavailable' },
+        { label: '     Available', value: 'Available' },
+        { label: '     Interviewing', value: 'Interviewing' },
     ];
-
-    // Select option1 by default
-    value = 'option1';
 
     /*get capitalizedGreeting() {
         return `Welcome ${this.greeting.toUpperCase()}!`;
     }*/
 
-    handleChange(event) {
-        const selectedOption = event.detail.value;
-        console.log('Option selected with value: ' + selectedOption);
+    handleStatusChange(event) {
+        var selectedStatus = event.target.value;
+        console.log('Option selected with value: ' + selectedStatus);
+        setInterviewerStatus({status:selectedStatus});
     }
 
     handleEventBoardNavigate(event){

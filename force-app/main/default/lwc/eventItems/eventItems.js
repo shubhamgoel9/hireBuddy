@@ -228,8 +228,8 @@ export default class EventItems extends NavigationMixin(LightningElement)
             for(const key in this.interviewerList)
             {
                 picklistoptions.push({
-                    label:this.interviewerList[key].Name+'('+this.interviewerList[key].InterviewerStatus__c+')',
-                    value:this.interviewerList[key].Email__c
+                    label:this.interviewerList[key].InterviewerName__c+' ('+this.interviewerList[key].InterviewerStatus__c+')',
+                    value:this.interviewerList[key].InterviewerEmail__c
                 });
             }
         }

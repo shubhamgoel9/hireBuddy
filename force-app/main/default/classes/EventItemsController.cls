@@ -207,7 +207,7 @@ global with sharing class EventItemsController {
     public static List<Interviewer__c> getInterviewerList(Id panelId){
       try {
         System.debug('Prit: Getting interviewer list');
-        return [SELECT Id, Name, Email__c,InterviewerStatus__c FROM Interviewer__c WHERE Email__c != NULL AND Panel__r.Id =:panelId];
+        return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL AND Panel__r.Id =:panelId];
         
       } catch (Exception e) {
         throw new AuraHandledException(e.getMessage());
@@ -216,7 +216,7 @@ global with sharing class EventItemsController {
 
     /* --------------HELPER METHODS----------------*/
     private static void updateRound(Id roundId,
-      String Interviewer,
+      String InterviewerEmail,
       String ProxyInterviewer,
       String Observer,
       DateTime InterviewTime,
@@ -230,27 +230,27 @@ global with sharing class EventItemsController {
         if(!round.isEmpty()) round[0].StartTime__c = InterviewTime;
       }
 
-      System.debug('Prit: Interviewer:: '+Interviewer);
-      if(Interviewer != null || ProxyInterviewer != null) 
+      System.debug('Prit: Interviewer:: '+InterviewerEmail);
+      if(InterviewerEmail != null || ProxyInterviewer != null) 
       {
         String toEmail;
-        if(!round.isEmpty() && Interviewer != null && !Interviewer.equalsIgnoreCase('Proxy'))
+        if(!round.isEmpty() && InterviewerEmail != null && !InterviewerEmail.equalsIgnoreCase('Proxy'))
         {
-          if(Interviewer.equalsIgnoreCase('None'))
+          if(InterviewerEmail.equalsIgnoreCase('None'))
           {
             round[0].Interviewer__c = null;
           }
           else
           {
-            List<Interviewer__c> inter = [Select Id from Interviewer__c where Email__c = :Interviewer LIMIT 1];
+            List<Interviewer__c> inter = [Select Id from Interviewer__c where InterviewerEmail__c = :InterviewerEmail LIMIT 1];
             if(inter != null){
               round[0].Interviewer__c = inter[0].Id;
               round[0].ProxyInterviewer__c = null;
-              toEmail = Interviewer;
+              toEmail = InterviewerEmail;
             }
           }
         }
-        else if(!round.isEmpty() && ProxyInterviewer != null && Interviewer.equalsIgnoreCase('Proxy'))
+        else if(!round.isEmpty() && ProxyInterviewer != null && InterviewerEmail.equalsIgnoreCase('Proxy'))
         {
           round[0].ProxyInterviewer__c = ProxyInterviewer;
           round[0].Interviewer__c = null;
