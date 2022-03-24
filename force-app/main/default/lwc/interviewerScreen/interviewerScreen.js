@@ -60,7 +60,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         ;
     }
 
-    handleRoundNavigation(event){
+    /*handleRoundNavigation(event){
         event.preventDefault();
         var funActID = event.currentTarget.dataset.id;
         
@@ -73,7 +73,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
             }
         });
         
-    }
+    }*/
     
    
 }

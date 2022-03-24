@@ -1,0 +1,67 @@
+<template>
+    <div class="slds-card">
+      <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h1 class="slds-card__header-title">
+                Assign Interviwer to panel
+            </h1>
+          </div>
+        </header>
+      </div>
+      <br>
+      <div class="slds-card__body">
+            <table style="width: 50%;"><tbody>
+                <tr class="slds-hint-parent">
+                    <td colspan="3" style="width:45%;">
+                        <lightning-input data-id='userEmail' onchange={handleChange} label ="Enter Interviewer Email" value={userEmail} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email" maxlength="50"></lightning-input>
+                    </td>
+                    <td colspan="3" style="width:10%;">
+                    </td>
+                    <td colspan="3" style="width:45%;">
+                        <lightning-combobox data-id="panel" type="text" onchange={handleChange} label="Assign Panel" options={panelOptions} value={panelName}></lightning-combobox>
+                    </td>
+                </tr>
+                    
+            </tbody></table>
+            <br>
+                <lightning-button class="slds-var-m-around_medium button" 
+                label="Assign"
+                disabled={isDataEmpty}
+                onclick={assignInterviewer}></lightning-button>
+            <br>
+
+            <div if:true={isInterviewerList} style="height: 500px;">
+                <lightning-datatable
+                        key-field="id"
+                        data={interviewerList}
+                        columns={columns}
+                        show-row-number-column="true">
+                </lightning-datatable>
+            </div>
+            <div if:true={isModalOpen}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header" style="background-color:lightcoral;">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                                <lightning-icon icon-name="utility:close"
+                                    alternative-text="close"
+                                    variant="inverse"
+                                    size="small" ></lightning-icon>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <h1 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate" >Error</h1>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2" style="text-align: center;">
+                            <h2>{errorMessage}</h2>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_neutral" onclick={closeModal} title="OK">OK</button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </div>
+    </div>
+</template>

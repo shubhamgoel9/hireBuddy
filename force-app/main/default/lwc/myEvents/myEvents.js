@@ -1,6 +1,7 @@
 import { LightningElement, wire } from 'lwc';
 import getFutureEvents from '@salesforce/apex/EventsController.getFutureEvents';
 import getPastEvents from '@salesforce/apex/EventsController.getPastEvents';
+import getCurrentUserName from '@salesforce/apex/HireBuddyController.getCurrentUserName';
 
 import { NavigationMixin } from 'lightning/navigation';
 
@@ -8,10 +9,12 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 
     @wire(getFutureEvents) eventList;
     @wire(getPastEvents) pastEventList;
+    @wire(getCurrentUserName) currentUser;
 
     currentEvent;
 
     get futureEvents(){
+        console.log("username : " + JSON.stringify(this.getCurrentUserName));
         console.log("events : " + JSON.stringify(this.eventList.data));
         console.log("pastEvents : " + JSON.stringify(this.pastEventList.data));
         return this.eventList.data;
@@ -52,11 +55,28 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 		});
     }
 
+    handleViewAll() {
+        this[NavigationMixin.Navigate]({
+
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Hiring_Event__c',
+                actionName: 'list'
+            },
+            state: {
+                // 'filterName' is a property on the page 'state'
+                // and identifies the target list view.
+                // It may also be an 18 character list view id.
+                filterName: 'All' // or by 18 char '00BT0000002TONQMA4'
+            }
+		});
+    }
+
     navigateToNewHiringEvent(){
         this[NavigationMixin.Navigate]({
             type: 'standard__objectPage',
             attributes: {
-                objectApiName: "hirebuddy__Hiring_Event__c",
+                objectApiName: "Hiring_Event__c",
                 actionName: 'new'
             },
             // state: {
