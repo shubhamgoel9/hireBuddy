@@ -1,6 +1,10 @@
 <template>
-    <lightning-card icon-name="custom:custom14">
-      <h1 slot="title">Welcome, {currentUser.data}</h1>
+  <div class="slds-card">
+      <div class="slds-media__body">
+        <h3 class="slds-card__header-title">
+          
+        </h3>
+      </div>
                    <br>
 
                    <div class="slds-card">
@@ -33,14 +37,14 @@
                                 onchange={handleStatusChange}
                                 type="button"></lightning-radio-group>
                         </td>
-                      
+                       <td></td>
                        
                           
                           <template if:true={myTodayEvent.data}>
                             <td>
                               <lightning-button
                                   variant="brand"
-                                  name="new-with-defaults"
+                                  name="navigateEventBoard"
                                   label="Navigate To Event Board"
                                   class="slds-var-m-around_small button"
                                   onclick={handleEventBoardNavigate}>
@@ -105,6 +109,50 @@
                     </tbody>
                   </table> 
                  </div> 
-                                                        
-    </lightning-card>
+                <br/><br/>
+                 <div class="slds-card">
+                  <div class="slds-text-align_right"></div>
+                  <div class="slds-card__header slds-grid"> 
+                      <div class="slds-text-body_small">
+                        <div class="demo-only" style="padding:0.5rem;background:#9b9ba3">
+                          <div class="slds-text-color_inverse">
+                              <b><u>Instructions for the  Interviewers</u></b><br/><br/> 
+                              MTS<br/>
+                              Round 1: Problem Solving, DS, OOPs fundamentals, Coding ( 60 mins). <br/>
+                              Round 2: Tech Dive Deep on current design, Problem Solving, DS, Coding, Code Quality (60 mins). <br/>
+                              <br/>
+                              HM Round : Current Project, Alignment to Salesforce Core values, Overall fitment ( 30 mins)<br/>
+                              <br/>
+                              SMTS<br/>
+                              Round 1: Problem Solving, DS/Algo, Coding, Code Quality<br/>
+                              Round 2: LLD + Coding (90 Mins)<br/>
+                              HM Round: Current project, Alignment to Core Values<br/>
+                              <br/>
+                              LMTS<br/>
+                              Round 1: Problem Solving, DS/Algo, Coding, Code Quality<br/>
+                              Round 2: LLD+Coding (90 mins)<br/>
+                              Round 3: System Design<br/>
+                              HM Round: Current Project, Alignment to core values<br/>
+                              <br/>
+                              4 (Advance) - Strong Hire<br/>
+                              3 (Proficient)-  Hire<br/>
+                              2 (Developing) - No Hire<br/>
+                              1 (Does not demonstrate) - Strong No Hire<br/>
+                              <br/>
+                              DO<br/>
+                              Introduce yourself to the candidate<br/>
+                              Write down the questions you have asked in the Comments section (ex: column J) and any specfic items to cover in next round<br/>
+                              Give detailed feedback in SIFT form<br/>
+                              After completion of interview please inform recruiter in slack and change color code to green in the handshake document<br/>
+                              <br/>
+                              DO NOT<br/>
+                              Don't give ratings with fractions<br/>
+                              Don't write your feedback for the questions you have asked in column G<br/>
+                          </div>
+                        </div>  
+                    </div>
+                  </div>
+                </div>
+
+        </div>                   
 </template>

@@ -1,5 +1,16 @@
-<template>
-     
+<template> 
+
+  <div class="slds-card">
+    <div class="slds-card__header slds-grid">
+      <div class="slds-no-flex">
+        <lightning-button variant="brand"
+        class="slds-var-m-around_medium button" 
+        label="Set Status to Currently Interviewing"
+        onclick={setStatus}
+        ></lightning-button>
+      </div>
+    </div>
+   </div>
     <div class="slds-card">
       <div class="slds-card__header slds-grid">
         <header class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -18,9 +29,7 @@
               </a>
             </h2>
           </div>
-          <!-- <div class="slds-no-flex">
-            <button class="slds-button slds-button_neutral">New</button>
-          </div> -->
+          
         </header>
       </div>
       </div>
@@ -34,7 +43,7 @@
             <template if:true={accounts}>
               <template for:each={accounts} for:item="acc"> 
                 <tr key={acc.id}>
-                  <td><strong>Candidate Name</strong></td>
+                  <td style="background-color: gainsboro;" ><strong>Candidate Name</strong></td>
                   
                    <td>
                     {acc.Candidate__r.Name}
@@ -45,7 +54,7 @@
                    <td > <div class="slds-truncate" title="Resume"> <a href={acc.ResumeLink__c}> {acc.Candidate__r.ResumeLink__c} </a></div></td> 
                 </tr>
                 <tr key={acc.id}>
-                  <td> <strong>Round Number</strong></td> 
+                  <td style="background-color: gainsboro;"> <strong>Round Number</strong></td> 
                    <td > <div class="slds-truncate" title="Name">   {acc.Name}  </div></td> 
                 </tr>
                 <tr key={acc.id}>
@@ -53,7 +62,7 @@
                    <td > <div class="slds-truncate" title="SiftLink"> <a href={acc.SiftLink__c}> {acc.SiftLink__c} </a></div></td> 
                 </tr>
                 <tr key={acc.id}>
-                  <td> <strong>Role evaluation</strong> </td>
+                  <td style="background-color: gainsboro;"> <strong>Role evaluation</strong> </td>
                   <td> 
                     {acc.Candidate__r.Role__c}
                   </td>
@@ -64,23 +73,27 @@
                     <div class="slds-truncate" title="InterviewLink"> <a href={acc.InterviewLink__c}>{acc.Candidate__r.InterviewLink__c}</a></div>
                  </td>
                 </tr>
-                <tr key={acc.id}> <td><strong>Code pair link</strong></td>
-                  <td>
+                <tr key={acc.id} > <td style="background-color: gainsboro;"><strong>Code pair link</strong></td>
+                  <td >
                     <div class="slds-truncate" title="CodepairLink"> <a href={acc.CodepairLink__c}>{acc.Candidate__r.CodepairLink__c}</a></div>
-                    </td></tr>
+                    </td>
+                  </tr>
+                  <tr key={acc.id}>
+                    <td><strong> Provide Feedback </strong></td>
+                     <td><lightning-input  name="feedback"  value="" onchange={genericOnChange}> label="" ></lightning-input > </td> 
+                  </tr>
+                    <tr key={acc.id}>
+                       <td style="background-color: gainsboro;"></td>
+                       <td><lightning-button variant="brand" label='Complete Interview'  title='Complete Interview' onclick={handleCompleted} class="slds-var-m-left_x-small"></lightning-button>
+                       </td>
+                    </tr> 
                  
               </template>
             </template>
             
           </tbody>
-        </table>
+        </table> 
+
         
-        <br/><br/>
-        <div class="row">
-          <strong><h2 class="header">Provide Feedback</h2></strong>
-        <lightning-input  name="feedback"  value="" onchange={genericOnChange}> label="" ></lightning-input > </div>
-      </div>
-      <lightning-button variant="brand" label='Complete Interview'  title='Complete Interview' onclick={handleCompleted}    class="slds-var-m-left_x-small"></lightning-button>
-           
-     
+    </div>
 </template>

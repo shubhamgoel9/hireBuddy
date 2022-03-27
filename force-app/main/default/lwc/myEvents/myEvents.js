@@ -28,32 +28,36 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
     handleEventScreen(event) {
         event.preventDefault();
         var funEventID = event.currentTarget.dataset.id;
-
         this.currentEvent = event.target.value;
         console.log("currentEvent : " + JSON.stringify(funEventID));
         this.dispatchEvent(new CustomEvent('currenteventscreen', {detail : {eventId: funEventID}  }));
 
         this[NavigationMixin.Navigate]({
 
-            // type: 'standard__recordPage',
-            // attributes: {
-            //     recordId: funEventID,
-            //     objectApiName: 'Account',
-            //     actionName: 'view'
-            // }
-
 			type: 'standard__navItemPage',
 			attributes: {
-                apiName: 'Event_Screen'
-				// recordId: event.target.squad.Id,
-				// objectApiName: 'Squad__c',
-				// actionName: 'view',
+                apiName: 'Event_Screen',
+                actionName: 'new',
 			},
             state: {
                 c__recordId: funEventID,
             }
 		});
     }
+
+    navigateToInterviewerAssignment(event) {
+        event.preventDefault();
+
+        this[NavigationMixin.Navigate]({
+
+			type: 'standard__navItemPage',
+			attributes: {
+                apiName: 'Interviewer_Assignment',
+                actionName: 'new',
+            }
+		});
+    }
+
 
     handleViewAll() {
         this[NavigationMixin.Navigate]({

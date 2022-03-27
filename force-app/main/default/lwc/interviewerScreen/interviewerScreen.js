@@ -41,15 +41,31 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         });
     }
 
-    handleRoundNavigate(event){
+    handleRoundNavigate(event) {
+       /* var roundId = event.currentTarget.dataset.id;
+        const navConfig = {
+            type: "standard__component",
+            attributes: {
+              componentName: "c__interviewDetails"
+            },
+            state: {
+               c__recordId:  roundId
+            }
+          };
+      
+
+        //4. Invoke Naviate method
+    this[NavigationMixin.Navigate](navConfig); */
         // Generate a URL to a User record page
         var funActID = event.currentTarget.dataset.id;
+         
 
-        this[NavigationMixin.Navigate]({
+       this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
                 //recordId: funActID,
                 apiName: 'Assigned_Rounds',
+                actionName: 'new',
                 //actionName: 'view',
             },
             state: {
@@ -57,7 +73,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         }).then((url) => {
             this.recordPageUrl = url;
         })
-        ;
+        ; 
     }
 
     /*handleRoundNavigation(event){

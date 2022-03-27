@@ -2,6 +2,7 @@ import { LightningElement, track } from 'lwc';
 import assignInterviewerToPanel from '@salesforce/apex/InterviewerAssignmentService.assignInterviewerToPanel';
 import getPanelList from '@salesforce/apex/InterviewerAssignmentService.getPanelList';
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
+import deleteInterviewerList from '@salesforce/apex/EventItemsController.deleteInterviewerList';
 const columns = [
     { label: 'Name', fieldName: 'InterviewerName__c', type:'text' },
     { label: 'Email', fieldName: 'InterviewerEmail__c', type:'email' }
@@ -10,6 +11,7 @@ export default class InterviewerAssignment extends LightningElement {
     columns=columns;
     @track userEmail;
     @track panelId;
+    @track panelName;
     @track panelList;
     @track interviewerList;
     @track isModalOpen =false;
@@ -24,7 +26,7 @@ export default class InterviewerAssignment extends LightningElement {
             this.panelList = result;
 		})
 		.catch(error => {
-            console.log('Prit: panel list error: '+error);
+            console.log('Prit: panel list error: '+JSON.stringify(error));
 			this.error = error;
 			this.panelList = undefined;
 		})
@@ -55,6 +57,13 @@ export default class InterviewerAssignment extends LightningElement {
         if(event.target.dataset.id === 'panel')
         {
             this.panelId = value;
+            for(const key in this.panelList)
+            {
+                if(this.panelList[key].Id === this.panelId)
+                {
+                    this.panelName = this.panelList[key].Name;
+                }
+            }
             this.getInterviewerListFromPanel();
         }
         else if(event.target.dataset.id === 'userEmail')
@@ -104,7 +113,7 @@ export default class InterviewerAssignment extends LightningElement {
         {
             assignInterviewerToPanel({userEmail:this.userEmail, panelId:this.panelId})
             .then(result => {
-                this.errorMessage = "Assignment Successful!";
+                this.errorMessage = "Assignment Successful! Kindly refresh page to reload data.";
             })
             .catch(error => {
                 console.log('error: '+JSON.stringify(error));
@@ -135,6 +144,37 @@ export default class InterviewerAssignment extends LightningElement {
     closeModal() {
         // to close modal set isModalOpen tarck value as false
         this.isModalOpen = false;
-        window.location.reload();
+        //window.location.reload();
+        this.connectedCallback();
     }
+
+    @track isDeleteDisabled=true;
+    @track selectedInterviewerItem=null;
+    //Method to make delete Button enable/disabled based on the row select/unselect
+    disableDeleteButton(event)
+    {
+        console.log('Prit: eventDetails:: '+JSON.stringify(event.detail));
+        this.selectedItems=event.detail.selectedRows;
+        console.log('Prit: selectedItems:: '+this.selectedItems);
+        if(this.selectedItems.length==0)
+        {
+            this.isDeleteDisabled=true;
+        }
+        else{
+            this.isDeleteDisabled=false;
+        }
+    }
+
+    //Action to perform on clicking delete button
+    deleteInterviewer()
+    {
+        console.log('Prit: Delete interviewer details:: '+JSON.stringify(this.selectedItems));
+        deleteInterviewerList(
+            {interviewerList:this.selectedItems}
+        )
+        this.errorMessage ="Deletion Successful. Kindly refresh page to reload data.";
+        this.openModal();
+        this.isDeleteDisabled = true;
+    }
+    
 }

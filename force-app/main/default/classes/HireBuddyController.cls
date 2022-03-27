@@ -167,4 +167,25 @@ global with sharing class HireBuddyController {
     }
     return false;
   }
+
+
+  @AuraEnabled
+  public static Boolean setStatusToInterviewing(Id roundId ) {
+    List<Round__c> updatedRound = new List<Round__c>();
+
+    List<Round__c> roundObj = [
+      SELECT Id, Name,  RoundStatus__c
+      FROM Round__c
+      WHERE Id = :roundId
+      LIMIT 1
+    ];
+ 
+    roundObj[0].RoundStatus__c = 'In Progress';
+    updatedRound.add(roundObj[0]);
+    if (!updatedRound.isEmpty()) {
+      update updatedRound;
+      return true;
+    }
+    return false;
+  }
 }

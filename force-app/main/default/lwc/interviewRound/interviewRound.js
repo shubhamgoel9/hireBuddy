@@ -1,14 +1,31 @@
-import { LightningElement, wire, track } from "lwc";   
+import { LightningElement, wire, track , api } from "lwc";   
 import getCandiateByRoundId from '@salesforce/apex/HireBuddyController.getCandiateByRoundId'; 
 import setFeedback from '@salesforce/apex/HireBuddyController.setFeedback';
-
+import setStatusToInterviewing from '@salesforce/apex/HireBuddyController.setStatusToInterviewing';
 export default class InterviewRound extends LightningElement {
     @track searchKey; 
     //@wire(getCandiateByRoundId, { roundId: 'a018c00000SpSEMAA3' }) accounts;
-    @track roundId;
+   // @track roundId;
     @track accounts;
     @track feedback;
     @track theRecord = {};
+    @track roundId;
+
+
+
+    setStatus(event) {
+
+        console.log( ' roundId ' + this.roundId);
+        setStatusToInterviewing({roundId:this.roundId})
+        .then(result => {
+            if(result){
+                console.log(result);
+            }
+        })
+        .catch(error => {
+            console.log('Error: ', error);
+        }) 
+    }
 
     genericOnChange(event){
         this.theRecord[event.target.name] = event.target.value;
@@ -27,8 +44,7 @@ export default class InterviewRound extends LightningElement {
         })
         .catch(error => {
             console.log('Error: ', error);
-        })
-        
+        }) 
     }
 
 

@@ -6,39 +6,8 @@ import setNewCandidateDetails from '@salesforce/apex/EventItemsController.setNew
 import deleteCandidateDetails from '@salesforce/apex/EventItemsController.deleteCandidateDetails';
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
 import getPanelId from '@salesforce/apex/EventItemsController.getPanelId';
-import getProfile from '@salesforce/apex/EventItemsController.getProfile';
+import getEventName from '@salesforce/apex/EventItemsController.getEventName';
 const columns = [
-    { label: 'Candidate Name', fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
-    typeAttributes:{
-        label: {
-            fieldName: 'CandidateName__c'
-        }
-    }},
-    { label: 'Role Evaluation', fieldName: 'RoleEvaluation__c', initialWidth: 100},
-    { label: 'Candidate Status', fieldName: 'CandidateStatus__c', initialWidth: 100},
-    { label: 'Codepair Link', fieldName: 'CodepairLink__c', type:'url', initialWidth: 80},
-    { label: 'Interview Link', fieldName: 'InterviewLink__c', type:'url',initialWidth: 80},
-    { label: 'R1 Start Time ', fieldName: 'R1StartTime__c',initialWidth: 100},
-    { label: 'R1 Interviewer ', fieldName: 'R1Interviewer__c',initialWidth: 100},
-    { label: 'R1 Proxy Interviewer ', fieldName: 'R1ProxyInterviewer__c',type:'email', initialWidth: 100},
-    { label: 'R1 Observer ', fieldName: 'R1Observer__c',initialWidth: 100, type:'email'},
-    { label: 'R1 Round Status', fieldName: 'R1RoundStatus__c',initialWidth: 100},
-    { label: 'R1 SIFT Link', fieldName: 'R1SiftLink__c',type:'url', initialWidth: 100},
-    { label: 'R1 Feedback ', fieldName: 'R1Feedback__c',initialWidth: 100},
-    { label: 'R2 Start Time ', fieldName: 'R2StartTime__c',initialWidth: 100},
-    { label: 'R2 Interviewer ', fieldName: 'R2Interviewer__c',initialWidth: 100},
-    { label: 'R2 Proxy Interviewer ', fieldName: 'R2ProxyInterviewer__c',type:'email',initialWidth: 100},
-    { label: 'R2 Observer ', fieldName: 'R2Observer__c',type:'email', initialWidth: 100},
-    { label: 'R2 Round Status', fieldName: 'R2RoundStatus__c',initialWidth: 100},
-    { label: 'R2 SIFT Link', fieldName: 'R2SiftLink__c',type:'url', initialWidth: 100},
-    { label: 'R2 Feedback ', fieldName: 'R2Feedback__c',initialWidth: 100},
-    { label: 'R3 Start Time ', fieldName: 'R3StartTime__c',initialWidth: 100},
-    { label: 'R3 Interviewer ', fieldName: 'R3Interviewer__c',initialWidth: 100},
-    { label: 'R3 Proxy Interviewer ', fieldName: 'R3ProxyInterviewer__c',type:'email', initialWidth: 100},
-    { label: 'R3 Observer ', fieldName: 'R3Observer__c',type:'email', initialWidth: 100},
-    { label: 'R3 Round Status', fieldName: 'R3RoundStatus__c',initialWidth: 100},
-    { label: 'R3 SIFT Link', fieldName: 'R3SiftLink__c',type:'url', initialWidth: 100},
-    { label: 'R3 Feedback ', fieldName: 'R3Feedback__c',initialWidth: 100},
     {label: 'Action', type: "button", initialWidth: 80, typeAttributes: {
         label: 'Edit',  
         name: 'Edit',  
@@ -46,7 +15,89 @@ const columns = [
         disabled: false,  
         value: 'edit',  
         iconPosition: 'left'  
-    }}  
+    }},
+    { label: 'Candidate Name', fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
+        typeAttributes:{
+            label: {
+            fieldName: 'CandidateName__c'
+            }
+        },
+    },
+    { label: 'Role Evaluation', fieldName: 'RoleEvaluation__c', initialWidth: 100},
+    { label: 'Candidate Status', fieldName: 'CandidateStatus__c', initialWidth: 100},
+    { label: 'Codepair Link', fieldName: 'CodepairLink__c', type:'url', initialWidth: 80},
+    { label: 'Interview Link', fieldName: 'InterviewLink__c', type:'url',initialWidth: 80},
+    { label: 'R1 Start Time ', fieldName: 'R1StartTime__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r1RoundColor'} 
+    }},
+    { label: 'R1 Interviewer ', fieldName: 'R1Interviewer__c',initialWidth: 100 ,
+        cellAttributes: {
+        class: {fieldName:'r1RoundColor'} 
+    }
+    },
+    { label: 'R1 Proxy Interviewer ', fieldName: 'R1ProxyInterviewer__c',type:'email', initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r1RoundColor'} 
+    }},
+    { label: 'R1 Observer ', fieldName: 'R1Observer__c',initialWidth: 100, type:'email', cellAttributes: {
+        class: {fieldName:'r1RoundColor'} 
+    }},
+    { label: 'R1 Round Status', fieldName: 'R1RoundStatus__c',initialWidth: 100,
+        cellAttributes: {
+            class: {fieldName:'r1RoundColor'} 
+        }
+    },
+    { label: 'R1 SIFT Link', fieldName: 'R1SiftLink__c',type:'url', initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r1RoundColor'} 
+    }},
+    { label: 'R1 Feedback ', fieldName: 'R1Feedback__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r1RoundColor'} 
+    }},
+    { label: 'R2 Start Time ', fieldName: 'R2StartTime__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r2RoundColor'} 
+    }},
+    { label: 'R2 Interviewer ', fieldName: 'R2Interviewer__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r2RoundColor'} 
+    }},
+    { label: 'R2 Proxy Interviewer ', fieldName: 'R2ProxyInterviewer__c',type:'email',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r2RoundColor'} 
+    }},
+    { label: 'R2 Observer ', fieldName: 'R2Observer__c',type:'email', initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r2RoundColor'} 
+    }},
+    { label: 'R2 Round Status', fieldName: 'R2RoundStatus__c',initialWidth: 100,
+        cellAttributes: {
+            class: {fieldName:'r2RoundColor'}
+        }
+    },
+    { label: 'R2 SIFT Link', fieldName: 'R2SiftLink__c',type:'url', initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r2RoundColor'} 
+    }},
+    { label: 'R2 Feedback ', fieldName: 'R2Feedback__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r2RoundColor'} 
+    }},
+    { label: 'R3 Start Time ', fieldName: 'R3StartTime__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r3RoundColor'} 
+    }},
+    { label: 'R3 Interviewer ', fieldName: 'R3Interviewer__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r3RoundColor'} 
+    }},
+    { label: 'R3 Proxy Interviewer ', fieldName: 'R3ProxyInterviewer__c',type:'email', initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r3RoundColor'} 
+    }},
+    { label: 'R3 Observer ', fieldName: 'R3Observer__c',type:'email', initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r3RoundColor'} 
+    }},
+    { label: 'R3 Round Status', fieldName: 'R3RoundStatus__c',initialWidth: 100,
+        cellAttributes: {
+            class: {fieldName:'r3RoundColor'}
+        }
+    },
+    { label: 'R3 SIFT Link', fieldName: 'R3SiftLink__c',type:'url', initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r3RoundColor'} 
+    }},
+    { label: 'R3 Feedback ', fieldName: 'R3Feedback__c',initialWidth: 100, cellAttributes: {
+        class: {fieldName:'r3RoundColor'} 
+    }}
 
 ];
 export default class EventItems extends NavigationMixin(LightningElement)
@@ -58,18 +109,8 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track eventItemRecord;
     @track eventId;
     @track eventName;
-    @track eventItems=[];
+    @track eventItems;
     @track panelId;
-    
-    @wire(getProfile) profileName;
-    get isInterviewer()
-    {
-        console.log('Prit: profileName:: '+this.profileName.data);
-        if(this.profileName.data === 'Interviewer')
-            return true;
-        else
-            return false;
-    }
 
     //Get All Event Items to display in dashboard
     parameters = {};
@@ -79,13 +120,58 @@ export default class EventItems extends NavigationMixin(LightningElement)
         console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
         this.eventId = this.parameters.c__recordId;
 
+        getEventName({eventId:this.eventId})
+        .then(result => {
+			this.eventName = result;
+            console.log('Prit: eventName:: '+ this.eventName);
+        })
+        .catch(error => {
+			this.error = error;
+			this.eventName = undefined;
+		})
+
         getAllEventItems({eventId:this.eventId})
 		.then(result => {
 			this.eventItems = result;
             console.log('Prit: eventItems : '+JSON.stringify(this.eventItems));
-            this.eventName = this.eventItems[0].CandidateId__r.HiringEventId__r.Name;
-            console.log('Prit: eventName:: '+ this.eventName);
 			this.error = undefined;
+            this.eventItems = result.map(item=>{
+                console.log('Prit item::--- '+JSON.stringify(item));
+                console.log('Prit: condition check '+ (item.R1RoundStatus__c === 'In Progress') );
+                console.log('Prit: r1round status: '+item.R1RoundStatus__c);
+                let r1RoundColor //= item.R1RoundStatus__c === 'In Progress' ? "slds-text-color_error":"slds-text-color_success";
+                let r2RoundColor //= item.R2RoundStatus__c == 'In Progress' ? "slds-text-color_error":"slds-text-color_success";
+                let r3RoundColor //= item.R3RoundStatus__c == 'In Progress' ? "data-table-aqua":"data-table-green";
+                
+                if(item.R1RoundStatus__c == 'Completed'){
+                    r1RoundColor =  "slds-text-color_success slds-text-title_bold";
+                } 
+                else if(item.R1RoundStatus__c == 'In Progress')
+                {
+                    r1RoundColor = "slds-text-color_error slds-text-title_bold";//"data-table-aqua";
+                }
+                if(item.R2RoundStatus__c == 'Completed'){
+                    r2RoundColor = "slds-text-color_success slds-text-title_bold";
+                } 
+                else if(item.R2RoundStatus__c == 'In Progress')
+                {
+                    r2RoundColor = "slds-text-color_error slds-text-title_bold";
+                }
+                if(item.R3RoundStatus__c == 'Completed'){
+                    r3RoundColor = "slds-text-color_success slds-text-title_bold";
+                } 
+                else if(item.R3RoundStatus__c == 'In Progress')
+                {
+                    r3RoundColor = "slds-text-color_error slds-text-title_bold";
+                }
+
+                return {...item, 
+                    "r1RoundColor":r1RoundColor,
+                    "r2RoundColor":r2RoundColor,
+                    "r3RoundColor":r3RoundColor
+                }
+            })
+            console.log('Prit: eventItems after css:: '+JSON.stringify(this.eventItems));
 		})
 		.catch(error => {
 			this.error = error;
@@ -509,20 +595,20 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
     }
 
-    @track isDeleteCandidateHidden=true;
+    @track isDeleteCandidateDisabled=true;
     @track selectedEventItems=null;
-    //Method to make delete Button Hide/Unhide based on the row select/unselect
-    showDeleteButton(event)
+    //Method to make delete Button enable/disabled based on the row select/unselect
+    disableDeleteButton(event)
     {
         console.log('Prit: show delete button:: '+JSON.stringify(event));
         this.selectedEventItems=event.detail.selectedRows;
         console.log('Prit: this.selectedEventItems:: '+this.selectedEventItems);
-        if(this.selectedEventItems.length==0 || this.profileName.data === 'Interviewer')
+        if(this.selectedEventItems.length==0)//|| this.profileName.data === 'Interviewer')
         {
-            this.isDeleteCandidateHidden=true;
+            this.isDeleteCandidateDisabled=true;
         }
         else{
-            this.isDeleteCandidateHidden=false;
+            this.isDeleteCandidateDisabled=false;
         }
     }
 
@@ -534,7 +620,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
             {selectedEventItems:this.selectedEventItems}
         )
         window.location.reload();
-        this.isDeleteCandidateHidden = true;
+        this.isDeleteCandidateDisabled = true;
     }
     
     

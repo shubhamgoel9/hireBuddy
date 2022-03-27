@@ -155,8 +155,9 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Interviewer</label>
     <nameField>
-        <label>Interviewer Name</label>
-        <type>Text</type>
+        <displayFormat>I-{0000}</displayFormat>
+        <label>Record</label>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Interviewers</pluralLabel>
     <searchLayouts></searchLayouts>

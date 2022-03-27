@@ -11,19 +11,20 @@
             <span class="slds-assistive-text">Hiring Event</span>
           </span>
         </div>
-        <div class="slds-media__body">
-          <h2 class="slds-card__header-title">
-            <div class="slds-align_absolute-center">
-              <span class="slds-align_absolute-center" style="height:5rem; font-size: 150%">Welcome {currentUser.data} !</span>
-              <!-- <h1 slot="title">Welcome, {currentUser.data}</h1> -->
-            </div>
-          </h2>
-        </div>
+         
         <div class="slds-no-flex">
-          <lightning-button 
+          <lightning-button variant="brand"
           class="slds-var-m-around_medium button" 
           label="Create New Event"
           onclick={navigateToNewHiringEvent}
+          ></lightning-button>
+        </div>
+        
+        <div class="slds-no-flex">
+          <lightning-button variant="brand"
+          class="slds-var-m-around_medium button" 
+          label="Assign Interviewer To Panel"
+          onclick={navigateToInterviewerAssignment}
           ></lightning-button>
         </div>
       </header>
@@ -79,7 +80,7 @@
           <tr class="slds-hint-parent" key={event.index}>
             <th scope="row">
               <div class="slds-truncate" title="Amy Choi">
-                <a onclick={handleEventScreen} data-id={event.Id} tabindex="-1">{event.Name}</a>
+                <a href={preparedUrl} onclick={handleEventScreen} data-id={event.Id} tabindex="-1">{event.Name}</a>
               </div>
             </th>
             <td role="gridcell">

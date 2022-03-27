@@ -3,15 +3,15 @@ global with sharing class EventItemsController {
   private static String plainNamespace = null;
   private static String namespacePrefix = null;
 
-  /*Get profile name of current user*/
-  @AuraEnabled(cacheable = true)
-  public static String getProfile(){
-      Id profileId = UserInfo.getProfileId();
-      String profileName =[Select Id, Name from Profile where Id=:profileId].Name;
-      system.debug('Profile Name'+profileName);
-      return profileName;
+  /*Get EventName*/
+  @AuraEnabled
+  public static string getEventName(Id eventId){
+    try {
+      return [SELECT Id,Name FROM Hiring_Event__c WHERE Id = :eventId].Name;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
   }
-
   /*Get all Event Items of a particular event*/
   @AuraEnabled(cacheable=true)
   public static List<HiringEventItem__c> getAllEventItem(String eventId) {
@@ -203,12 +203,22 @@ global with sharing class EventItemsController {
         throw new AuraHandledException(e.getMessage());
       }
     }
+
     @AuraEnabled(cacheable=true)
     public static List<Interviewer__c> getInterviewerList(Id panelId){
       try {
         System.debug('Prit: Getting interviewer list');
         return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL AND Panel__r.Id =:panelId];
         
+      } catch (Exception e) {
+        throw new AuraHandledException(e.getMessage());
+      }
+    }
+
+    @AuraEnabled
+    public static void deleteInterviewerList(List<Interviewer__c> interviewerList){
+      try {
+        delete interviewerList;
       } catch (Exception e) {
         throw new AuraHandledException(e.getMessage());
       }
