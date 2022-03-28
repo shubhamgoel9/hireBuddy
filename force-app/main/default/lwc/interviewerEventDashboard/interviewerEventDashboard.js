@@ -15,75 +15,75 @@ const columns = [
     { label: 'Codepair Link', fieldName: 'CodepairLink__c', type:'url', initialWidth: 80},
     { label: 'Interview Link', fieldName: 'InterviewLink__c', type:'url',initialWidth: 80},
     { label: 'R1 Start Time ', fieldName: 'R1StartTime__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r1RoundColor'} 
+        style: {fieldName:'r1RoundColor'},
     }},
     { label: 'R1 Interviewer ', fieldName: 'R1Interviewer__c',initialWidth: 100 ,
         cellAttributes: {
-        class: {fieldName:'r1RoundColor'} 
+        style:  {fieldName:'r1RoundColor'} 
     }
     },
     { label: 'R1 Proxy Interviewer ', fieldName: 'R1ProxyInterviewer__c',type:'email', initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r1RoundColor'} 
+        style:  {fieldName:'r1RoundColor'} 
     }},
     { label: 'R1 Observer ', fieldName: 'R1Observer__c',initialWidth: 100, type:'email', cellAttributes: {
-        class: {fieldName:'r1RoundColor'} 
+        style:  {fieldName:'r1RoundColor'} 
     }},
     { label: 'R1 Round Status', fieldName: 'R1RoundStatus__c',initialWidth: 100,
         cellAttributes: {
-            class: {fieldName:'r1RoundColor'} 
+            style:  {fieldName:'r1RoundColor'} 
         }
     },
     { label: 'R1 SIFT Link', fieldName: 'R1SiftLink__c',type:'url', initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r1RoundColor'} 
+        style:  {fieldName:'r1RoundColor'} 
     }},
     { label: 'R1 Feedback ', fieldName: 'R1Feedback__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r1RoundColor'} 
+        style:  {fieldName:'r1RoundColor'} 
     }},
     { label: 'R2 Start Time ', fieldName: 'R2StartTime__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r2RoundColor'} 
+        style:  {fieldName:'r2RoundColor'} 
     }},
     { label: 'R2 Interviewer ', fieldName: 'R2Interviewer__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r2RoundColor'} 
+        style:  {fieldName:'r2RoundColor'} 
     }},
     { label: 'R2 Proxy Interviewer ', fieldName: 'R2ProxyInterviewer__c',type:'email',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r2RoundColor'} 
+        style:  {fieldName:'r2RoundColor'} 
     }},
     { label: 'R2 Observer ', fieldName: 'R2Observer__c',type:'email', initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r2RoundColor'} 
+        style:  {fieldName:'r2RoundColor'} 
     }},
     { label: 'R2 Round Status', fieldName: 'R2RoundStatus__c',initialWidth: 100,
         cellAttributes: {
-            class: {fieldName:'r2RoundColor'}
+            style:  {fieldName:'r2RoundColor'}
         }
     },
     { label: 'R2 SIFT Link', fieldName: 'R2SiftLink__c',type:'url', initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r2RoundColor'} 
+        style:  {fieldName:'r2RoundColor'} 
     }},
     { label: 'R2 Feedback ', fieldName: 'R2Feedback__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r2RoundColor'} 
+        style:  {fieldName:'r2RoundColor'} 
     }},
     { label: 'R3 Start Time ', fieldName: 'R3StartTime__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r3RoundColor'} 
+        style:  {fieldName:'r3RoundColor'} 
     }},
     { label: 'R3 Interviewer ', fieldName: 'R3Interviewer__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r3RoundColor'} 
+        style:  {fieldName:'r3RoundColor'} 
     }},
     { label: 'R3 Proxy Interviewer ', fieldName: 'R3ProxyInterviewer__c',type:'email', initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r3RoundColor'} 
+        style:  {fieldName:'r3RoundColor'} 
     }},
     { label: 'R3 Observer ', fieldName: 'R3Observer__c',type:'email', initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r3RoundColor'} 
+        style:  {fieldName:'r3RoundColor'} 
     }},
     { label: 'R3 Round Status', fieldName: 'R3RoundStatus__c',initialWidth: 100,
         cellAttributes: {
-            class: {fieldName:'r3RoundColor'}
+            style:  {fieldName:'r3RoundColor'}
         }
     },
     { label: 'R3 SIFT Link', fieldName: 'R3SiftLink__c',type:'url', initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r3RoundColor'} 
+        style:  {fieldName:'r3RoundColor'} 
     }},
     { label: 'R3 Feedback ', fieldName: 'R3Feedback__c',initialWidth: 100, cellAttributes: {
-        class: {fieldName:'r3RoundColor'} 
+        style:  {fieldName:'r3RoundColor'} 
     }}
 
 ];
@@ -128,25 +128,25 @@ export default class InterviewerEventDashboard extends NavigationMixin(Lightning
                 let r3RoundColor //= item.R3RoundStatus__c == 'In Progress' ? "data-table-aqua":"data-table-green";
                 
                 if(item.R1RoundStatus__c == 'Completed'){
-                    r1RoundColor =  "slds-text-color_success slds-text-title_bold";
+                    r1RoundColor =  "background-color: green;";
                 } 
                 else if(item.R1RoundStatus__c == 'In Progress')
                 {
-                    r1RoundColor = "slds-text-color_error slds-text-title_bold";//"data-table-aqua";
+                    r1RoundColor = "background-color: aqua;";
                 }
                 if(item.R2RoundStatus__c == 'Completed'){
-                    r2RoundColor = "slds-text-color_success slds-text-title_bold";
+                    r2RoundColor =  "background-color: green";
                 } 
                 else if(item.R2RoundStatus__c == 'In Progress')
                 {
-                    r2RoundColor = "slds-text-color_error slds-text-title_bold";
+                    r2RoundColor = "background-color: aqua;";
                 }
                 if(item.R3RoundStatus__c == 'Completed'){
-                    r3RoundColor = "slds-text-color_success slds-text-title_bold";
+                    r3RoundColor =  "background-color: green;";
                 } 
                 else if(item.R3RoundStatus__c == 'In Progress')
                 {
-                    r3RoundColor = "slds-text-color_error slds-text-title_bold";
+                    r3RoundColor = "background-color: aqua;";
                 }
 
                 return {...item, 

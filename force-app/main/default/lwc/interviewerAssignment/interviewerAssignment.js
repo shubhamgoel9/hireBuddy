@@ -144,7 +144,7 @@ export default class InterviewerAssignment extends LightningElement {
     closeModal() {
         // to close modal set isModalOpen tarck value as false
         this.isModalOpen = false;
-        //window.location.reload();
+        window.location.reload();
         this.connectedCallback();
     }
 
@@ -172,7 +172,7 @@ export default class InterviewerAssignment extends LightningElement {
         deleteInterviewerList(
             {interviewerList:this.selectedItems}
         )
-        this.errorMessage ="Deletion Successful. Kindly refresh page to reload data.";
+        this.errorMessage ="Deletion Successful!";
         this.openModal();
         this.isDeleteDisabled = true;
     }

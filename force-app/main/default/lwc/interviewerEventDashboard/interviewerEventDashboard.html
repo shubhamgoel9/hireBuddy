@@ -4,22 +4,23 @@
         <header class="slds-media slds-media_center slds-has-flexi-truncate">
           <div class="slds-media__body">
             <h1 class="slds-card__header-title">
-                Welcome to Event: {eventName}
+               {eventName}
             </h1>
           </div>
         </header>
       </div>
       <br>
       <table style="width: fit-content;"><tbody>
-        <tr style="color: red; width:auto" >
-          <td style="background-color: red;">RED</td>
-          <td>In Progress</td>
+        <tr style="width:auto" >
+          <td style="background-color: aqua;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+          <td>&nbsp;In Progress</td>
         </tr>
-        <tr style="color: green; width:auto">
-          <td style="background-color: green;">GREEN</td>
-          <td>Completed</td>
+        <tr style="width:auto">
+          <td style="background-color: green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+          <td>&nbsp;Completed</td>
         </tr>
       </tbody></table>
+      <br>
       <div class="slds-card__body">
         <div if:true={eventItems} style="height: 500px;">
           <lightning-datatable

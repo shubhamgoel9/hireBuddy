@@ -91,15 +91,16 @@
           <div class="slds-backdrop slds-backdrop_open"></div>
         </div>
         <table style="width: fit-content;"><tbody>
-          <tr style="color: red; width:auto" >
-            <td style="background-color: red;">RED</td>
-            <td>In Progress</td>
+          <tr style="width:auto" >
+            <td style="background-color: aqua;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>&nbsp;In Progress</td>
           </tr>
-          <tr style="color: green; width:auto">
-            <td style="background-color: green;">GREEN</td>
-            <td>Completed</td>
+          <tr style="width:auto">
+            <td style="background-color: green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>&nbsp;Completed</td>
           </tr>
         </tbody></table>
+        <br>
         <div style="height: 500px;" if:true={eventItems}>
           <lightning-datatable
                   key-field="id"
@@ -132,54 +133,6 @@
           </template>
           </tbody>
         </table>
-
-
-        <br/><br/><br/> <br/><br/><br/>
-        <div class="slds-card">
-          <div class="slds-text-align_right"></div>
-          <div class="slds-card__header slds-grid"> 
-              <div class="slds-text-body_small">
-                <div class="demo-only" style="padding:0.5rem;background:#9b9ba3">
-                  <div class="slds-text-color_inverse">
-                      <b><u>Instructions for the  Interviewers</u></b><br/><br/> 
-                      MTS<br/>
-                      Round 1: Problem Solving, DS, OOPs fundamentals, Coding ( 60 mins). <br/>
-                      Round 2: Tech Dive Deep on current design, Problem Solving, DS, Coding, Code Quality (60 mins). <br/>
-                      <br/>
-                      HM Round : Current Project, Alignment to Salesforce Core values, Overall fitment ( 30 mins)<br/>
-                      <br/>
-                      SMTS<br/>
-                      Round 1: Problem Solving, DS/Algo, Coding, Code Quality<br/>
-                      Round 2: LLD + Coding (90 Mins)<br/>
-                      HM Round: Current project, Alignment to Core Values<br/>
-                      <br/>
-                      LMTS<br/>
-                      Round 1: Problem Solving, DS/Algo, Coding, Code Quality<br/>
-                      Round 2: LLD+Coding (90 mins)<br/>
-                      Round 3: System Design<br/>
-                      HM Round: Current Project, Alignment to core values<br/>
-                      <br/>
-                      4 (Advance) - Strong Hire<br/>
-                      3 (Proficient)-  Hire<br/>
-                      2 (Developing) - No Hire<br/>
-                      1 (Does not demonstrate) - Strong No Hire<br/>
-                      <br/>
-                      DO<br/>
-                      Introduce yourself to the candidate<br/>
-                      Write down the questions you have asked in the Comments section (ex: column J) and any specfic items to cover in next round<br/>
-                      Give detailed feedback in SIFT form<br/>
-                      After completion of interview please inform recruiter in slack and change color code to green in the handshake document<br/>
-                      <br/>
-                      DO NOT<br/>
-                      Don't give ratings with fractions<br/>
-                      Don't write your feedback for the questions you have asked in column G<br/>
-                  </div>
-                </div>  
-            </div>
-          </div>
-        </div>
-
-        
         <div if:true={isModalOpen}>
           <!-- Modal/Popup Box LWC starts here -->
           <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
