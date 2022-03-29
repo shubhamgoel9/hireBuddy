@@ -10,10 +10,10 @@ public with sharing class EmailService {
         String[] cc = new string[] {ccMail};
         
         email.setToAddresses(to);
-        if(ccMail!=null && ccMail != '')
+        /*if(ccMail!=null && ccMail != '')
             email.setCcAddresses(cc);
         if(repmail!=null && repmail!= '')
-            email.setInReplyTo(repMail);
+            email.setInReplyTo(repMail);*/
         
         email.setSubject(subject);
         

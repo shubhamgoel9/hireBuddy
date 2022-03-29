@@ -71,7 +71,10 @@ global with sharing class HireBuddyController {
       WHERE User__c = :userId
       LIMIT 1
     ];
-    return interviewer[0].InterviewerName__c;
+    if(interviewer.size() > 0){
+        return interviewer[0].InterviewerName__c;
+    }
+    return null;
   }
 
   @AuraEnabled(cacheable=true)
