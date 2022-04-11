@@ -72,6 +72,8 @@ public class EventItemsControllerTest {
         try{
             Id selectedEventItemId = [SELECT Id FROM HiringEventItem__c][0].Id;
             String candidateStatus = 'Loop Cut';
+            String codepairLink = 'http://www.salesforceindia.com';
+            String interviewLink = 'http://www.salesforcegoogle.com';
             String R1InterviewerEmail = [SELECT Id,Email FROM User WHERE Id = :UserInfo.getUserId()][0].Email ;
             String R1ProxyInterviewer = null;
             String R1Observer = [SELECT Id,Email FROM User WHERE Id = :UserInfo.getUserId()][0].Email;
@@ -95,6 +97,8 @@ public class EventItemsControllerTest {
             
             EventItemsController.setEventItem(selectedEventItemId,
             candidateStatus,
+            interviewLink,
+            codepairLink,
             R1InterviewerEmail,
             R1ProxyInterviewer,
             R1Observer,

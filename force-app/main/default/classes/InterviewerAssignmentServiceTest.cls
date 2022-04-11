@@ -44,5 +44,13 @@ public class InterviewerAssignmentServiceTest {
         }catch(Exception ex){}
     }
 
+    @isTest
+    static void getAllInterviewerListTest()
+    {
+        try{
+            InterviewerAssignmentService.getAllInterviewerList();
+        }catch(Exception ex){}
+    }
+
     
 }

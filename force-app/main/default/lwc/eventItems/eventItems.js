@@ -327,6 +327,8 @@ export default class EventItems extends NavigationMixin(LightningElement)
     }
 
     @track candidateStatus;
+    @track codepairLink;
+    @track interviewLink;
     @track R1InterviewerEmail;
     @track R1ProxyInterviewer;
     @track R1Observer;
@@ -353,6 +355,16 @@ export default class EventItems extends NavigationMixin(LightningElement)
         {
             this.candidateStatus = value;
             console.log('handle change candidateStatus::'+value);
+        }
+        else if(event.target.dataset.id === 'codepairLink')
+        {
+            this.codepairLink = value;
+            console.log('handle change ::'+value);
+        }
+        else if(event.target.dataset.id === 'interviewLink')
+        {
+            this.interviewLink = value;
+            console.log('handle change ::'+value);
         }
         else if(event.target.dataset.id === 'R1Interviewer')
         {
@@ -474,6 +486,8 @@ export default class EventItems extends NavigationMixin(LightningElement)
         //update Event Item Record
         setEventItem({selectedEventItemId:this.selectedEventItemId,
             candidateStatus:this.candidateStatus,
+            interviewLink:this.interviewLink,
+            codepairLink:this.codepairLink,
             R1InterviewerEmail:this.R1InterviewerEmail,
             R1ProxyInterviewer:this.R1ProxyInterviewer,
             R1Observer:this.R1Observer,

@@ -37,7 +37,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 			type: 'standard__navItemPage',
 			attributes: {
                 apiName: 'Event_Screen',
-                actionName: 'new',
+                //actionName: 'new',
 			},
             state: {
                 c__recordId: funEventID,
@@ -53,7 +53,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 			type: 'standard__navItemPage',
 			attributes: {
                 apiName: 'Interviewer_Assignment',
-                actionName: 'new',
+                //actionName: 'new',
             }
 		});
     }

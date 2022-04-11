@@ -32,16 +32,28 @@
                 disabled={isDataEmpty}
                 onclick={assignInterviewer}></lightning-button>
             </div>
+            <lightning-layout horizontal-align={horizontalAlign}>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <lightning-button-icon
+                        icon-name="utility:refresh"
+                        variant="border-filled"
+                        title="Refresh"
+                        alternative-text="Refresh"
+                        onclick={handleClick}
+                        icon-class="slds-m-around-medium">
+                    </lightning-button-icon>
+                </lightning-layout-item>
+            </lightning-layout>
             <br>
             <br>
             
             <div if:true={isInterviewerList}>
                     <h2>
-                        Interviewer List in {panelName}:
+                        Interviewer List:
                     </h2>
                 <lightning-datatable
                         key-field="id"
-                        data={interviewerList}
+                        data={allInterviewerList}
                         columns={columns}
                         onrowselection={disableDeleteButton}
                         show-row-number-column="true">

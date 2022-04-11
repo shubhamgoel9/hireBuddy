@@ -1,4 +1,4 @@
-global with sharing class EventItemsController {
+global class EventItemsController {
 
   private static String plainNamespace = null;
   private static String namespacePrefix = null;
@@ -65,6 +65,8 @@ global with sharing class EventItemsController {
   public static void setEventItem(
     Id selectedEventItemId,
     String candidateStatus,
+    String interviewLink,
+    String codepairLink,
     String R1InterviewerEmail,
     String R1ProxyInterviewer,
     String R1Observer,
@@ -95,10 +97,12 @@ global with sharing class EventItemsController {
         FROM HiringEventItem__c WHERE  Id=:selectedEventItemId LIMIT 1];
       
       List<SObject> updateList = new List<SObject>();
-      List<Candidate__c> candidateList = [Select Id, Status__c from Candidate__c where Id = :items[0].CandidateId__c LIMIT 1];
+      List<Candidate__c> candidateList = [Select Id, Status__c,CodepairLink__c,InterviewLink__c from Candidate__c where Id = :items[0].CandidateId__c LIMIT 1];
       if(candidateStatus != null) 
       {
         candidateList[0].Status__c = candidateStatus;
+        candidateList[0].CodepairLink__c = codepairLink;
+        candidateList[0].InterviewLink__c = interviewLink;
         updateList.add(candidateList[0]);
       }
       if(items[0].R1Round__c != null)

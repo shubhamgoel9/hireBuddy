@@ -160,6 +160,16 @@
                           <lightning-combobox data-id="candidateStatus" type="text" onchange={handleChange} label="Candidate Status" options={candidateStatusOptions} value={eventItemRecord.CandidateStatus__c}></lightning-combobox>
                         </td>
                       </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="codepairLink" type="url" label="Codepair Link" value={eventItemRecord.CodepairLink__c}></lightning-input>
+                        </td>
+                      </tr>
+                      <tr class="slds-hint-parent" key={eventItemRecord.Id}>
+                        <td>
+                          <lightning-input data-id="interviewLink" type="url" label="Interview link" value={eventItemRecord.InterviewLink__c}></lightning-input>
+                        </td>
+                      </tr>
                       <br><div class ="row"><h2 class="header"><b>Round 1 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
