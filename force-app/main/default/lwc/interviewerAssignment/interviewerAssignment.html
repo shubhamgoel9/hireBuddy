@@ -1,20 +1,28 @@
 <template>
     <div class="slds-card">
       <div class="slds-card__header slds-grid">
-        <header>
-            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
-                Assign Interviwer to panel
-            </h2>
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-standard-contact" title="contact">
+                  <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                    <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#contact"></use>
+                  </svg>
+                </span>
+            </div>
+            <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                    <span>Assign Interviewer to Panel</span>
+                </h2>
+              </div> 
         </header>
       </div>
-      <br>
       <div class="slds-card__body">
-            <div><table style="width: 50%;"><tbody>
+            <div><table  class="slds-table  slds-no-row-hover slds-table_fixed-layout" role="grid" style="width: 50%;"><tbody>
                 <tr class="slds-hint-parent">
                     <td>
                     </td>
                     <td colspan="3" style="width:45%;">
-                        <lightning-combobox data-id="panel" type="text" onchange={handleChange} label="Assign Panel" options={panelOptions} value=""></lightning-combobox>
+                        <lightning-combobox data-id="panel" type="text" onchange={handleChange} label="Select Panel" options={panelOptions} value=""></lightning-combobox>
                     </td>
                     <td colspan="3" style="width:10%;">
                     </td>
@@ -22,17 +30,20 @@
                         <lightning-input data-id='userEmail' onchange={handleChange} label ="Enter Interviewer Email" value="" pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email" maxlength="50"></lightning-input>
                     </td>
                 </tr>
+                <tr class="slds-hint-parent">
+                    <td colspan="3" style="left: auto;">
+                        <lightning-button class="slds-var-m-around_medium button" 
+                        label="Assign"
+                        variant="brand"
+                        disabled={isDataEmpty}
+                        onclick={assignInterviewer}></lightning-button>
+                    </td>
+                </tr>
                     
             </tbody></table></div>
             <br>
-            <div>
-                <lightning-button class="slds-var-m-around_medium button" 
-                label="Assign"
-                variant="brand"
-                disabled={isDataEmpty}
-                onclick={assignInterviewer}></lightning-button>
-            </div>
-            <lightning-layout horizontal-align={horizontalAlign}>
+            
+            <!--<lightning-layout horizontal-align={horizontalAlign}>
                 <lightning-layout-item flexibility="auto" padding="around-small">
                     <lightning-button-icon
                         icon-name="utility:refresh"
@@ -40,24 +51,37 @@
                         title="Refresh"
                         alternative-text="Refresh"
                         onclick={handleClick}
+                        align="right"
                         icon-class="slds-m-around-medium">
                     </lightning-button-icon>
                 </lightning-layout-item>
-            </lightning-layout>
+            </lightning-layout>-->
             <br>
-            <br>
-            
             <div if:true={isInterviewerList}>
-                    <h2>
-                        Interviewer List:
-                    </h2>
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-contact" title="contact">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#contact"></use>
+                            </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span>Interviewer List</span>
+                            </h2>
+                        </div> 
+                    </header>
+                </div>
                 <lightning-datatable
                         key-field="id"
-                        data={allInterviewerList}
+                        data={interviewerList}
                         columns={columns}
                         onrowselection={disableDeleteButton}
                         show-row-number-column="true">
                 </lightning-datatable>
+
                 <footer class="slds-modal__footer">
                     <lightning-button 
                       class="slds-var-m-around_medium button" 

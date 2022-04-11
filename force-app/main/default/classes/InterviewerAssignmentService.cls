@@ -1,5 +1,5 @@
 global with sharing class InterviewerAssignmentService {
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Panel__c> getPanelList(){
         try {
             return [SELECT Id, Name FROM Panel__c];
@@ -20,7 +20,7 @@ global with sharing class InterviewerAssignmentService {
         }
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Interviewer__c> getAllInterviewerList(){
         try {
             return [SELECT Id, InterviewerName__c, InterviewerEmail__c, PanelName__c,Panel__c FROM Interviewer__c];

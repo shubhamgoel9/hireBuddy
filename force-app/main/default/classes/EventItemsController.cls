@@ -13,7 +13,7 @@ global class EventItemsController {
     }
   }
   /*Get all Event Items of a particular event*/
-  @AuraEnabled(cacheable=true)
+  @AuraEnabled
   public static List<HiringEventItem__c> getAllEventItem(String eventId) {
   System.debug('Prit: event id::'+eventId);
       List<HiringEventItem__c> eventItemList = [
@@ -97,12 +97,21 @@ global class EventItemsController {
         FROM HiringEventItem__c WHERE  Id=:selectedEventItemId LIMIT 1];
       
       List<SObject> updateList = new List<SObject>();
-      List<Candidate__c> candidateList = [Select Id, Status__c,CodepairLink__c,InterviewLink__c from Candidate__c where Id = :items[0].CandidateId__c LIMIT 1];
-      if(candidateStatus != null) 
+      List<Candidate__c> candidateList = [SELECT Id, Status__c,CodepairLink__c,InterviewLink__c FROM Candidate__c WHERE Id = :items[0].CandidateId__c LIMIT 1];
+      if(candidateList!=null && !candidateList.isEmpty())  
       {
-        candidateList[0].Status__c = candidateStatus;
-        candidateList[0].CodepairLink__c = codepairLink;
-        candidateList[0].InterviewLink__c = interviewLink;
+        if(String.IsNotBlank(candidateStatus)) 
+        {
+          candidateList[0].Status__c = candidateStatus;
+        }
+        if(String.IsNotBlank(codepairLink))
+        {
+          candidateList[0].CodepairLink__c = codepairLink;
+        }
+        if(String.IsNotBlank(interviewLink))
+        {
+          candidateList[0].InterviewLink__c = interviewLink;
+        }
         updateList.add(candidateList[0]);
       }
       if(items[0].R1Round__c != null)
@@ -208,11 +217,11 @@ global class EventItemsController {
       }
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Interviewer__c> getInterviewerList(Id panelId){
       try {
         System.debug('Prit: Getting interviewer list');
-        return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL AND Panel__r.Id =:panelId];
+        return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c, PanelName__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL AND Panel__r.Id =:panelId];
         
       } catch (Exception e) {
         throw new AuraHandledException(e.getMessage());

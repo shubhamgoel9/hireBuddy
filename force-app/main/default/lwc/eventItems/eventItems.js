@@ -1,5 +1,6 @@
 import { LightningElement, wire, api, track } from "lwc";
 import { NavigationMixin } from 'lightning/navigation' ;
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventItem';
 import setEventItem from '@salesforce/apex/EventItemsController.setEventItem';
 import setNewCandidateDetails from '@salesforce/apex/EventItemsController.setNewCandidateDetails';
@@ -17,7 +18,7 @@ const columns = [
         iconPosition: 'left',
         brand:'variant'  
     }},
-    { label: 'Candidate Name', fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
+    { label: 'Candidate Name', sortable: true, fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
         typeAttributes:{
             label: {
             fieldName: 'CandidateName__c'
@@ -115,22 +116,9 @@ export default class EventItems extends NavigationMixin(LightningElement)
 
     //Get All Event Items to display in dashboard
     parameters = {};
-    connectedCallback() {
-        this.parameters = this.getQueryParameters();
-        console.log('prit parameter : ' + JSON.stringify(this.parameters));
-        console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
-        this.eventId = this.parameters.c__recordId;
 
-        getEventName({eventId:this.eventId})
-        .then(result => {
-			this.eventName = result;
-            console.log('Prit: eventName:: '+ this.eventName);
-        })
-        .catch(error => {
-			this.error = error;
-			this.eventName = undefined;
-		})
-
+    initializeComponent()
+    {
         getAllEventItems({eventId:this.eventId})
 		.then(result => {
 			this.eventItems = result;
@@ -191,6 +179,25 @@ export default class EventItems extends NavigationMixin(LightningElement)
 			this.error = error;
 			this.panelId = undefined;
 		})
+
+    }
+
+    connectedCallback() {
+        this.parameters = this.getQueryParameters();
+        console.log('prit parameter : ' + JSON.stringify(this.parameters));
+        console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
+        this.eventId = this.parameters.c__recordId;
+
+        getEventName({eventId:this.eventId})
+        .then(result => {
+			this.eventName = result;
+            console.log('Prit: eventName:: '+ this.eventName);
+        })
+        .catch(error => {
+			this.error = error;
+			this.eventName = undefined;
+		})
+        this.initializeComponent();
         
     }
     
@@ -359,12 +366,12 @@ export default class EventItems extends NavigationMixin(LightningElement)
         else if(event.target.dataset.id === 'codepairLink')
         {
             this.codepairLink = value;
-            console.log('handle change ::'+value);
+            console.log('handle change codepairLink::'+value);
         }
         else if(event.target.dataset.id === 'interviewLink')
         {
             this.interviewLink = value;
-            console.log('handle change ::'+value);
+            console.log('handle change interviewLink::'+value);
         }
         else if(event.target.dataset.id === 'R1Interviewer')
         {
@@ -507,9 +514,28 @@ export default class EventItems extends NavigationMixin(LightningElement)
             R3Sift:this.R3Sift,
             R3Feedback:this.R3Feedback
         })
-        
-        window.location.reload();
-        this.isModalOpen = false;
+        .then(() => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Candidate Record Modfied Successfully!',
+                    variant: 'success'
+                })
+            );
+            this.isModalOpen = false;
+            this.initializeComponent();
+        })
+        .catch(error => {
+            console.log('error in assignment: '+JSON.stringify(error));
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Modify Error',
+                    message: JSON.stringify(error),
+                    variant: 'error'
+                })
+            );
+        });
+        //window.location.reload();
     }
 
     //Add New Candidate Button onlick event to open candidateModal
@@ -603,11 +629,38 @@ export default class EventItems extends NavigationMixin(LightningElement)
                     newCandidateCodePairLink:this.newCandidateCodePairLink
                 }
             )
-            window.location.reload();
-            this.isCandidateModalOpen = false;
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Candidate record created Successfully!',
+                        variant: 'success'
+                    })
+                );
+                this.isCandidateModalOpen = false;
+                this.initializeComponent();
+    
+            })
+            .catch(error => {
+                console.log('error in creating record: '+JSON.stringify(error));
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error creating Candidate record.',
+                        message: JSON.stringify(error),
+                        variant: 'error'
+                    })
+                );
+            });
+            //window.location.reload();
         }
         else {
-            alert('Please fill the required form entries and try again.');
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Required fields missing',
+                    message: JSON.stringify(error),
+                    variant: 'error'
+                })
+            );
         }
     }
 
@@ -632,11 +685,29 @@ export default class EventItems extends NavigationMixin(LightningElement)
     deleteCandidate()
     {
         console.log('Prit: Delete candidate details:: '+JSON.stringify(this.selectedEventItems));
-        deleteCandidateDetails(
-            {selectedEventItems:this.selectedEventItems}
-        )
-        window.location.reload();
-        this.isDeleteCandidateDisabled = true;
+        deleteCandidateDetails({selectedEventItems:this.selectedEventItems})
+        .then( () => 
+        {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Candidate record deleted successfully!',
+                    variant: 'success'
+                })
+            );
+            this.isDeleteCandidateDisabled = true;
+            this.initializeComponent();
+        })
+        .catch((error) => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error deleting Candidate record.',
+                    message: error.data,
+                    variant: 'error'
+                })
+            );
+        });
+        //window.location.reload();
     }
     
     

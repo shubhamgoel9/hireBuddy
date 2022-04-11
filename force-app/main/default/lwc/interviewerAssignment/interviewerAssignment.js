@@ -5,8 +5,9 @@ import assignInterviewerToPanel from '@salesforce/apex/InterviewerAssignmentServ
 import getPanelList from '@salesforce/apex/InterviewerAssignmentService.getPanelList';
 import getAllInterviewerList from '@salesforce/apex/InterviewerAssignmentService.getAllInterviewerList';
 import deleteInterviewerList from '@salesforce/apex/EventItemsController.deleteInterviewerList';
+import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
 const columns = [
-    { label: 'Name', fieldName: 'InterviewerName__c', type:'text' },
+    { label: 'Name', fieldName: 'InterviewerName__c', sortable: true, type:'text' },
     { label: 'Email', fieldName: 'InterviewerEmail__c', type:'email' },
     { label: 'Panel', fieldName: 'PanelName__c', type:'text'}
 ];
@@ -29,9 +30,10 @@ export default class InterviewerAssignment extends LightningElement {
         this.initializeComponent();
     }
 
-    @wire(getAllInterviewerList)
+    /*@wire(getAllInterviewerList)
     wiredResult(result){
         this.refreshTable =result;
+        console.log('Prit: allInterviewerList: '+JSON.stringify(result.data));
         if(result.data)
         {
             this.allInterviewerList = result.data;
@@ -44,7 +46,8 @@ export default class InterviewerAssignment extends LightningElement {
             this.error = result.error;
             this.allInterviewerList = undefined;
         }
-    }
+    }*/
+
     handleClick() {
         console.log('Prit: refreshtable:: '+JSON.stringify(this.refreshTable));
         refreshApex(this.refreshTable);
@@ -53,12 +56,13 @@ export default class InterviewerAssignment extends LightningElement {
 
     connectedCallback()
     {
+        console.log('Connected callback..');
        this.initializeComponent();
     }
 
     initializeComponent()
     {
-        /*getAllInterviewerList()
+        getAllInterviewerList()
         .then(result=>{
             console.log('Prit: Inside initialize: interviewerLIst: '+ JSON.stringify(result));
             this.allInterviewerList=result;
@@ -66,7 +70,9 @@ export default class InterviewerAssignment extends LightningElement {
         .catch(error => {
             this.error=error;
             this.allInterviewerList=undefined;
-        })*/
+        })
+
+        this.getInterviewerListFromPanel();
 
         getPanelList()
 		.then(result => {
@@ -78,8 +84,11 @@ export default class InterviewerAssignment extends LightningElement {
 			this.error = error;
 			this.panelList = undefined;
 		})
+
+        this.isDataEmpty = (!(this.userEmail && this.panelId));
     }
 
+    //Method to load panelList dropdown
     get panelOptions()
     {
         let picklistoptions = [];
@@ -110,7 +119,9 @@ export default class InterviewerAssignment extends LightningElement {
             {
                 if(this.panelList[key].Id === this.panelId)
                 {
+                    console.log('Prit: panelId found in panelList');
                     this.panelName = this.panelList[key].Name;
+                    this.getInterviewerListFromPanel();
                 }
             }
         }
@@ -123,9 +134,9 @@ export default class InterviewerAssignment extends LightningElement {
     }
 
     //method to get Interviewerlist from panel
-    /*getInterviewerListFromPanel()
+    getInterviewerListFromPanel()
     {
-        for(const key in this.allInterviewerList)
+        /*for(const key in this.allInterviewerList)
         {
             console.log('Prit: slected panel:: '+this.panelId);
             console.log('Prit: current interviewer panel in loop:: '+this.allInterviewerList[key].Panel__c);
@@ -136,11 +147,12 @@ export default class InterviewerAssignment extends LightningElement {
                 console.log('Prit: after push:: '+ JSON.stringify(this.interviewerList));
             }
         }*/
-        /*getInterviewerList({panelId:this.panelId})
+        console.log('Prit: Entered getInterviewerListFromPanel: ');
+        getInterviewerList({panelId:this.panelId})
 		.then(result => {
             this.interviewerList = result;
             this.isInterviewerList = true;
-            console.log('Prit: interviewer list result: '+JSON.stringify(this.interviewerList));
+            console.log('Prit: interviewer list from selected panel: '+JSON.stringify(this.interviewerList));
 
 		})
 		.catch(error => {
@@ -148,7 +160,7 @@ export default class InterviewerAssignment extends LightningElement {
 			this.error = error;
 			this.interviewerList = undefined;
 		})
-    }*/
+    }
 
     assignInterviewer()
     {
@@ -167,7 +179,7 @@ export default class InterviewerAssignment extends LightningElement {
                 allValid = false;
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Interviewer already exists!',
+                        title: 'Interviewer already exists in '+this.allInterviewerList[key].PanelName__c+'!',
                         variant: 'error'
                     })
                 );
@@ -186,10 +198,7 @@ export default class InterviewerAssignment extends LightningElement {
                     })
                 );
                 console.log('Prit: result: '+JSON.stringify(result));
-                this.allInterviewerList=[...this.allInterviewerList,result];
-                this.refreshTable.data=this.allInterviewerList;
-                console.log('Prit: new interviewerList'+ JSON.stringify(this.allInterviewerList));
-
+                this.initializeComponent();
             })
             .catch(error => {
                 console.log('error in assignment: '+JSON.stringify(error));
@@ -202,7 +211,7 @@ export default class InterviewerAssignment extends LightningElement {
                 );
             });
             this.userEmail=null;
-            this.panelId=null;
+            //this.panelId=null;
             this.isDataEmpty=true;
             //this.openModal();
 
@@ -262,12 +271,11 @@ export default class InterviewerAssignment extends LightningElement {
                         variant: 'success'
                     })
                 );
-                for(const key in this.selectedItems)
+                /*for(const key in this.selectedItems)
                 {
                     this.allInterviewerList = this.allInterviewerList.filter(value => value !== this.selectedItems[key]);
-                }
-                this.refreshTable.data=this.allInterviewerList;
-                this.refresh();
+                }*/
+                this.initializeComponent();
             })
             .catch((error) => {
                 this.dispatchEvent(
@@ -277,7 +285,9 @@ export default class InterviewerAssignment extends LightningElement {
                         variant: 'error'
                     })
                 );
-            });
+            }
+        );
     }
+
     
 }
