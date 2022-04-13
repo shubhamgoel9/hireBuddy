@@ -2,6 +2,7 @@ import { LightningElement, wire, track , api } from "lwc";
 import getCandiateByRoundId from '@salesforce/apex/HireBuddyController.getCandiateByRoundId'; 
 import setFeedback from '@salesforce/apex/HireBuddyController.setFeedback';
 import setStatusToInterviewing from '@salesforce/apex/HireBuddyController.setStatusToInterviewing';
+import getInterviewerStatus from '@salesforce/apex/HireBuddyController.getInterviewerStatus';
 export default class InterviewRound extends LightningElement {
     @track searchKey; 
     //@wire(getCandiateByRoundId, { roundId: 'a018c00000SpSEMAA3' }) accounts;
@@ -10,7 +11,8 @@ export default class InterviewRound extends LightningElement {
     @track feedback;
     @track theRecord = {};
     @track roundId;
-
+    @track disableStatus = false;
+    @wire(getInterviewerStatus) currentStatus;
 
 
     setStatus(event) {
@@ -25,6 +27,8 @@ export default class InterviewRound extends LightningElement {
         .catch(error => {
             console.log('Error: ', error);
         }) 
+
+        disableStatus = true;
     }
 
     genericOnChange(event){
@@ -55,6 +59,19 @@ export default class InterviewRound extends LightningElement {
         console.log('deeksha parameter : ' + JSON.stringify(this.parameters));
         console.log('deeksha c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
         this.roundId = this.parameters.c__recordId;
+        console.log('Deeksha this.currentStatus.data' + this.currentStatus.data);
+        if (this.currentStatus.data == undefined) {
+            getInterviewerStatus().then(result => {
+                this.currentStatus = result;
+                console.log('Deeksha result --- ' + result);
+                if (result == 'Interviewing') {
+                    this.disableStatus = true;
+                }
+            }) 
+        }
+        else if (this.currentStatus.data == 'Interviewing') {
+            this.disableStatus = true;
+        }
 
         getCandiateByRoundId({roundId:this.roundId})
 		.then(result => {

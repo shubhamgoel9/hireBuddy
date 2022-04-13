@@ -82,29 +82,21 @@ global with sharing class HireBuddyController {
     Id userId = UserInfo.getUserId();
     Id eventId;
     List<Interviewer__c> interviwerList = [
-      SELECT Id, InterviewerEmail__c
+      SELECT Id, InterviewerEmail__c, PanelName__c
       FROM Interviewer__c
       WHERE User__c = :userId
       LIMIT 1
     ];
     if (interviwerList != null && interviwerList.size() > 0) {
-      String interviewer = interviwerList[0].InterviewerEmail__c;
-      List<HiringEventItem__c> heiList = [
-        SELECT Id, HiringEvent__c, R1StartTime__c
-        FROM HiringEventItem__c
+      String panel = interviwerList[0].PanelName__c;
+      List<Hiring_Event__c> eventList = [
+        SELECT Id,Date__c 
+        FROM Hiring_Event__c
         WHERE
-          (R1InterviewerEmail__c = :interviewer
-          AND (R1StartTime__c = TODAY
-          OR R1StartTime__c = TOMORROW))
-          OR (R2InterviewerEmail__c = :interviewer
-          AND (R2StartTime__c = TODAY
-          OR R2StartTime__c = TOMORROW))
-          OR (R3InterviewerEmail__c = :interviewer
-          AND (R3StartTime__c = TODAY
-          OR R3StartTime__c = TOMORROW))
+          PanelName__c =: panel ORDER BY Date__c LIMIT 1
       ];
-      if (heiList != null && !heiList.isEmpty()) {
-        eventId = heiList[0].HiringEvent__c;
+      if (eventList != null && !eventList.isEmpty()) {
+        eventId = eventList[0].Id;
       }
     }
     return eventId;
@@ -175,14 +167,13 @@ global with sharing class HireBuddyController {
   @AuraEnabled
   public static Boolean setStatusToInterviewing(Id roundId ) {
     List<Round__c> updatedRound = new List<Round__c>();
-
+    setInterviewerStatus('Interviewing');
     List<Round__c> roundObj = [
       SELECT Id, Name,  RoundStatus__c
       FROM Round__c
       WHERE Id = :roundId
       LIMIT 1
     ];
- 
     roundObj[0].RoundStatus__c = 'In Progress';
     updatedRound.add(roundObj[0]);
     if (!updatedRound.isEmpty()) {

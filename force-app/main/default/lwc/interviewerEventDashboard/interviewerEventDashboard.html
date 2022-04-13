@@ -1,27 +1,43 @@
 <template>
-    <div class="slds-card">
-      <div class="slds-card__header slds-grid">
-        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-          <div class="slds-media__body">
-            <h1 class="slds-card__header-title">
-               {eventName}
-            </h1>
-          </div>
-        </header>
-      </div>
-      <br>
-      <table style="width: fit-content;"><tbody>
+  <div class="slds-card">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-contact" title="contact">
+              <svg class="slds-icon slds-icon_small" aria-hidden="true">
+              </svg>
+            </span>
+        </div>
+        <div class="slds-media__body">
+            <h2 class="slds-card__header-title">
+                <span>{eventName}</span>
+            </h2>
+        </div>
+        <div class="slds-no-flex">
+            <lightning-button 
+              class="slds-var-m-around_medium button" 
+              variant="brand"
+              label="Add New Candidate"
+              hidden={isInterviewer}
+              onclick={openCandidateModal}
+            ></lightning-button>
+        </div>
+        <br> 
+      </header>
+    </div>
+    
+    <div class="slds-card__body">
+      
+      <table class="slds-table  slds-no-row-hover slds-table_fixed-layout" role="grid" style="width: fit-content;"><tbody>
         <tr style="width:auto" >
-          <td style="background-color: aqua;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+          <td style="background-color: aqua;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
           <td>&nbsp;In Progress</td>
         </tr>
         <tr style="width:auto">
-          <td style="background-color: green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+          <td style="background-color: green;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
           <td>&nbsp;Completed</td>
         </tr>
       </tbody></table>
-      <br>
-      <div class="slds-card__body">
         <div if:true={eventItems} style="height: 500px;">
           <lightning-datatable
                   key-field="id"

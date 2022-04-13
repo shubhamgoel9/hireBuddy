@@ -55,7 +55,7 @@ global class EventItemsController {
           R3Feedback__c,
           R3SiftLink__c,
           R3Observer__c
-          FROM HiringEventItem__c WHERE  CandidateId__r.HiringEventId__c=:eventId];
+          FROM HiringEventItem__c WHERE  CandidateId__r.HiringEventId__c=:eventId ORDER BY Id];
           System.debug('itemList:: '+eventItemList);
       return eventItemList;
   }
