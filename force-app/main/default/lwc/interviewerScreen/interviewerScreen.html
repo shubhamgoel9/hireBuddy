@@ -33,7 +33,7 @@
                         <td>
                                 <lightning-radio-group name="Status" 
                                 options={options}
-                                value={currentStatus.data}
+                                value={currentStatus}
                                 onchange={handleStatusChange}
                                 type="button"></lightning-radio-group>
                         </td>
@@ -96,7 +96,7 @@
                         <td role="gridcell">
                           <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>  {round.Name} </a></div>
                         </td>
-                        <td>{round.StartTime__c}</td>
+                        <td><lightning-formatted-date-time value={round.StartTime__c} year="2-digit" month="short" day="2-digit" hour="numeric" minute="2-digit"></lightning-formatted-date-time></td>
                       </tr>
                     </template>
                     <template if:false={roundList.data}>

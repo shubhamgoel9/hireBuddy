@@ -3,7 +3,7 @@ import { NavigationMixin } from 'lightning/navigation' ;
 import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventItem';
 import getEventName from '@salesforce/apex/EventItemsController.getEventName';
 const columns = [
-    { label: 'Candidate Name', fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
+    { label: 'Candidate Name', sortable: true, fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
         typeAttributes:{
             label: {
             fieldName: 'CandidateName__c'
@@ -14,9 +14,14 @@ const columns = [
     { label: 'Candidate Status', fieldName: 'CandidateStatus__c', initialWidth: 100},
     { label: 'Codepair Link', fieldName: 'CodepairLink__c', type:'url', initialWidth: 80},
     { label: 'Interview Link', fieldName: 'InterviewLink__c', type:'url',initialWidth: 80},
-    { label: 'R1 Start Time ', fieldName: 'R1StartTime__c',initialWidth: 100, cellAttributes: {
-        style: {fieldName:'r1RoundColor'},
-    }},
+    { label: 'R1 Start Time ', fieldName: 'R1StartTime__c',initialWidth: 130, type:'date', 
+        typeAttributes: {
+            year:'2-digit', month:"short", day:"2-digit", hour:"numeric", minute:"2-digit", timezone:"IST"
+        },
+        cellAttributes: {
+            style: {fieldName:'r1RoundColor'},
+        }
+    },
     { label: 'R1 Interviewer ', fieldName: 'R1Interviewer__c',initialWidth: 100 ,
         cellAttributes: {
         style:  {fieldName:'r1RoundColor'} 
@@ -39,9 +44,14 @@ const columns = [
     { label: 'R1 Feedback ', fieldName: 'R1Feedback__c',initialWidth: 100, cellAttributes: {
         style:  {fieldName:'r1RoundColor'} 
     }},
-    { label: 'R2 Start Time ', fieldName: 'R2StartTime__c',initialWidth: 100, cellAttributes: {
-        style:  {fieldName:'r2RoundColor'} 
-    }},
+    { label: 'R2 Start Time ', fieldName: 'R2StartTime__c',initialWidth: 130, type:'date', 
+        typeAttributes: {
+            year:'2-digit', month:"short", day:"2-digit", hour:"numeric", minute:"2-digit", timezone:"IST"
+        },
+        cellAttributes: {
+            style:  {fieldName:'r2RoundColor'} 
+        }
+    },
     { label: 'R2 Interviewer ', fieldName: 'R2Interviewer__c',initialWidth: 100, cellAttributes: {
         style:  {fieldName:'r2RoundColor'} 
     }},
@@ -62,9 +72,14 @@ const columns = [
     { label: 'R2 Feedback ', fieldName: 'R2Feedback__c',initialWidth: 100, cellAttributes: {
         style:  {fieldName:'r2RoundColor'} 
     }},
-    { label: 'R3 Start Time ', fieldName: 'R3StartTime__c',initialWidth: 100, cellAttributes: {
-        style:  {fieldName:'r3RoundColor'} 
-    }},
+    { label: 'R3 Start Time ', fieldName: 'R3StartTime__c',initialWidth: 130, type:'date', 
+        typeAttributes: {
+            year:'2-digit', month:"short", day:"2-digit", hour:"numeric", minute:"2-digit", timezone:"IST"
+        },
+        cellAttributes: {
+            style:  {fieldName:'r3RoundColor'} 
+        }
+    },
     { label: 'R3 Interviewer ', fieldName: 'R3Interviewer__c',initialWidth: 100, cellAttributes: {
         style:  {fieldName:'r3RoundColor'} 
     }},
@@ -127,26 +142,29 @@ export default class InterviewerEventDashboard extends NavigationMixin(Lightning
                 let r2RoundColor //= item.R2RoundStatus__c == 'In Progress' ? "slds-text-color_error":"slds-text-color_success";
                 let r3RoundColor //= item.R3RoundStatus__c == 'In Progress' ? "data-table-aqua":"data-table-green";
                 
-                if(item.R1RoundStatus__c == 'Completed'){
-                    r1RoundColor =  "background-color: green;";
+                if(item.R1RoundStatus__c == 'Completed')
+                {
+                    r1RoundColor =  "background-color: #C1E1C1;";
                 } 
                 else if(item.R1RoundStatus__c == 'In Progress')
                 {
-                    r1RoundColor = "background-color: aqua;";
+                    r1RoundColor = "background-color: #FFE4B5;"
                 }
-                if(item.R2RoundStatus__c == 'Completed'){
-                    r2RoundColor =  "background-color: green";
+                if(item.R2RoundStatus__c == 'Completed')
+                {
+                    r2RoundColor =  "background-color: #C1E1C1";
                 } 
                 else if(item.R2RoundStatus__c == 'In Progress')
                 {
-                    r2RoundColor = "background-color: aqua;";
+                    r2RoundColor = "background-color: #FFE4B5;";
                 }
-                if(item.R3RoundStatus__c == 'Completed'){
-                    r3RoundColor =  "background-color: green;";
+                if(item.R3RoundStatus__c == 'Completed')
+                {
+                    r3RoundColor =  "background-color: #C1E1C1;";
                 } 
                 else if(item.R3RoundStatus__c == 'In Progress')
                 {
-                    r3RoundColor = "background-color: aqua;";
+                    r3RoundColor = "background-color: #FFE4B5;";
                 }
 
                 return {...item, 

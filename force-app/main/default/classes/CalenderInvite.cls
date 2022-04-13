@@ -1,23 +1,23 @@
 public class CalenderInvite {
     
-    public static void sendinvite() {        
+    public static void sendinvite(List<String> emailList, DateTime startTime ) {        
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage(); 
-        mail.setToAddresses(new List<String>{'smanisheng@gmail.com'});
-        mail.setSubject('Meeting Invitation');      
+        mail.setToAddresses(emailList);
+        mail.setSubject('IMPORTANT: You have an assignment');      
         mail.setPlainTextBody('');     
         Messaging.EmailFileAttachment attach = new Messaging.EmailFileAttachment();   
         attach.filename = 'reminder.ics'; 
         attach.ContentType = 'text/calendar';     
         attach.inline = true;     
-        attach.body = invite();   
+        attach.body = invite(startTime);   
         mail.setFileAttachments(new Messaging.EmailFileAttachment[] {attach});   
         Messaging.SendEmailResult[] er = Messaging.sendEmail(new Messaging.Email[] { mail }); 
     }
     
-    private static Blob invite() {
+    private static Blob invite(DateTime startTime) {
         DateTime dt=DateTime.now().adddays(1);
-        String startdatetime=String.valueof(dt.year()+'0'+dt.month()+''+dt.day()+'T000000Z');
-        String enddatetime=String.valueof(dt.year()+'0'+dt.month()+''+dt.day()+'T020000Z');
+        String startdatetime=String.valueof(startTime);
+        String enddatetime=String.valueof(startTime.addHours(1));
         String txtInvite = ''; 
         txtInvite += 'BEGIN:VCALENDAR\n';        
         txtInvite += 'PRODID::-//hacksw/handcal//NONSGML v1.0//EN\n';

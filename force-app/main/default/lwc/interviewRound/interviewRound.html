@@ -29,7 +29,14 @@
               </a>
             </h2>
           </div>
-          
+          <div class="slds-no-flex">
+            <lightning-button 
+              class="slds-var-m-around_medium button" 
+              variant="brand"
+              label="Refresh"
+              onclick={connectedCallback}
+            ></lightning-button>
+        </div>
         </header>
       </div>
       </div>
@@ -51,7 +58,7 @@
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Candidate Resume </strong></td> 
-                   <td > <div class="slds-truncate" title="Resume"> <a href={acc.ResumeLink__c}> {acc.Candidate__r.ResumeLink__c} </a></div></td> 
+                   <td > <a href={acc.Candidate__r.ResumeLink__c} target="_blank"> {acc.Candidate__r.ResumeLink__c} </a></td> 
                 </tr>
                 <tr key={acc.id}>
                   <td style="background-color: gainsboro;"> <strong>Round Number</strong></td> 
@@ -59,7 +66,7 @@
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Sift Link </strong></td> 
-                   <td > <div class="slds-truncate" title="SiftLink"> <a href={acc.SiftLink__c}> {acc.SiftLink__c} </a></div></td> 
+                   <td > <div class="slds-truncate" title="SiftLink"> <a href={acc.Candidate__r.SiftLink__c} target="_blank"> {acc.Candidate__r.SiftLink__c} </a></div></td> 
                 </tr>
                 <tr key={acc.id}>
                   <td style="background-color: gainsboro;"> <strong>Role evaluation</strong> </td>
@@ -70,16 +77,16 @@
                 <tr key={acc.id}>
                    <td> <strong>Interview Link</strong></td>
                   <td>
-                    <div class="slds-truncate" title="InterviewLink"> <a href={acc.InterviewLink__c}>{acc.Candidate__r.InterviewLink__c}</a></div>
+                    <div class="slds-truncate" title="InterviewLink"> <a href={acc.Candidate__r.InterviewLink__c} target="_blank">{acc.Candidate__r.InterviewLink__c}</a></div>
                  </td>
                 </tr>
                 <tr key={acc.id} > <td style="background-color: gainsboro;"><strong>Code pair link</strong></td>
                   <td >
-                    <div class="slds-truncate" title="CodepairLink"> <a href={acc.CodepairLink__c}>{acc.Candidate__r.CodepairLink__c}</a></div>
+                    <div class="slds-truncate" title="CodepairLink"> <a href={acc.Candidate__r.CodepairLink__c} target="_blank">{acc.Candidate__r.CodepairLink__c}</a></div>
                     </td>
                   </tr>
                   <tr key={acc.id}>
-                    <td><strong> Provide Feedback </strong></td>
+                    <td><strong>Comments</strong></td>
                      <td><lightning-input  name="feedback"  value="" onchange={genericOnChange}> label="" ></lightning-input > </td> 
                   </tr>
                     <tr key={acc.id}>

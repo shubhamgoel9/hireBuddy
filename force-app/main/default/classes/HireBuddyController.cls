@@ -93,6 +93,8 @@ global with sharing class HireBuddyController {
         SELECT Id,Date__c 
         FROM Hiring_Event__c
         WHERE
+          Date__c >= TODAY 
+          AND
           PanelName__c =: panel ORDER BY Date__c LIMIT 1
       ];
       if (eventList != null && !eventList.isEmpty()) {
@@ -102,7 +104,7 @@ global with sharing class HireBuddyController {
     return eventId;
   }
 
-  @AuraEnabled(cacheable=true)
+  @AuraEnabled
   public static String getInterviewerStatus() {
     try {
       Id userId = UserInfo.getUserId();

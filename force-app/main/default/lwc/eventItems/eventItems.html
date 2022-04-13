@@ -23,6 +23,14 @@
                 onclick={openCandidateModal}
               ></lightning-button>
           </div>
+          <div class="slds-no-flex">
+            <lightning-button 
+              class="slds-var-m-around_medium button" 
+              variant="brand"
+              label="Refresh"
+              onclick={connectedCallback}
+            ></lightning-button>
+        </div>
           <br> 
         </header>
       </div>
@@ -31,11 +39,11 @@
         
         <table class="slds-table  slds-no-row-hover slds-table_fixed-layout" role="grid" style="width: fit-content;"><tbody>
           <tr style="width:50%" >
-            <td style="background-color: aqua;">&nbsp;</td>
+            <td style="background-color: #FFE4B5;">&nbsp;</td>
             <td>&nbsp;In Progress</td>
           </tr>
           <tr style="width:50%">
-            <td style="background-color: green;">&nbsp;</td>
+            <td style="background-color: #C1E1C1;">&nbsp;</td>
             <td>&nbsp;Completed</td>
           </tr>
         </tbody></table>

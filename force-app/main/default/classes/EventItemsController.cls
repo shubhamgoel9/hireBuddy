@@ -282,7 +282,7 @@ global class EventItemsController {
         if(String.IsNotBlank(toEmail))
         {
           String emailBody = 'An interview of a candidate is scheduled at: '+round[0].StartTime__c+'. Kindly check HireBuddy for more details.';
-          sendEmail(toEmail,'IMPORTANT: You have an assignment','',emailBody);
+          sendEmail(toEmail,'IMPORTANT: You have an assignment','',emailBody, round[0].StartTime__c);
         }
       }
       if(Observer != null) 
@@ -291,7 +291,7 @@ global class EventItemsController {
         {
           round[0].Observer__c = Observer;
           String emailBody =  'An interview of a candidate is scheduled at: '+round[0].StartTime__c+'. You are an observer for interviewer '+round[0].Interviewer__r.Name;
-          sendEmail(Observer,'IMPORTANT: You have an assignment','',emailBody);
+          sendEmail(Observer,'IMPORTANT: You have an assignment','',emailBody, round[0].StartTime__c);
         }
       }
       if(Sift != null) 
@@ -307,9 +307,10 @@ global class EventItemsController {
       }
     }
 
-    private static void sendEmail(String toEmail, String subject, String toName, String mailContent) {
+    private static void sendEmail(String toEmail, String subject, String toName, String mailContent, DateTime startTime) {
         EmailService.toMail = toEmail;
         EmailService.sendMail(subject, toName, mailContent);
+        CalenderInvite.sendinvite(new List<String> {toEmail}, startTime);
     }
 
 }

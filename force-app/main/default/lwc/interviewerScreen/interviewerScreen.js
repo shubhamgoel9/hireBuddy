@@ -1,4 +1,4 @@
-import { LightningElement ,wire, api} from 'lwc';
+import { LightningElement ,wire, api, track} from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getMyUpcomingRound from '@salesforce/apex/HireBuddyController.getMyUpcomingRound';
 import getMyTodayEvent from '@salesforce/apex/HireBuddyController.getMyTodayEvent';
@@ -10,7 +10,8 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     @wire(getMyUpcomingRound) roundList;
     @wire(getMyTodayEvent) myTodayEvent;
     @wire(getCurrentUserName) currentUser;
-    @wire(getInterviewerStatus) currentStatus;
+    //@wire(getInterviewerStatus) 
+    @track currentStatus;
    
     options = [
         { label: '     Unavailable', value: 'Unavailable' },
@@ -22,6 +23,14 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         return `Welcome ${this.greeting.toUpperCase()}!`;
     }*/
 
+    connectedCallback()
+    {
+        getInterviewerStatus().then(result => {
+            this.currentStatus = result;
+        }).catch(error => {
+			this.error = error;
+		}) 
+    }
     handleStatusChange(event) {
         var selectedStatus = event.target.value;
         console.log('Option selected with value: ' + selectedStatus);
