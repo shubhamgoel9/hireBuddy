@@ -9,7 +9,6 @@ import { NavigationMixin } from 'lightning/navigation';
 export default class MyEvents extends NavigationMixin(LightningElement) {
 
     @api recordId;
-    //@wire(getNamespace) nsp;
     @wire(getFutureEvents) eventList;
     @wire(getPastEvents) pastEventList;
     @wire(getCurrentUserName) currentUser;
