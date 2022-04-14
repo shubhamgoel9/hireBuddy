@@ -173,7 +173,7 @@ global with sharing class HireBuddyController {
         if (plainNamespace == null){
             String withDotNotation = HireBuddyController.class.getName();
             if (withDotNotation.contains('.')){
-                plainNamespace = withDotNotation.substringBefore('.');
+                plainNamespace = withDotNotation.substringBefore('.')+'__';
             } else {
                 plainNamespace = '';
             }

@@ -310,7 +310,7 @@ global class EventItemsController {
     private static void sendEmail(String toEmail, String subject, String toName, String mailContent, DateTime startTime) {
         EmailService.toMail = toEmail;
         EmailService.sendMail(subject, toName, mailContent);
-        CalenderInvite.sendinvite(new List<String> {toEmail}, startTime);
+        //CalenderInvite.sendinvite(new List<String> {toEmail}, startTime);
     }
 
 }

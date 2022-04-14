@@ -8,6 +8,7 @@ import deleteCandidateDetails from '@salesforce/apex/EventItemsController.delete
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
 import getPanelId from '@salesforce/apex/EventItemsController.getPanelId';
 import getEventName from '@salesforce/apex/EventItemsController.getEventName';
+import getNamespace from '@salesforce/apex/HirebuddyController.getNamespace';
 const columns = [
     {label: 'Action', type: "button", initialWidth: 80, typeAttributes: {
         label: 'Edit',  
@@ -129,11 +130,13 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track eventItems;
     @track panelId;
 
-    //Get All Event Items to display in dashboard
+    @wire(getNamespace) nsp;
+
     parameters = {};
 
     initializeComponent()
     {
+        //Get All Event Items to display in dashboard
         getAllEventItems({eventId:this.eventId})
 		.then(result => {
 			this.eventItems = result;
@@ -201,6 +204,8 @@ export default class EventItems extends NavigationMixin(LightningElement)
     }
 
     connectedCallback() {
+        console.log('HI');
+        console.log('Prit: nsp: '+this.nsp);
         this.parameters = this.getQueryParameters();
         console.log('prit parameter : ' + JSON.stringify(this.parameters));
         console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));

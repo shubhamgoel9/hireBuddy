@@ -1,30 +1,63 @@
-import { LightningElement, wire, api } from 'lwc';
+import { LightningElement, wire, api, track } from 'lwc';
 import getFutureEvents from '@salesforce/apex/EventsController.getFutureEvents';
 import getPastEvents from '@salesforce/apex/EventsController.getPastEvents';
 import getCurrentUserName from '@salesforce/apex/HireBuddyController.getCurrentUserName';
 import {refreshApex} from '@salesforce/apex';
-
+import {removeNamespaceFromKeyInObject, addNamespaceForKeyInObject,namespace} from 'c/utility';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class MyEvents extends NavigationMixin(LightningElement) {
 
     @api recordId;
+    //@wire(getNamespace) nsp;
     @wire(getFutureEvents) eventList;
     @wire(getPastEvents) pastEventList;
     @wire(getCurrentUserName) currentUser;
 
     currentEvent;
 
+    connectedCallback()
+    {
+        console.log('Inside connectedCallback:: '+ namespace);
+        
+    }
+
     get futureEvents(){
         refreshApex(this.pastEvents);
         console.log("username : " + JSON.stringify(this.getCurrentUserName));
         console.log("events : " + JSON.stringify(this.eventList.data));
+        if(this.eventList.data != undefined)
+        {
+            var eventListData =  this.eventList.data;
+            var tempList =[];
+            for(const key in eventListData)
+            {
+                console.log('Prit: eventListData[key] in future events: '+eventListData[key]);
+                tempList[key] = removeNamespaceFromKeyInObject(eventListData[key]);
+            }
+            this.eventList.data=tempList;
+            console.log('new eventList : '+JSON.stringify(this.data));
+        }
         return this.eventList.data;
     }
 
     get pastEvents(){
         refreshApex(this.eventList);
-        console.log("pastEventList : " + JSON.stringify(this.pastEventList.data));
+        console.log("pastEventList : " + JSON.stringify(this.pastEventList));
+
+        if(this.pastEventList.data != undefined)
+        {
+            var eventListData =  this.pastEventList.data;
+            var tempList =[];
+            for(const key in eventListData)
+            {
+                console.log('Prit: eventListData[key] in past events: '+eventListData[key]);
+                tempList[key] = removeNamespaceFromKeyInObject(eventListData[key]);
+                console.log('Prit: eventListData[key] in past events after removing ns: '+tempList[key]);
+            }
+            this.pastEventList.data = tempList;
+            console.log('new pastEventList : '+JSON.stringify(this.pastEventList.data));
+        }
         return this.pastEventList.data;
     }
 
@@ -39,7 +72,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 
 			type: 'standard__navItemPage',
 			attributes: {
-                apiName: 'Event_Screen',
+                apiName: namespace+'Event_Screen',
                 //actionName: 'new',
 			},
             state: {
@@ -55,7 +88,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 
 			type: 'standard__navItemPage',
 			attributes: {
-                apiName: 'Interviewer_Assignment',
+                apiName: namespace+'Interviewer_Assignment',
                 //actionName: 'new',
             }
 		});
@@ -67,7 +100,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 
             type: 'standard__objectPage',
             attributes: {
-                objectApiName: 'Hiring_Event__c',
+                objectApiName: namespace+'Hiring_Event__c',
                 actionName: 'list'
             },
             state: {
@@ -84,7 +117,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
         this[NavigationMixin.Navigate]({
             type: 'standard__objectPage',
             attributes: {
-                objectApiName: "Hiring_Event__c",
+                objectApiName: namespace+"Hiring_Event__c",
                 actionName: 'new'
             },
             // state: {
