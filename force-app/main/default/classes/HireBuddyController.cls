@@ -1,4 +1,7 @@
 global with sharing class HireBuddyController {
+  
+  private static String plainNamespace = null;
+  
   @AuraEnabled(cacheable=true)
   public static List<Round__c> getMyUpcomingRound() {
     List<Round__c> roundList = null;
@@ -164,7 +167,19 @@ global with sharing class HireBuddyController {
     }
     return false;
   }
-
+  
+  @AuraEnabled
+  public static String getNamespace() {
+        if (plainNamespace == null){
+            String withDotNotation = HireBuddyController.class.getName();
+            if (withDotNotation.contains('.')){
+                plainNamespace = withDotNotation.substringBefore('.');
+            } else {
+                plainNamespace = '';
+            }
+        }
+        return plainNamespace;
+    }
 
   @AuraEnabled
   public static Boolean setStatusToInterviewing(Id roundId ) {
