@@ -51,14 +51,10 @@ global with sharing class HireBuddyController {
         SiftLink__c,
         Candidate__r.Id,
         Candidate__r.Name,
-        Candidate__r.CodepairLink__c,
-        Candidate__r.Contact__c,
-        Candidate__r.Email__c,
-        Candidate__r.HiringEventId__c,
-        Candidate__r.InterviewLink__c,
-        Candidate__r.ResumeLink__c,
-        Candidate__r.Role__c,
-        Candidate__r.Status__c
+         CodepairLink__c,  
+         InterviewLink__c,
+         ResumeLink__c,
+         Role__c 
       FROM Round__c
       WHERE Id = :roundId
     ];

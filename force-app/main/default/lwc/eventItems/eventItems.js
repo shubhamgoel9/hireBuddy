@@ -8,7 +8,8 @@ import deleteCandidateDetails from '@salesforce/apex/EventItemsController.delete
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
 import getPanelId from '@salesforce/apex/EventItemsController.getPanelId';
 import getEventName from '@salesforce/apex/EventItemsController.getEventName';
-import getNamespace from '@salesforce/apex/HirebuddyController.getNamespace';
+import {removeNamespaceFromKeyInObject, addNamespaceForKeyInObject,namespace} from 'c/utility';
+
 const columns = [
     {label: 'Action', type: "button", initialWidth: 80, typeAttributes: {
         label: 'Edit',  
@@ -129,8 +130,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track eventName;
     @track eventItems;
     @track panelId;
-
-    @wire(getNamespace) nsp;
+    @track interviewerList = [];
 
     parameters = {};
 
@@ -144,6 +144,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
 			this.error = undefined;
             this.eventItems = result.map(item=>{
                 console.log('Prit item::--- '+JSON.stringify(item));
+                item = removeNamespaceFromKeyInObject(item);
                 console.log('Prit: condition check '+ (item.R1RoundStatus__c === 'In Progress') );
                 console.log('Prit: r1round status: '+item.R1RoundStatus__c);
                 let r1RoundColor 
@@ -204,8 +205,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
     }
 
     connectedCallback() {
-        console.log('HI');
-        console.log('Prit: nsp: '+this.nsp);
         this.parameters = this.getQueryParameters();
         console.log('prit parameter : ' + JSON.stringify(this.parameters));
         console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
@@ -245,7 +244,10 @@ export default class EventItems extends NavigationMixin(LightningElement)
         getInterviewerList({panelId:this.panelId})
 		.then(result => {
             console.log('Prit: interviewer list result: '+JSON.stringify(result));
-            this.interviewerList = result;
+            for(const key in result)
+            {
+                this.interviewerList[key] = removeNamespaceFromKeyInObject(result[key]);
+            }
 		})
 		.catch(error => {
             console.log('Prit: interviewer list error: '+error);
@@ -721,11 +723,12 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.isDeleteCandidateDisabled = true;
             this.initializeComponent();
         })
-        .catch((error) => {
+        .catch(error => {
+            console.log('error in deleting record: '+JSON.stringify(error));
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error deleting Candidate record.',
-                    message: error.data,
+                    message: JSON.stringify(error),
                     variant: 'error'
                 })
             );

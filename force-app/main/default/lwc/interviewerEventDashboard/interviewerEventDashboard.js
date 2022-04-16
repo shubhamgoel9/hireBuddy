@@ -2,6 +2,8 @@ import { LightningElement, wire, api, track } from "lwc";
 import { NavigationMixin } from 'lightning/navigation' ;
 import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventItem';
 import getEventName from '@salesforce/apex/EventItemsController.getEventName';
+import {removeNamespaceFromKeyInObject, addNamespaceForKeyInObject,namespace} from 'c/utility';
+
 const columns = [
     { label: 'Candidate Name', sortable: true, fieldName: 'ResumeLink__c', type:'url', initialWidth: 100, 
         typeAttributes:{
@@ -135,6 +137,9 @@ export default class InterviewerEventDashboard extends NavigationMixin(Lightning
         getAllEventItems({eventId:this.eventId})
 		.then(result => {
 			this.eventItems = result.map(item=>{
+                console.log('Prit item::--- '+JSON.stringify(item));
+
+                item = removeNamespaceFromKeyInObject(item);
                 console.log('Prit item::--- '+JSON.stringify(item));
                 console.log('Prit: condition check '+ (item.R1RoundStatus__c === 'In Progress') );
                 console.log('Prit: r1round status: '+item.R1RoundStatus__c);

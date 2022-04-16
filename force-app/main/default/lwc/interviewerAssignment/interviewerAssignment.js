@@ -6,6 +6,8 @@ import getPanelList from '@salesforce/apex/InterviewerAssignmentService.getPanel
 import getAllInterviewerList from '@salesforce/apex/InterviewerAssignmentService.getAllInterviewerList';
 import deleteInterviewerList from '@salesforce/apex/EventItemsController.deleteInterviewerList';
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
+import {removeNamespaceFromKeyInObject, addNamespaceForKeyInObject,namespace} from 'c/utility';
+
 const columns = [
     { label: 'Name', fieldName: 'InterviewerName__c', sortable: true, type:'text' },
     { label: 'Email', fieldName: 'InterviewerEmail__c', type:'email' },
@@ -18,6 +20,7 @@ export default class InterviewerAssignment extends LightningElement {
     @track panelName;
     @track panelList;
     @track interviewerList=[];
+    @track allInterviewerList = [];
     @track isModalOpen =false;
     @track errorMessage;
     @track isInterviewerList=false;
@@ -65,7 +68,10 @@ export default class InterviewerAssignment extends LightningElement {
         getAllInterviewerList()
         .then(result=>{
             console.log('Prit: Inside initialize: interviewerLIst: '+ JSON.stringify(result));
-            this.allInterviewerList=result;
+            for(key in result)
+            {
+                this.allInterviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
+            }
         })
         .catch(error => {
             this.error=error;
@@ -77,7 +83,7 @@ export default class InterviewerAssignment extends LightningElement {
         getPanelList()
 		.then(result => {
             console.log('Prit: panel list result: '+JSON.stringify(result));
-            this.panelList = result;
+            this.panelList=result;
 		})
 		.catch(error => {
             console.log('Prit: panel list error: '+JSON.stringify(error));
@@ -150,10 +156,11 @@ export default class InterviewerAssignment extends LightningElement {
         console.log('Prit: Entered getInterviewerListFromPanel: ');
         getInterviewerList({panelId:this.panelId})
 		.then(result => {
-            this.interviewerList = result;
+            for(key in result)
+            {
+                this.interviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
+            }
             this.isInterviewerList = true;
-            console.log('Prit: interviewer list from selected panel: '+JSON.stringify(this.interviewerList));
-
 		})
 		.catch(error => {
             console.log('Prit: interviewer list error: '+error);

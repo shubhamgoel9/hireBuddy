@@ -4,6 +4,9 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import setFeedback from '@salesforce/apex/HireBuddyController.setFeedback';
 import setStatusToInterviewing from '@salesforce/apex/HireBuddyController.setStatusToInterviewing';
 import getInterviewerStatus from '@salesforce/apex/HireBuddyController.getInterviewerStatus';
+
+import { removeNamespaceFromKeyInObject, addNamespaceForKeyInObject, namespace } from 'c/utility';
+import {refreshApex} from '@salesforce/apex';
 export default class InterviewRound extends LightningElement {
     @track searchKey; 
     //@wire(getCandiateByRoundId, { roundId: 'a018c00000SpSEMAA3' }) accounts;
@@ -69,7 +72,7 @@ export default class InterviewRound extends LightningElement {
         
         getInterviewerStatus().then(result => {
             this.currentStatus = result;
-            console.log('Deeksha result --- ' + result);
+            
             if (result == 'Interviewing') {
                 this.disableStatus = true;
             }
@@ -82,10 +85,28 @@ export default class InterviewRound extends LightningElement {
 		}) 
 
         getCandiateByRoundId({roundId:this.roundId})
-		.then(result => {
+            .then(result => {
+            
+                if(result != undefined)
+                {
+                    var accountsData = result;
+                    console.log('Deeksha     accountsData :' + JSON.stringify(accountsData));
+                    var tempList = []; 
+                    for(const key in accountsData)
+                    {
+                         
+                        tempList[key] = removeNamespaceFromKeyInObject(accountsData[key]);
+                            
+                    }
+                    console.log('new tempList : '+JSON.stringify(tempList));
+                  
+                    result=tempList;
+                    console.log('new accounts : '+JSON.stringify(result));
+                }
 			this.accounts = result;
             console.log('deeksha: accounts : '+JSON.stringify(this.accounts));  
-            console.log('deeksha: work ');
+             
+            
 		})
 		.catch(error => {
 			this.error = error;
@@ -93,6 +114,8 @@ export default class InterviewRound extends LightningElement {
 		})
         
     }
+
+     
 
 
     //method to recieve query parameters from the calling page

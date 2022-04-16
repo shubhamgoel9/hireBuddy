@@ -4,9 +4,7 @@ import {namespace} from './namespaceutils';
 
 function removeNamespaceFromKeyInObject(object) {
     
-        console.log('removingNamespace: '+namespace);
-        return Object.keys(object).reduce( (accu, key) => {
-            console.log('key: '+key); 
+    return Object.keys(object).reduce( (accu, key) => {
         accu[key.replace(namespace, "")] = object[key]; 
         return accu;
         },{});

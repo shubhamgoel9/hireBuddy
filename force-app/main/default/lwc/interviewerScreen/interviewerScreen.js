@@ -1,10 +1,13 @@
 import { LightningElement ,wire, api, track} from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getMyUpcomingRound from '@salesforce/apex/HireBuddyController.getMyUpcomingRound';
 import getMyTodayEvent from '@salesforce/apex/HireBuddyController.getMyTodayEvent';
 import getCurrentUserName from '@salesforce/apex/HireBuddyController.getCurrentUserName';
 import setInterviewerStatus from '@salesforce/apex/HireBuddyController.setInterviewerStatus';
 import getInterviewerStatus from '@salesforce/apex/HireBuddyController.getInterviewerStatus';
+import { removeNamespaceFromKeyInObject, addNamespaceForKeyInObject, namespace } from 'c/utility';
+import {refreshApex} from '@salesforce/apex';
 export default class InterviewerScreen extends NavigationMixin(LightningElement) {
 
     @wire(getMyUpcomingRound) roundList;
@@ -23,18 +26,61 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         return `Welcome ${this.greeting.toUpperCase()}!`;
     }*/
 
+    get upcomingRounds(){
+        refreshApex(this.roundList);
+        refreshApex(this.myTodayEvent);
+        if(this.roundList.data != undefined)
+        {
+            var roundListData =  this.roundList.data;
+            var tempList =[];
+            for(const key in roundListData)
+            {
+                tempList[key] = removeNamespaceFromKeyInObject(roundListData[key]);
+            }
+            this.roundList.data=tempList;   
+        }
+        return this.roundList.data;
+    }
+
+
     connectedCallback()
     {
+
         getInterviewerStatus().then(result => {
+            console.debug('Deeksha - result  ' + result);
+
             this.currentStatus = result;
+            console.debug('Deeksha - this.currentStatus  ' + this.currentStatus);
+
         }).catch(error => {
 			this.error = error;
 		}) 
     }
+    
     handleStatusChange(event) {
         var selectedStatus = event.target.value;
         console.log('Option selected with value: ' + selectedStatus);
-        setInterviewerStatus({status:selectedStatus});
+        setInterviewerStatus({status:selectedStatus})
+        .then(() => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Interviewer Status Updated Successfully!',
+                    variant: 'success'
+                })
+            );
+
+        })
+        .catch(error => {
+            console.log('error in creating record: '+JSON.stringify(error));
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error updating Interviewer status!',
+                    message: JSON.stringify(error),
+                    variant: 'error'
+                })
+            );
+        });
     }
 
     handleEventBoardNavigate(event){
@@ -42,7 +88,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: 'Event_Dashboard',
+                apiName: namespace+'Event_Dashboard',
             },
             state: {
                 c__recordId: this.myTodayEvent.data
@@ -73,7 +119,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
             type: 'standard__navItemPage',
             attributes: {
                 //recordId: funActID,
-                apiName: 'Assigned_Rounds',
+                apiName: namespace+'Assigned_Rounds',
                 actionName: 'new',
                 //actionName: 'view',
             },

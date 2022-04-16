@@ -58,7 +58,7 @@
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Candidate Resume </strong></td> 
-                   <td > <a href={acc.Candidate__r.ResumeLink__c} target="_blank"> {acc.Candidate__r.ResumeLink__c} </a></td> 
+                   <td > <a href={acc.ResumeLink__c} target="_blank"> {acc.ResumeLink__c} </a></td> 
                 </tr>
                 <tr key={acc.id}>
                   <td style="background-color: gainsboro;"> <strong>Round Number</strong></td> 
@@ -66,23 +66,23 @@
                 </tr>
                 <tr key={acc.id}>
                   <td> <strong>Sift Link </strong></td> 
-                   <td > <div class="slds-truncate" title="SiftLink"> <a href={acc.Candidate__r.SiftLink__c} target="_blank"> {acc.Candidate__r.SiftLink__c} </a></div></td> 
+                   <td > <div class="slds-truncate" title="SiftLink"> <a href={acc.SiftLink__c} target="_blank"> {acc.SiftLink__c} </a></div></td> 
                 </tr>
                 <tr key={acc.id}>
                   <td style="background-color: gainsboro;"> <strong>Role evaluation</strong> </td>
                   <td> 
-                    {acc.Candidate__r.Role__c}
+                    {acc.Role__c}
                   </td>
                 </tr> 
                 <tr key={acc.id}>
                    <td> <strong>Interview Link</strong></td>
                   <td>
-                    <div class="slds-truncate" title="InterviewLink"> <a href={acc.Candidate__r.InterviewLink__c} target="_blank">{acc.Candidate__r.InterviewLink__c}</a></div>
+                    <div class="slds-truncate" title="InterviewLink"> <a href={acc.InterviewLink__c} target="_blank">{acc.InterviewLink__c}</a></div>
                  </td>
                 </tr>
                 <tr key={acc.id} > <td style="background-color: gainsboro;"><strong>Code pair link</strong></td>
                   <td >
-                    <div class="slds-truncate" title="CodepairLink"> <a href={acc.Candidate__r.CodepairLink__c} target="_blank">{acc.Candidate__r.CodepairLink__c}</a></div>
+                    <div class="slds-truncate" title="CodepairLink"> <a href={acc.CodepairLink__c} target="_blank">{acc.CodepairLink__c}</a></div>
                     </td>
                   </tr>
                   <tr key={acc.id}>

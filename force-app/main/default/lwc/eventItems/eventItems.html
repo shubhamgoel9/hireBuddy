@@ -86,7 +86,7 @@
                     </tr>
                     <tr class="slds-hint-parent">
                       <td>
-                        <lightning-combobox data-id="newCandidateRoleEvaluation" type="text" onchange={handleNewCandidateChange} options={candidateRoleOptions} label="Role Evaluation " placeholder="Choose one" required></lightning-combobox>
+                        <lightning-combobox data-id="newCandidateRoleEvaluation" onchange={handleNewCandidateChange} options={candidateRoleOptions} label="Role Evaluation " placeholder="Choose one" required></lightning-combobox>
                       </td>
                     </tr>
                     <tr class="slds-hint-parent">
@@ -167,7 +167,7 @@
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="candidateStatus" type="text" onchange={handleChange} label="Candidate Status" options={candidateStatusOptions} value={eventItemRecord.CandidateStatus__c}></lightning-combobox>
+                          <lightning-combobox data-id="candidateStatus" onchange={handleChange} label="Candidate Status" options={candidateStatusOptions} value={eventItemRecord.CandidateStatus__c}></lightning-combobox>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
@@ -183,7 +183,7 @@
                       <br><div class ="row"><h2 class="header"><b>Round 1 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="R1Interviewer" type="text" onchange={handleChange} label="R1 Interviewer" options={interviewerListOptions} value={eventItemRecord.R1InterviewerEmail__c} ></lightning-combobox>
+                          <lightning-combobox data-id="R1Interviewer" onchange={handleChange} label="R1 Interviewer" options={interviewerListOptions} value={eventItemRecord.R1InterviewerEmail__c} ></lightning-combobox>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
@@ -214,7 +214,7 @@
                       <br><div class ="row"><h2 class="header"><b>Round 2 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="R2Interviewer" type="text" onchange={handleChange} label="R2 Interviewer" options={interviewerListOptions} value={eventItemRecord.R2InterviewerEmail__c}  ></lightning-combobox>
+                          <lightning-combobox data-id="R2Interviewer" onchange={handleChange} label="R2 Interviewer" options={interviewerListOptions} value={eventItemRecord.R2InterviewerEmail__c}  ></lightning-combobox>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
@@ -245,7 +245,7 @@
                       <br><div class ="row"><h2 class="header"><b>Round 3 Details:</b></h2></div><br>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-combobox data-id="R3Interviewer" type="text" onchange={handleChange} label="R3 Interviewer" options={interviewerListOptions} value={eventItemRecord.R3InterviewerEmail__c}  ></lightning-combobox>
+                          <lightning-combobox data-id="R3Interviewer" onchange={handleChange} label="R3 Interviewer" options={interviewerListOptions} value={eventItemRecord.R3InterviewerEmail__c}  ></lightning-combobox>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
