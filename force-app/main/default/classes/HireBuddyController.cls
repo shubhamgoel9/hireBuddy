@@ -195,4 +195,39 @@ global with sharing class HireBuddyController {
     }
     return false;
   }
+
+  @AuraEnabled(cacheable=true)
+  public static List<String> getPermissionSetAssignments()
+  {
+    List<String> permissionsets = new List<String>();
+    try {
+      List<PermissionSetAssignment> psa =  [SELECT PermissionSet.Name FROM PermissionSetAssignment WHERE Assignee.Id = :UserInfo.getUserId()];
+      for(PermissionSetAssignment ps:psa)
+      {
+        permissionsets.add(ps.PermissionSet.Name);
+      }
+      return permissionsets;
+    } catch (Exception e) 
+    {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable = true)
+  public static Boolean isRecruiter(){
+    try {
+      return (getPermissionSetAssignments().contains('HireBuddy_Recruiter')) || (getPermissionSetAssignments().contains('All_Permissions'));
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable = true)
+  public static Boolean isInterviewer(){
+    try {
+      return (getPermissionSetAssignments().contains('HireBuddy_Interviewer')) || (getPermissionSetAssignments().contains('All_Permissions'));
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }

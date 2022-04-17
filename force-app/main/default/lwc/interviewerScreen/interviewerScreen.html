@@ -1,5 +1,6 @@
 <template>
-  <div class="slds-card">
+  <template if:true={isInterviewer}>
+    <div class="slds-card">
       <div class="slds-media__body">
         <h3 class="slds-card__header-title">
           
@@ -153,5 +154,18 @@
                   </div>
                 </div>
 
-        </div>                   
+        </div> 
+    </template>
+    <template if:false={isInterviewer}>
+      <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+        <tbody>       
+          <tr class="slds-hint-parent" >
+            <td></td>
+            <td >
+              <b><div class="slds-truncate" title="AccessDenied">Insufficient Access. Kindly contact your System Administrator. </div></b>
+            </td> <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </template>                  
 </template>

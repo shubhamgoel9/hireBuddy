@@ -4,7 +4,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import setFeedback from '@salesforce/apex/HireBuddyController.setFeedback';
 import setStatusToInterviewing from '@salesforce/apex/HireBuddyController.setStatusToInterviewing';
 import getInterviewerStatus from '@salesforce/apex/HireBuddyController.getInterviewerStatus';
-
+import isInterviewer from '@salesforce/apex/HirebuddyController.isInterviewer';
 import { removeNamespaceFromKeyInObject, addNamespaceForKeyInObject, namespace } from 'c/utility';
 import {refreshApex} from '@salesforce/apex';
 export default class InterviewRound extends LightningElement {
@@ -16,6 +16,7 @@ export default class InterviewRound extends LightningElement {
     @track theRecord = {};
     @track roundId;
     @track disableStatus = false;
+    @track isInterviewer;
     @wire(getInterviewerStatus) currentStatus;
 
 
@@ -64,54 +65,67 @@ export default class InterviewRound extends LightningElement {
 
     //Get All Event Items to display in dashboard
     parameters = {};
-    connectedCallback() {
+    async connectedCallback() {
+        await isInterviewer()
+        .then(result => {
+            this.isInterviewer = result;
+            console.log('Prit: isInterviewer: '+this.isInterviewer);
+        })
+        .catch(error => {
+            this.error = error;
+            this.isInterviewer = false;
+        })
+
         this.parameters = this.getQueryParameters();
         console.log('deeksha parameter : ' + JSON.stringify(this.parameters));
         console.log('deeksha c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
         this.roundId = this.parameters.c__recordId;
         
-        getInterviewerStatus().then(result => {
-            this.currentStatus = result;
-            
-            if (result == 'Interviewing') {
-                this.disableStatus = true;
-            }
-            else
-            {
-                this.disableStatus = false;
-            }
-        }).catch(error => {
-			this.error = error;
-		}) 
-
-        getCandiateByRoundId({roundId:this.roundId})
-            .then(result => {
-            
-                if(result != undefined)
-                {
-                    var accountsData = result;
-                    console.log('Deeksha     accountsData :' + JSON.stringify(accountsData));
-                    var tempList = []; 
-                    for(const key in accountsData)
-                    {
-                         
-                        tempList[key] = removeNamespaceFromKeyInObject(accountsData[key]);
-                            
-                    }
-                    console.log('new tempList : '+JSON.stringify(tempList));
-                  
-                    result=tempList;
-                    console.log('new accounts : '+JSON.stringify(result));
+        if(this.isInterviewer)
+        {
+            await getInterviewerStatus().then(result => {
+                this.currentStatus = result;
+                
+                if (result == 'Interviewing') {
+                    this.disableStatus = true;
                 }
-			this.accounts = result;
-            console.log('deeksha: accounts : '+JSON.stringify(this.accounts));  
-             
-            
-		})
-		.catch(error => {
-			this.error = error;
-			this.eventItems = undefined;
-		})
+                else
+                {
+                    this.disableStatus = false;
+                }
+            }).catch(error => {
+                this.error = error;
+            }) 
+
+            await getCandiateByRoundId({roundId:this.roundId})
+                .then(result => {
+                
+                    if(result != undefined)
+                    {
+                        var accountsData = result;
+                        console.log('Deeksha     accountsData :' + JSON.stringify(accountsData));
+                        var tempList = []; 
+                        for(const key in accountsData)
+                        {
+                            
+                            tempList[key] = removeNamespaceFromKeyInObject(accountsData[key]);
+                                
+                        }
+                        console.log('new tempList : '+JSON.stringify(tempList));
+                    
+                        result=tempList;
+                        console.log('new accounts : '+JSON.stringify(result));
+                    }
+                this.accounts = result;
+                console.log('deeksha: accounts : '+JSON.stringify(this.accounts));  
+                
+                
+            })
+            .catch(error => {
+                this.error = error;
+                this.eventItems = undefined;
+            })
+        }
         
     }
 

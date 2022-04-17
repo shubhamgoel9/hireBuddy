@@ -6,10 +6,12 @@ import getMyTodayEvent from '@salesforce/apex/HireBuddyController.getMyTodayEven
 import getCurrentUserName from '@salesforce/apex/HireBuddyController.getCurrentUserName';
 import setInterviewerStatus from '@salesforce/apex/HireBuddyController.setInterviewerStatus';
 import getInterviewerStatus from '@salesforce/apex/HireBuddyController.getInterviewerStatus';
+import isInterviewer from '@salesforce/apex/HirebuddyController.isInterviewer';
 import { removeNamespaceFromKeyInObject, addNamespaceForKeyInObject, namespace } from 'c/utility';
 import {refreshApex} from '@salesforce/apex';
 export default class InterviewerScreen extends NavigationMixin(LightningElement) {
 
+    @track isInterviewer;
     @wire(getMyUpcomingRound) roundList;
     @wire(getMyTodayEvent) myTodayEvent;
     @wire(getCurrentUserName) currentUser;
@@ -47,10 +49,19 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     }
 
 
-    connectedCallback()
+    async connectedCallback()
     {
+        await isInterviewer()
+        .then(result => {
+            this.isInterviewer = result;
+            console.log('Prit: isInterviewer: '+this.isInterviewer);
+        })
+        .catch(error => {
+            this.error = error;
+            this.isInterviewer = false;
+        })
 
-        getInterviewerStatus().then(result => {
+        await getInterviewerStatus().then(result => {
             console.debug('Deeksha - result  ' + result);
 
             this.currentStatus = result;

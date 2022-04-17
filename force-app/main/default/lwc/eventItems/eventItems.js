@@ -8,6 +8,7 @@ import deleteCandidateDetails from '@salesforce/apex/EventItemsController.delete
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
 import getPanelId from '@salesforce/apex/EventItemsController.getPanelId';
 import getEventName from '@salesforce/apex/EventItemsController.getEventName';
+import isRecruiter from '@salesforce/apex/HirebuddyController.isRecruiter';
 import {removeNamespaceFromKeyInObject, addNamespaceForKeyInObject,namespace} from 'c/utility';
 
 const columns = [
@@ -131,6 +132,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track eventItems;
     @track panelId;
     @track interviewerList = [];
+    @track isRecruiter = false;
 
     parameters = {};
 
@@ -212,22 +214,35 @@ export default class EventItems extends NavigationMixin(LightningElement)
 
     }
 
-    connectedCallback() {
-        this.parameters = this.getQueryParameters();
-        console.log('prit parameter : ' + JSON.stringify(this.parameters));
-        console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
-        this.eventId = this.parameters.c__recordId;
-
-        getEventName({eventId:this.eventId})
+    async connectedCallback() {
+        await isRecruiter()
         .then(result => {
-			this.eventName = result;
-            console.log('Prit: eventName:: '+ this.eventName);
+            this.isRecruiter = result;
+            console.log('Prit: isRecruiter: '+this.isRecruiter);
         })
         .catch(error => {
-			this.error = error;
-			this.eventName = undefined;
-		})
-        this.initializeComponent();
+            this.error = error;
+            this.isRecruiter = false;
+        })
+        if(this.isRecruiter)
+        {
+            this.parameters = this.getQueryParameters();
+            console.log('prit parameter : ' + JSON.stringify(this.parameters));
+            console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
+            this.eventId = this.parameters.c__recordId;
+
+            getEventName({eventId:this.eventId})
+            .then(result => {
+                this.eventName = result;
+                console.log('Prit: eventName:: '+ this.eventName);
+            })
+            .catch(error => {
+                this.error = error;
+                this.eventName = undefined;
+            })
+
+            this.initializeComponent();
+        }
         
     }
     

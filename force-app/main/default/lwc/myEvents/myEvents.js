@@ -4,6 +4,7 @@ import getPastEvents from '@salesforce/apex/EventsController.getPastEvents';
 import getCurrentUserName from '@salesforce/apex/HireBuddyController.getCurrentUserName';
 import {refreshApex} from '@salesforce/apex';
 import {removeNamespaceFromKeyInObject, addNamespaceForKeyInObject,namespace} from 'c/utility';
+import isRecruiter from '@salesforce/apex/HirebuddyController.isRecruiter';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class MyEvents extends NavigationMixin(LightningElement) {
@@ -12,12 +13,21 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
     @wire(getFutureEvents) eventList;
     @wire(getPastEvents) pastEventList;
     @wire(getCurrentUserName) currentUser;
+    @track isRecruiter;
 
     currentEvent;
 
-    connectedCallback()
+    async connectedCallback()
     {
-        console.log('Inside connectedCallback:: '+ namespace);
+        await isRecruiter()
+        .then(result => {
+            this.isRecruiter = result;
+            console.log('Prit: isRecruiter: '+this.isRecruiter);
+        })
+        .catch(error => {
+            this.error = error;
+            this.isRecruiter = false;
+        })
         
     }
 

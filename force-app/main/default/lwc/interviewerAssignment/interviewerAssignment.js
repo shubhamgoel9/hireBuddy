@@ -4,8 +4,11 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import assignInterviewerToPanel from '@salesforce/apex/InterviewerAssignmentService.assignInterviewerToPanel';
 import getPanelList from '@salesforce/apex/InterviewerAssignmentService.getPanelList';
 import getAllInterviewerList from '@salesforce/apex/InterviewerAssignmentService.getAllInterviewerList';
+import assignPermissionSet from '@salesforce/apex/InterviewerAssignmentService.assignPermissionSet';
+import removePermissionSet from '@salesforce/apex/InterviewerAssignmentService.removePermissionSet';
 import deleteInterviewerList from '@salesforce/apex/EventItemsController.deleteInterviewerList';
 import getInterviewerList from '@salesforce/apex/EventItemsController.getInterviewerList';
+import isRecruiter from '@salesforce/apex/HirebuddyController.isRecruiter';
 import {removeNamespaceFromKeyInObject, addNamespaceForKeyInObject,namespace} from 'c/utility';
 
 const columns = [
@@ -26,6 +29,7 @@ export default class InterviewerAssignment extends LightningElement {
     @track isInterviewerList=false;
     @track isDataEmpty=true;
     @track error;
+    @track isRecruiter;
 
 
     @api refresh() {
@@ -41,34 +45,46 @@ export default class InterviewerAssignment extends LightningElement {
 
     async initializeComponent()
     {
-        await getAllInterviewerList()
-        .then(result=>{
-            this.allInterviewerList = [];
-            console.log('Prit: Inside initialize: interviewerLIst: '+ JSON.stringify(result));
-            for(const key in result)
-            {
-                this.allInterviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
-            }
+        await isRecruiter()
+        .then(result => {
+            this.isRecruiter = result;
+            console.log('Prit: isRecruiter: '+this.isRecruiter);
         })
         .catch(error => {
-            this.error=error;
-            this.allInterviewerList=undefined;
+            this.error = error;
+            this.isRecruiter = false;
         })
+        if(this.isRecruiter)
+        {
+            await getAllInterviewerList()
+            .then(result=>{
+                this.allInterviewerList = [];
+                console.log('Prit: Inside initialize: interviewerLIst: '+ JSON.stringify(result));
+                for(const key in result)
+                {
+                    this.allInterviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
+                }
+            })
+            .catch(error => {
+                this.error=error;
+                this.allInterviewerList=undefined;
+            })
 
-        if(this.panelId) {
-            this.getInterviewerListFromPanel();
+            if(this.panelId) {
+                this.getInterviewerListFromPanel();
+            }
+
+            await getPanelList()
+            .then(result => {
+                console.log('Prit: panel list result: '+JSON.stringify(result));
+                this.panelList=result;
+            })
+            .catch(error => {
+                console.log('Prit: panel list error: '+JSON.stringify(error));
+                this.error = error;
+                this.panelList = undefined;
+            })
         }
-
-        await getPanelList()
-		.then(result => {
-            console.log('Prit: panel list result: '+JSON.stringify(result));
-            this.panelList=result;
-		})
-		.catch(error => {
-            console.log('Prit: panel list error: '+JSON.stringify(error));
-			this.error = error;
-			this.panelList = undefined;
-		})
 
         this.isDataEmpty = (!(this.userEmail && this.panelId));
     }
@@ -186,14 +202,36 @@ export default class InterviewerAssignment extends LightningElement {
                     })
                 );
                 console.log('Prit: result: '+JSON.stringify(result));
-                this.initializeComponent();
+                //this.initializeComponent();
             })
             .catch(error => {
                 console.log('error in assignment: '+JSON.stringify(error));
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error Assigning Interviewer to Panel',
-                        message: JSON.stringify(error),
+                        message: error.body.message,
+                        variant: 'error'
+                    })
+                );
+            });
+
+            assignPermissionSet({userEmail:this.userEmail})
+            .then(result => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Permission Assigned Successfully!',
+                        variant: 'success'
+                    })
+                );
+                this.initializeComponent();
+            })
+            .catch(error => {
+                console.log('error in assignment: '+JSON.stringify(error));
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error Assigning Permission to Interviewer',
+                        message: error.body.message,
                         variant: 'error'
                     })
                 );
@@ -234,19 +272,43 @@ export default class InterviewerAssignment extends LightningElement {
                         variant: 'success'
                     })
                 );
-                this.initializeComponent();
             })
             .catch((error) => {
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error deleting Interviewer record.',
-                        message: error.data,
+                        message: error.body.message,
                         variant: 'error'
                     })
                 );
             }
         );
-    }
 
+        var selInterviewerList = this.selectedItems;
+        for(const key in selInterviewerList)
+        {
+            this.selectedItems[key] = addNamespaceForKeyInObject(selInterviewerList[key]);
+        }
+        await removePermissionSet({interviewerList:this.selectedItems})
+        .then(() => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Interviewer permission removed',
+                    variant: 'success'
+                })
+            );
+            this.initializeComponent();
+        })
+        .catch(error => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error removing Interviewer permission.',
+                    message: error.body.message,
+                    variant: 'error'
+                })
+            );
+        });
+    }
     
 }

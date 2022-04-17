@@ -21,6 +21,41 @@ global with sharing class InterviewerAssignmentService {
     }
 
     @AuraEnabled
+    public static void assignPermissionSet(String userEmail){
+        try {
+            User usr = [SELECT Id FROM User WHERE Email =:userEmail LIMIT 1];
+            PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = 'HireBuddy_Interviewer'][0];
+            PermissionSetAssignment psa = new PermissionSetAssignment(AssigneeId=usr.Id, PermissionSetId=ps.Id);
+
+            List<PermissionSetAssignment> existingPsa = [SELECT Id FROM PermissionSetAssignment WHERE AssigneeId = :usr.Id AND PermissionSetId=:ps.Id];
+            if(existingPsa==null || existingPsa.size()==0)
+                upsert psa;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void removePermissionSet(List<Interviewer__c> interviewerList){
+        try {
+            List<String> emailIds = new List<String>();
+            List<String> userIds = new List<String>();
+            for(Interviewer__c inter: interviewerList)
+            {
+                emailIds.add(inter.InterviewerEmail__c);
+            }
+            System.debug('Prit: emailIds: '+emailIds);
+            List<User> userList = [SELECT Id FROM User WHERE Email =:emailIds];
+            for(User usr: userList)
+            {
+                userIds.add(usr.Id);
+            }
+            delete [SELECT Id FROM PermissionSetAssignment WHERE AssigneeId = :userIds AND PermissionSet.Name='HireBuddy_Interviewer'];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    @AuraEnabled
     public static List<Interviewer__c> getAllInterviewerList(){
         try {
             return [SELECT Id, InterviewerName__c, InterviewerEmail__c, PanelName__c,Panel__c FROM Interviewer__c];
