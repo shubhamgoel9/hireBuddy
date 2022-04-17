@@ -710,6 +710,12 @@ export default class EventItems extends NavigationMixin(LightningElement)
     deleteCandidate()
     {
         console.log('Prit: Delete candidate details:: '+JSON.stringify(this.selectedEventItems));
+        var eventItemsList = this.selectedEventItems
+        for(const key in eventItemsList)
+        {
+            this.selectedEventItems[key] = addNamespaceForKeyInObject(eventItemsList[key]);
+        }
+        console.log('Prit: Delete candidate details:: '+JSON.stringify(this.selectedEventItems));
         deleteCandidateDetails({selectedEventItems:this.selectedEventItems})
         .then( () => 
         {
@@ -728,7 +734,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error deleting Candidate record.',
-                    message: JSON.stringify(error),
+                    message: error.body.message,
                     variant: 'error'
                 })
             );

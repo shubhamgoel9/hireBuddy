@@ -33,42 +33,19 @@ export default class InterviewerAssignment extends LightningElement {
         this.initializeComponent();
     }
 
-    /*@wire(getAllInterviewerList)
-    wiredResult(result){
-        this.refreshTable =result;
-        console.log('Prit: allInterviewerList: '+JSON.stringify(result.data));
-        if(result.data)
-        {
-            this.allInterviewerList = result.data;
-            this.isInterviewerList = true;
-            this.error = undefined;
-        }
-        
-        else if (result.error) 
-        {
-            this.error = result.error;
-            this.allInterviewerList = undefined;
-        }
-    }*/
-
-    handleClick() {
-        console.log('Prit: refreshtable:: '+JSON.stringify(this.refreshTable));
-        refreshApex(this.refreshTable);
-        return this.refresh();
-    }
-
     connectedCallback()
     {
         console.log('Connected callback..');
        this.initializeComponent();
     }
 
-    initializeComponent()
+    async initializeComponent()
     {
-        getAllInterviewerList()
+        await getAllInterviewerList()
         .then(result=>{
+            this.allInterviewerList = [];
             console.log('Prit: Inside initialize: interviewerLIst: '+ JSON.stringify(result));
-            for(key in result)
+            for(const key in result)
             {
                 this.allInterviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
             }
@@ -78,9 +55,11 @@ export default class InterviewerAssignment extends LightningElement {
             this.allInterviewerList=undefined;
         })
 
-        this.getInterviewerListFromPanel();
+        if(this.panelId) {
+            this.getInterviewerListFromPanel();
+        }
 
-        getPanelList()
+        await getPanelList()
 		.then(result => {
             console.log('Prit: panel list result: '+JSON.stringify(result));
             this.panelList=result;
@@ -140,27 +119,29 @@ export default class InterviewerAssignment extends LightningElement {
     }
 
     //method to get Interviewerlist from panel
-    getInterviewerListFromPanel()
+    async getInterviewerListFromPanel()
     {
-        /*for(const key in this.allInterviewerList)
-        {
-            console.log('Prit: slected panel:: '+this.panelId);
-            console.log('Prit: current interviewer panel in loop:: '+this.allInterviewerList[key].Panel__c);
-            if(this.allInterviewerList[key].Panel__c == this.panelId)
-            {
-                console.log('Prit: before push:: '+ JSON.stringify(this.allInterviewerList[key]));
-                this.interviewerList.push(this.allInterviewerList[key]);
-                console.log('Prit: after push:: '+ JSON.stringify(this.interviewerList));
-            }
-        }*/
         console.log('Prit: Entered getInterviewerListFromPanel: ');
-        getInterviewerList({panelId:this.panelId})
+        await getInterviewerList({panelId:this.panelId})
 		.then(result => {
-            for(key in result)
+            console.log('Prit: this.interviewerList result: '+JSON.stringify(result) + ' length: '+result.length);
+            if(result.length > 0)
             {
-                this.interviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
+                this.interviewerList=[];
+                for(const key in result)
+                {
+                    this.interviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
+                    console.log('Prit: this.interviewerList[key]: '+JSON.stringify(this.interviewerList[key]));
+
+                }
+                this.isInterviewerList = true;
             }
-            this.isInterviewerList = true;
+            else
+            {
+                this.interviewerList=[];
+                this.isInterviewerList = false;
+            }
+            console.log('Prit: this.interviewerList: '+JSON.stringify(this.interviewerList));
 		})
 		.catch(error => {
             console.log('Prit: interviewer list error: '+error);
@@ -226,19 +207,6 @@ export default class InterviewerAssignment extends LightningElement {
         
     }
 
-    /*openModal()
-    {
-        this.isModalOpen = true;
-        console.log('Prit: isModalOpen:: '+this.isModalOpen);
-
-    }
-
-    closeModal() {
-        // to close modal set isModalOpen tarck value as false
-        this.isModalOpen = false;
-        this.refreshData();
-    }*/
-
     @track isDeleteDisabled=true;
     @track selectedInterviewerItem=null;
     //Method to make delete Button enable/disabled based on the row select/unselect
@@ -256,20 +224,8 @@ export default class InterviewerAssignment extends LightningElement {
         }
     }
 
-    //Action to perform on clicking delete button
-    /*deleteInterviewer()
-    {
-        console.log('Prit: Delete interviewer details:: '+JSON.stringify(this.selectedItems));
-        deleteInterviewerList(
-            {interviewerList:this.selectedItems}
-        )
-        this.errorMessage ="Deletion Successful!";
-        this.openModal();
-        this.isDeleteDisabled = true;
-    }*/
-
-    deleteInterviewer() {
-        deleteInterviewerList({interviewerList:this.selectedItems})
+    async deleteInterviewer() {
+        await deleteInterviewerList({interviewerList:this.selectedItems})
             .then(() => {
                 this.dispatchEvent(
                     new ShowToastEvent({
@@ -278,10 +234,6 @@ export default class InterviewerAssignment extends LightningElement {
                         variant: 'success'
                     })
                 );
-                /*for(const key in this.selectedItems)
-                {
-                    this.allInterviewerList = this.allInterviewerList.filter(value => value !== this.selectedItems[key]);
-                }*/
                 this.initializeComponent();
             })
             .catch((error) => {
