@@ -106,7 +106,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
                 // 'filterName' is a property on the page 'state'
                 // and identifies the target list view.
                 // It may also be an 18 character list view id.
-                filterName: 'All' // or by 18 char '00BT0000002TONQMA4'
+                filterName: 'Recent' // or by 18 char '00BT0000002TONQMA4'
             }
 		});
 
