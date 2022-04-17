@@ -139,7 +139,15 @@ export default class EventItems extends NavigationMixin(LightningElement)
         //Get All Event Items to display in dashboard
         getAllEventItems({eventId:this.eventId})
 		.then(result => {
-			this.eventItems = result;
+            if(result != undefined && result.length>0)
+			{
+                this.eventItems = result;
+            }
+            else
+            {
+                this.eventItems = false;
+                return;
+            }
             console.log('Prit: eventItems : '+JSON.stringify(this.eventItems));
 			this.error = undefined;
             this.eventItems = result.map(item=>{

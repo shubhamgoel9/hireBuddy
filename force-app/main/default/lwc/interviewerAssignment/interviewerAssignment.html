@@ -80,10 +80,12 @@
                     </footer>
                 </div>
                 <div if if:false={isInterviewerList}>
-                    <table class="slds-table  slds-no-row-hover slds-table_fixed-layout" role="grid" >
+                    <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid">
                         <tbody>
-                            <tr class="slds-hint-parent">
-                                <td><strong>No Records Found!</strong></td>
+                            <tr class="slds-hint-parent" >
+                                <td role="gridcell">
+                                <div class="slds-truncate" title="Round">No Records found!</div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

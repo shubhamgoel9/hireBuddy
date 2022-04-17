@@ -85,19 +85,19 @@
                     </div>
                     
                   <div class="slds-card__body">
-                  <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
-                  <template for:each={upcomingRounds} for:item="round"></template>
-                    
+                  <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">                    
                     <tbody>
-                      <template for:each={upcomingRounds} for:item="round">
-                      <tr class="slds-hint-parent" key={round.Id}>
-                        <td>{round.Candidate__r.Name}</td>
-                        <td role="gridcell">
-                          <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>  {round.Name} </a></div>
-                        </td>
-                        <td><lightning-formatted-date-time value={round.StartTime__c} year="2-digit" month="short" day="2-digit" hour="numeric" minute="2-digit"></lightning-formatted-date-time></td>
-                      </tr>
-                    </template>
+                      <template if:true={upcomingRounds}>
+                        <template for:each={upcomingRounds} for:item="round">
+                          <tr class="slds-hint-parent" key={round.Id}>
+                            <td>{round.Candidate__r.Name}</td>
+                            <td role="gridcell">
+                              <div class="slds-truncate" title="Round"><a onclick={handleRoundNavigate} data-id={round.Id}>  {round.Name} </a></div>
+                            </td>
+                            <td><lightning-formatted-date-time value={round.StartTime__c} year="2-digit" month="short" day="2-digit" hour="numeric" minute="2-digit"></lightning-formatted-date-time></td>
+                          </tr>
+                        </template>
+                      </template>
                     <template if:false={upcomingRounds}>
                       <tr class="slds-hint-parent" >
                         <td role="gridcell">

@@ -29,7 +29,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     get upcomingRounds(){
         refreshApex(this.roundList);
         refreshApex(this.myTodayEvent);
-        if(this.roundList.data != undefined)
+        if(this.roundList.data != undefined && this.roundList.data.length>0)
         {
             var roundListData =  this.roundList.data;
             var tempList =[];
@@ -38,8 +38,12 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
                 tempList[key] = removeNamespaceFromKeyInObject(roundListData[key]);
             }
             this.roundList.data=tempList;   
+            return this.roundList.data;
         }
-        return this.roundList.data;
+        else
+        {
+            return false;
+        }
     }
 
 
