@@ -86,7 +86,7 @@
         </thead>
         <tbody>
           <template for:each={futureEvents} for:item="event">
-          <tr class="slds-hint-parent" key={event.index}>
+          <tr class="slds-hint-parent" key={event.Id}>
             <th scope="row">
               <div class="slds-truncate" title="Amy Choi">
                 <a href={preparedUrl} onclick={handleEventScreen} data-id={event.Id} tabindex="-1">{event.Name}</a>
@@ -153,7 +153,7 @@
         </thead>
         <tbody>
           <template for:each={pastEvents} for:item="pastevent">
-          <tr class="slds-hint-parent" key={pastevent.index}>
+          <tr class="slds-hint-parent" key={pastevent.Id}>
             <th scope="row">
               <div class="slds-truncate" title="Amy Choi">
                 <a  onclick={handleEventScreen} data-id={pastevent.Id} tabindex="-1">{pastevent.Name}</a>

@@ -2,6 +2,7 @@ global class EventItemsController {
 
   private static String plainNamespace = null;
   private static String namespacePrefix = null;
+  private static String userTimeZone = null;
 
   /*Get EventName*/
   @AuraEnabled
@@ -88,6 +89,7 @@ global class EventItemsController {
     ) 
     {
       System.debug('Prit: selectedEventItemId:: '+selectedEventItemId);
+      userTimeZone = UserInfo.getTimeZone().getID();
       List<HiringEventItem__c> items = [ SELECT
         Id,
         CandidateId__c,
@@ -281,8 +283,8 @@ global class EventItemsController {
         }
         if(String.IsNotBlank(toEmail))
         {
-          String emailBody = 'An interview of a candidate is scheduled at: '+round[0].StartTime__c+'. Kindly check HireBuddy for more details.';
-          sendEmail(toEmail,'IMPORTANT: You have an assignment','',emailBody, round[0].StartTime__c);
+          String emailBody = 'An interview of a candidate is scheduled at: '+round[0].StartTime__c.format('MM/dd/yyyy HH:mm a',userTimeZone)+'. Kindly check HireBuddy for more details.';
+          sendEmail(toEmail,'IMPORTANT: You have an assignment','',emailBody, round[0].StartTime__c.format('MM/dd/yyyy HH:mm a',userTimeZone));
         }
       }
       if(Observer != null) 
@@ -290,8 +292,8 @@ global class EventItemsController {
         if(!round.isEmpty() && String.IsNotBlank(Observer))
         {
           round[0].Observer__c = Observer;
-          String emailBody =  'An interview of a candidate is scheduled at: '+round[0].StartTime__c+'. You are an observer for interviewer '+round[0].Interviewer__r.Name;
-          sendEmail(Observer,'IMPORTANT: You have an assignment','',emailBody, round[0].StartTime__c);
+          String emailBody =  'An interview of a candidate is scheduled at: '+round[0].StartTime__c.format('MM/dd/yyyy HH:mm a',userTimeZone)+'. You are an observer for interviewer '+round[0].Interviewer__r.Name;
+          sendEmail(Observer,'IMPORTANT: You have an assignment','',emailBody, round[0].StartTime__c.format('MM/dd/yyyy HH:mm a',userTimeZone));
         }
       }
       if(Sift != null) 
@@ -307,7 +309,7 @@ global class EventItemsController {
       }
     }
 
-    private static void sendEmail(String toEmail, String subject, String toName, String mailContent, DateTime startTime) {
+    private static void sendEmail(String toEmail, String subject, String toName, String mailContent, String startTime) {
         EmailService.toMail = toEmail;
         EmailService.sendMail(subject, toName, mailContent);
         //CalenderInvite.sendinvite(new List<String> {toEmail}, startTime);
