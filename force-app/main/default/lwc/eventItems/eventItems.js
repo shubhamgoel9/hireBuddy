@@ -150,13 +150,9 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 this.eventItems = false;
                 return;
             }
-            console.log('Prit: eventItems : '+JSON.stringify(this.eventItems));
 			this.error = undefined;
             this.eventItems = result.map(item=>{
-                console.log('Prit item::--- '+JSON.stringify(item));
                 item = removeNamespaceFromKeyInObject(item);
-                console.log('Prit: condition check '+ (item.R1RoundStatus__c === 'In Progress') );
-                console.log('Prit: r1round status: '+item.R1RoundStatus__c);
                 let r1RoundColor 
                 let r2RoundColor 
                 let r3RoundColor 
@@ -192,7 +188,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
                     "r3RoundColor":r3RoundColor
                 }
             })
-            console.log('Prit: eventItems after css:: '+JSON.stringify(this.eventItems));
 		})
 		.catch(error => {
 			this.error = error;
@@ -202,12 +197,10 @@ export default class EventItems extends NavigationMixin(LightningElement)
         getPanelId({eventId:this.eventId})
 		.then(result => {
 			this.panelId = result;
-            console.log('Prit: panelId:: '+ this.panelId);
             this.getInterviewerListFromPanel();
 			this.error = undefined;
 		})
 		.catch(error => {
-            console.log('Prit: getPanelId:'+JSON.stringify(error));
 			this.error = error;
 			this.panelId = undefined;
 		})
@@ -218,7 +211,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
         await isRecruiter()
         .then(result => {
             this.isRecruiter = result;
-            console.log('Prit: isRecruiter: '+this.isRecruiter);
         })
         .catch(error => {
             this.error = error;
@@ -227,14 +219,11 @@ export default class EventItems extends NavigationMixin(LightningElement)
         if(this.isRecruiter)
         {
             this.parameters = this.getQueryParameters();
-            console.log('prit parameter : ' + JSON.stringify(this.parameters));
-            console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
             this.eventId = this.parameters.c__recordId;
 
             getEventName({eventId:this.eventId})
             .then(result => {
                 this.eventName = result;
-                console.log('Prit: eventName:: '+ this.eventName);
             })
             .catch(error => {
                 this.error = error;
@@ -266,14 +255,12 @@ export default class EventItems extends NavigationMixin(LightningElement)
     {
         getInterviewerList({panelId:this.panelId})
 		.then(result => {
-            console.log('Prit: interviewer list result: '+JSON.stringify(result));
             for(const key in result)
             {
                 this.interviewerList[key] = removeNamespaceFromKeyInObject(result[key]);
             }
 		})
 		.catch(error => {
-            console.log('Prit: interviewer list error: '+error);
 			this.error = error;
 			this.interviewerList = undefined;
 		})
@@ -285,7 +272,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track disableR3ProxyInterviewer;
     openModal(event) {
         // to open modal set isModalOpen tarck value as true
-        console.log('Prit: openModal entry:: event : '+JSON.stringify(event));
         if(this.isInterviewer)
         {
             alert('You are not authorized to perform this action');
@@ -293,20 +279,14 @@ export default class EventItems extends NavigationMixin(LightningElement)
             return;
         }
         const actionName = event.detail.action.name;
-        console.log('actionName: '+actionName);
         if ( actionName === 'Edit' ) {
             this.isModalOpen = true;
             this.selectedEventItemId=event.detail.row.Id;
-            console.log('Prit: eventItems:: '+JSON.stringify(this.eventItems));
-            console.log('Prit this.selectedEventItemId: '+this.selectedEventItemId);
             for (const key in this.eventItems) {
-                console.log('Prit: this.eventItems[key].Id: '+this.eventItems[key].Id);
 
                 if(this.eventItems[key].Id === this.selectedEventItemId)
                 {
                     this.eventItemRecord = this.eventItems[key];
-                    console.log('Prit: eventItemRecord: '+JSON.stringify(this.eventItemRecord));
-                    console.log('Prit: this.eventItemRecord.R1InterviewerEmail: '+this.eventItemRecord.R1InterviewerEmail__c);
                     if(this.eventItemRecord.R1InterviewerEmail__c)
                     {
                         this.disableR1ProxyInterviewer = true;
@@ -315,7 +295,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
                     {
                         this.disableR1ProxyInterviewer = false;
                     }
-                    console.log('Prit: this.eventItemRecord.R2InterviewerEmail: '+this.eventItemRecord.R2InterviewerEmail__c);
                     if(this.eventItemRecord.R2InterviewerEmail__c)
                     {
                         this.disableR2ProxyInterviewer = true;
@@ -324,10 +303,8 @@ export default class EventItems extends NavigationMixin(LightningElement)
                     {
                         this.disableR2ProxyInterviewer = false;
                     }
-                    console.log('Prit: this.eventItemRecord.R3InterviewerEmail: '+this.eventItemRecord.R3InterviewerEmail__c);
                     if(this.eventItemRecord.R3InterviewerEmail__c)
                     {
-                        console.log('Prit: setting R3 interviewer enable/disable');
                         this.disableR3ProxyInterviewer = true;
                     }
                     else
@@ -376,7 +353,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 });
             }
         }
-        console.log('Prit: picklistoptions :: '+ JSON.stringify(picklistoptions));
         return picklistoptions;
             
     }
@@ -404,22 +380,18 @@ export default class EventItems extends NavigationMixin(LightningElement)
     //method to set the selected values in the Modify Candidate Modal box
     handleChange(event) {
         var value = event.target.value;
-        console.log('enter handle change::'+value);
 
         if(event.target.dataset.id === 'candidateStatus')
         {
             this.candidateStatus = value;
-            console.log('handle change candidateStatus::'+value);
         }
         else if(event.target.dataset.id === 'codepairLink')
         {
             this.codepairLink = value;
-            console.log('handle change codepairLink::'+value);
         }
         else if(event.target.dataset.id === 'interviewLink')
         {
             this.interviewLink = value;
-            console.log('handle change interviewLink::'+value);
         }
         else if(event.target.dataset.id === 'R1Interviewer')
         {
@@ -432,7 +404,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 this.disableR1ProxyInterviewer=true;
             }
             this.R1InterviewerEmail = value;
-            console.log('handle change:: disableR1ProxyInterviewer '+this.disableR1ProxyInterviewer);
         }
         else if(event.target.dataset.id === 'R1ProxyInterviewer')
         {
@@ -441,22 +412,18 @@ export default class EventItems extends NavigationMixin(LightningElement)
         else if(event.target.dataset.id === 'R1Observer')
         {
             this.R1Observer = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R1Time')
         {
             this.R1Time = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R1Sift')
         {
             this.R1Sift = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R1Feedback')
         {
             this.R1Feedback = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R2Interviewer')
         {
@@ -469,7 +436,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 this.disableR2ProxyInterviewer=true;
             }
             this.R2InterviewerEmail = value;
-            console.log('handle change:: disableR2ProxyInterviewer '+this.disableR2ProxyInterviewer);
         }
         else if(event.target.dataset.id === 'R2ProxyInterviewer')
         {
@@ -478,22 +444,18 @@ export default class EventItems extends NavigationMixin(LightningElement)
         else if(event.target.dataset.id === 'R2Observer')
         {
             this.R2Observer = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R2Time')
         {
             this.R2Time = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R2Sift')
         {
             this.R2Sift = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R2Feedback')
         {
             this.R2Feedback = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R3Interviewer')
         {
@@ -506,7 +468,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 this.disableR3ProxyInterviewer=true;
             }
             this.R3InterviewerEmail = value;
-            console.log('handle change:: disableR3ProxyInterviewer '+this.disableR3ProxyInterviewer);
         }
         else if(event.target.dataset.id === 'R3ProxyInterviewer')
         {
@@ -515,28 +476,23 @@ export default class EventItems extends NavigationMixin(LightningElement)
         else if(event.target.dataset.id === 'R3Observer')
         {
             this.R3Observer = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R3Time')
         {
             this.R3Time = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R3Sift')
         {
             this.R3Sift = value;
-            console.log('handle change::'+value);
         }
         else if(event.target.dataset.id === 'R3Feedback')
         {
             this.R3Feedback = value;
-            console.log('handle change::'+value);
         }
     }
     
     //Action to perform on clicking SAVE on EDIT Modal
     submitDetails() {
-        console.log('PP: inside submitDetails: selectedEventItemId::'+this.selectedEventItemId);
         // to close modal set isModalOpen tarck value as false
         //update Event Item Record
         setEventItem({selectedEventItemId:this.selectedEventItemId,
@@ -574,16 +530,14 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.initializeComponent();
         })
         .catch(error => {
-            console.log('error in assignment: '+JSON.stringify(error));
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Modify Error',
-                    message: JSON.stringify(error),
+                    message: error.body.message,
                     variant: 'error'
                 })
             );
         });
-        //window.location.reload();
     }
 
     //Add New Candidate Button onlick event to open candidateModal
@@ -612,49 +566,39 @@ export default class EventItems extends NavigationMixin(LightningElement)
     //handle new candidate details change
     handleNewCandidateChange(event){
         var value = event.target.value;
-        console.log('enter handle change::'+value);
 
         if(event.target.dataset.id === 'newCandidateName')
         {
             this.newCandidateName = value;
-            console.log('handle change newCandidateName::'+value);
         }
         if(event.target.dataset.id === 'newCandidateEmail')
         {
             this.newCandidateEmail = value;
-            console.log('handle change newCandidateEmail::'+value);
         }
         if(event.target.dataset.id === 'newCandidateContact')
         {
             this.newCandidateContact = value;
-            console.log('handle change newCandidateContact::'+value);
         }
         if(event.target.dataset.id === 'newCandidateResume')
         {
             this.newCandidateResume = value;
-            console.log('handle change newCandidateResume::'+value);
         }
         if(event.target.dataset.id === 'newCandidateRoleEvaluation')
         {
             this.newCandidateRoleEvaluation = value;
-            console.log('handle change newCandidateRoleEvaluation::'+value);
         }
         if(event.target.dataset.id === 'newCandidateInterviewLink')
         {
             this.newCandidateInterviewLink = value;
-            console.log('handle change newCandidateInterviewLink::'+value);
         }
         if(event.target.dataset.id === 'newCandidateCodePairLink')
         {
             this.newCandidateCodePairLink = value;
-            console.log('handle change newCandidateCodePairLink::'+value);
         }
 
     }
     //Action to perform on clicking SAVE on Add New Candidate Modal
     submitNewCandidateDetails(event){
-        console.log('Prit: validating and saving new candidate details:: ');
-        console.log('Current value of the input: ' + event.target.value);
 
         const allValid = [
             ...this.template.querySelectorAll('lightning-input'),
@@ -690,11 +634,10 @@ export default class EventItems extends NavigationMixin(LightningElement)
     
             })
             .catch(error => {
-                console.log('error in creating record: '+JSON.stringify(error));
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error creating Candidate record.',
-                        message: JSON.stringify(error),
+                        message: error.body.message,
                         variant: 'error'
                     })
                 );
@@ -705,7 +648,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Required fields missing',
-                    message: JSON.stringify(error),
+                    message: '',
                     variant: 'error'
                 })
             );
@@ -717,9 +660,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
     //Method to make delete Button enable/disabled based on the row select/unselect
     disableDeleteButton(event)
     {
-        console.log('Prit: show delete button:: '+JSON.stringify(event));
         this.selectedEventItems=event.detail.selectedRows;
-        console.log('Prit: this.selectedEventItems:: '+this.selectedEventItems);
         if(this.selectedEventItems.length==0)//|| this.profileName.data === 'Interviewer')
         {
             this.isDeleteCandidateDisabled=true;
@@ -732,13 +673,11 @@ export default class EventItems extends NavigationMixin(LightningElement)
     //Action to perform on clicking delete button
     deleteCandidate()
     {
-        console.log('Prit: Delete candidate details:: '+JSON.stringify(this.selectedEventItems));
         var eventItemsList = this.selectedEventItems
         for(const key in eventItemsList)
         {
             this.selectedEventItems[key] = addNamespaceForKeyInObject(eventItemsList[key]);
         }
-        console.log('Prit: Delete candidate details:: '+JSON.stringify(this.selectedEventItems));
         deleteCandidateDetails({selectedEventItems:this.selectedEventItems})
         .then( () => 
         {
@@ -753,7 +692,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
             this.initializeComponent();
         })
         .catch(error => {
-            console.log('error in deleting record: '+JSON.stringify(error));
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error deleting Candidate record.',
@@ -762,7 +700,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 })
             );
         });
-        //window.location.reload();
     }
     
     

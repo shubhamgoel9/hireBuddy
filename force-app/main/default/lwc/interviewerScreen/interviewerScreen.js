@@ -54,7 +54,6 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         await isInterviewer()
         .then(result => {
             this.isInterviewer = result;
-            console.log('Prit: isInterviewer: '+this.isInterviewer);
         })
         .catch(error => {
             this.error = error;
@@ -62,10 +61,8 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         })
 
         await getInterviewerStatus().then(result => {
-            console.debug('Deeksha - result  ' + result);
 
             this.currentStatus = result;
-            console.debug('Deeksha - this.currentStatus  ' + this.currentStatus);
 
         }).catch(error => {
 			this.error = error;
@@ -74,7 +71,6 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     
     handleStatusChange(event) {
         var selectedStatus = event.target.value;
-        console.log('Option selected with value: ' + selectedStatus);
         setInterviewerStatus({status:selectedStatus})
         .then(() => {
             this.dispatchEvent(
@@ -87,7 +83,6 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
 
         })
         .catch(error => {
-            console.log('error in creating record: '+JSON.stringify(error));
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error updating Interviewer status!',
@@ -99,7 +94,6 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     }
 
     handleEventBoardNavigate(event){
-        console.log('EventId: '+this.myTodayEvent.data);
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {

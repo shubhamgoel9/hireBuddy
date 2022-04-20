@@ -22,7 +22,6 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
         await isRecruiter()
         .then(result => {
             this.isRecruiter = result;
-            console.log('Prit: isRecruiter: '+this.isRecruiter);
         })
         .catch(error => {
             this.error = error;
@@ -33,26 +32,21 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 
     get futureEvents(){
         refreshApex(this.pastEvents);
-        console.log("username : " + JSON.stringify(this.getCurrentUserName));
-        console.log("events : " + JSON.stringify(this.eventList.data));
         if(this.eventList.data != undefined)
         {
             var eventListData =  this.eventList.data;
             var tempList =[];
             for(const key in eventListData)
             {
-                console.log('Prit: eventListData[key] in future events: '+eventListData[key]);
                 tempList[key] = removeNamespaceFromKeyInObject(eventListData[key]);
             }
             this.eventList.data=tempList;
-            console.log('new eventList : '+JSON.stringify(this.data));
         }
         return this.eventList.data;
     }
 
     get pastEvents(){
         refreshApex(this.eventList);
-        console.log("pastEventList : " + JSON.stringify(this.pastEventList));
 
         if(this.pastEventList.data != undefined)
         {
@@ -60,12 +54,9 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
             var tempList =[];
             for(const key in eventListData)
             {
-                console.log('Prit: eventListData[key] in past events: '+eventListData[key]);
                 tempList[key] = removeNamespaceFromKeyInObject(eventListData[key]);
-                console.log('Prit: eventListData[key] in past events after removing ns: '+tempList[key]);
             }
             this.pastEventList.data = tempList;
-            console.log('new pastEventList : '+JSON.stringify(this.pastEventList.data));
         }
         return this.pastEventList.data;
     }
@@ -74,7 +65,6 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
         event.preventDefault();
         var funEventID = event.currentTarget.dataset.id;
         this.currentEvent = event.target.value;
-        console.log("currentEvent : " + JSON.stringify(funEventID));
         this.dispatchEvent(new CustomEvent('currenteventscreen', {detail : {eventId: funEventID}  }));
 
         this[NavigationMixin.Navigate]({

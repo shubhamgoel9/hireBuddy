@@ -11,7 +11,6 @@ function removeNamespaceFromKeyInObject(object) {
   };
 
 function addNamespaceForKeyInObject(object) {
-    console.log('adding namespace: '+namespace);
     return Object.keys(object).reduce( (accu, field) => {
       if(field.includes("__c")) {
         accu[namespace+field] = object[field];

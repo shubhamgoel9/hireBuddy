@@ -33,13 +33,11 @@ export default class InterviewerAssignment extends LightningElement {
 
 
     @api refresh() {
-        console.log('Prit: refresh called. ');
         this.initializeComponent();
     }
 
     connectedCallback()
     {
-        console.log('Connected callback..');
        this.initializeComponent();
     }
 
@@ -48,7 +46,6 @@ export default class InterviewerAssignment extends LightningElement {
         await isRecruiter()
         .then(result => {
             this.isRecruiter = result;
-            console.log('Prit: isRecruiter: '+this.isRecruiter);
         })
         .catch(error => {
             this.error = error;
@@ -59,7 +56,6 @@ export default class InterviewerAssignment extends LightningElement {
             await getAllInterviewerList()
             .then(result=>{
                 this.allInterviewerList = [];
-                console.log('Prit: Inside initialize: interviewerLIst: '+ JSON.stringify(result));
                 for(const key in result)
                 {
                     this.allInterviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
@@ -76,11 +72,9 @@ export default class InterviewerAssignment extends LightningElement {
 
             await getPanelList()
             .then(result => {
-                console.log('Prit: panel list result: '+JSON.stringify(result));
                 this.panelList=result;
             })
             .catch(error => {
-                console.log('Prit: panel list error: '+JSON.stringify(error));
                 this.error = error;
                 this.panelList = undefined;
             })
@@ -93,7 +87,6 @@ export default class InterviewerAssignment extends LightningElement {
     get panelOptions()
     {
         let picklistoptions = [];
-        console.log('Prit: this.panelList:: '+JSON.stringify(this.panelList));
         if(this.panelList)
         {
             for(const key in this.panelList)
@@ -104,14 +97,12 @@ export default class InterviewerAssignment extends LightningElement {
                 });
             }
         }
-        console.log('Prit: picklistoptions :: '+ JSON.stringify(picklistoptions));
         return picklistoptions;   
     }
 
     handleChange(event)
     {
         var value = event.target.value;
-        console.log('enter handle change::'+value);
 
         if(event.target.dataset.id === 'panel')
         {
@@ -120,7 +111,6 @@ export default class InterviewerAssignment extends LightningElement {
             {
                 if(this.panelList[key].Id === this.panelId)
                 {
-                    console.log('Prit: panelId found in panelList');
                     this.panelName = this.panelList[key].Name;
                     this.getInterviewerListFromPanel();
                 }
@@ -131,23 +121,19 @@ export default class InterviewerAssignment extends LightningElement {
             this.userEmail = value;
         }
         this.isDataEmpty = (!(this.userEmail && this.panelId));
-        console.log('Prit: isDataEmpty:'+this.isDataEmpty);
     }
 
     //method to get Interviewerlist from panel
     async getInterviewerListFromPanel()
     {
-        console.log('Prit: Entered getInterviewerListFromPanel: ');
         await getInterviewerList({panelId:this.panelId})
 		.then(result => {
-            console.log('Prit: this.interviewerList result: '+JSON.stringify(result) + ' length: '+result.length);
             if(result.length > 0)
             {
                 this.interviewerList=[];
                 for(const key in result)
                 {
                     this.interviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
-                    console.log('Prit: this.interviewerList[key]: '+JSON.stringify(this.interviewerList[key]));
 
                 }
                 this.isInterviewerList = true;
@@ -157,10 +143,8 @@ export default class InterviewerAssignment extends LightningElement {
                 this.interviewerList=[];
                 this.isInterviewerList = false;
             }
-            console.log('Prit: this.interviewerList: '+JSON.stringify(this.interviewerList));
 		})
 		.catch(error => {
-            console.log('Prit: interviewer list error: '+error);
 			this.error = error;
 			this.interviewerList = undefined;
 		})
@@ -201,11 +185,9 @@ export default class InterviewerAssignment extends LightningElement {
                         variant: 'success'
                     })
                 );
-                console.log('Prit: result: '+JSON.stringify(result));
                 //this.initializeComponent();
             })
             .catch(error => {
-                console.log('error in assignment: '+JSON.stringify(error));
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error Assigning Interviewer to Panel',
@@ -227,7 +209,6 @@ export default class InterviewerAssignment extends LightningElement {
                 this.initializeComponent();
             })
             .catch(error => {
-                console.log('error in assignment: '+JSON.stringify(error));
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error Assigning Permission to Interviewer',
@@ -250,9 +231,7 @@ export default class InterviewerAssignment extends LightningElement {
     //Method to make delete Button enable/disabled based on the row select/unselect
     disableDeleteButton(event)
     {
-        console.log('Prit: eventDetails:: '+JSON.stringify(event.detail));
         this.selectedItems=event.detail.selectedRows;
-        console.log('Prit: selectedItems:: '+this.selectedItems);
         if(this.selectedItems.length==0)
         {
             this.isDeleteDisabled=true;

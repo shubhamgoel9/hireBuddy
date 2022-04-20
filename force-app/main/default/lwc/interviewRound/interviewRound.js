@@ -22,32 +22,26 @@ export default class InterviewRound extends LightningElement {
 
     setStatus(event) {
 
-        console.log( ' roundId ' + this.roundId);
         setStatusToInterviewing({roundId:this.roundId})
         .then(result => {
             if(result){
-                console.log('setStatusToInterviewing: '+result);
                 this.disableStatus = true;
             }
         })
         .catch(error => {
-            console.log('Error: ', error);
         }) 
     }
 
     genericOnChange(event){
         this.theRecord[event.target.name] = event.target.value;
-        console.log(event.target.name + ' now is set to ' + event.target.value);
 
         this.feedback = event.target.value;
-        console.log(  ' feedback ' + this.feedback);
 
     }
     handleCompleted(event) { 
         setFeedback({roundId:this.roundId,feedback:this.feedback})
         .then(result => {
             if(result){
-                console.log(result);
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
@@ -58,7 +52,11 @@ export default class InterviewRound extends LightningElement {
             }
         })
         .catch(error => {
-            console.log('Error: ', error);
+            new ShowToastEvent({
+                title: 'Error!',
+                message: error.body.message,
+                variant: 'error'
+            })
         }) 
     }
 
@@ -69,7 +67,6 @@ export default class InterviewRound extends LightningElement {
         await isInterviewer()
         .then(result => {
             this.isInterviewer = result;
-            console.log('Prit: isInterviewer: '+this.isInterviewer);
         })
         .catch(error => {
             this.error = error;
@@ -77,8 +74,6 @@ export default class InterviewRound extends LightningElement {
         })
 
         this.parameters = this.getQueryParameters();
-        console.log('deeksha parameter : ' + JSON.stringify(this.parameters));
-        console.log('deeksha c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
         this.roundId = this.parameters.c__recordId;
         
         if(this.isInterviewer)
@@ -103,7 +98,6 @@ export default class InterviewRound extends LightningElement {
                     if(result != undefined)
                     {
                         var accountsData = result;
-                        console.log('Deeksha     accountsData :' + JSON.stringify(accountsData));
                         var tempList = []; 
                         for(const key in accountsData)
                         {
@@ -111,13 +105,10 @@ export default class InterviewRound extends LightningElement {
                             tempList[key] = removeNamespaceFromKeyInObject(accountsData[key]);
                                 
                         }
-                        console.log('new tempList : '+JSON.stringify(tempList));
                     
                         result=tempList;
-                        console.log('new accounts : '+JSON.stringify(result));
                     }
                 this.accounts = result;
-                console.log('deeksha: accounts : '+JSON.stringify(this.accounts));  
                 
                 
             })
