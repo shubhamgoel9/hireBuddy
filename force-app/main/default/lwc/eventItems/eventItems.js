@@ -1,4 +1,4 @@
-import { LightningElement, wire, api, track } from "lwc";
+import { LightningElement, wire, track } from "lwc";
 import { NavigationMixin } from 'lightning/navigation' ;
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getAllEventItems from '@salesforce/apex/EventItemsController.getAllEventItem';
@@ -134,6 +134,44 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track interviewerList = [];
     @track isRecruiter = false;
 
+    @track disableR1ProxyInterviewer;
+    @track disableR2ProxyInterviewer;
+    @track disableR3ProxyInterviewer;
+    
+    //Variables for modify candidate modal box
+    @track candidateStatus;
+    @track codepairLink;
+    @track interviewLink;
+    @track R1InterviewerEmail;
+    @track R1ProxyInterviewer;
+    @track R1Observer;
+    @track R1Time;
+    @track R1Sift;
+    @track R1Feedback;
+    @track R2InterviewerEmail;
+    @track R2Observer;
+    @track R2Time;
+    @track R2Sift;
+    @track R2Feedback;
+    @track R3InterviewerEmail;
+    @track R3Observer;
+    @track R3Time;
+    @track R3Sift;
+    @track R3Feedback;
+
+    //Variables for new Candidate details
+    @track newCandidateName;
+    @track newCandidateEmail;
+    @track newCandidateContact;
+    @track newCandidateResume;
+    @track newCandidateRoleEvaluation;
+    @track newCandidateInterviewLink;
+    @track newCandidateCodePairLink;
+
+    //variables for disableDeleteButton
+    @track isDeleteCandidateDisabled=true;
+    @track selectedEventItems=null;
+
     parameters = {};
 
     initializeComponent()
@@ -156,30 +194,31 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 let r1RoundColor 
                 let r2RoundColor 
                 let r3RoundColor 
-                
+                let completedColor = "background-color: #C1E1C1;"
+                let inProgressColor = "background-color: #FFE4B5;"
                 if(item.R1RoundStatus__c == 'Completed')
                 {
-                    r1RoundColor =  "background-color: #C1E1C1;";
+                    r1RoundColor =  completedColor;
                 } 
                 else if(item.R1RoundStatus__c == 'In Progress')
                 {
-                    r1RoundColor = "background-color: #FFE4B5;"
+                    r1RoundColor = inProgressColor;
                 }
                 if(item.R2RoundStatus__c == 'Completed')
                 {
-                    r2RoundColor =  "background-color: #C1E1C1";
+                    r2RoundColor =  completedColor;
                 } 
                 else if(item.R2RoundStatus__c == 'In Progress')
                 {
-                    r2RoundColor = "background-color: #FFE4B5;";
+                    r2RoundColor = inProgressColor;
                 }
                 if(item.R3RoundStatus__c == 'Completed')
                 {
-                    r3RoundColor =  "background-color: #C1E1C1;";
+                    r3RoundColor =  completedColor;
                 } 
                 else if(item.R3RoundStatus__c == 'In Progress')
                 {
-                    r3RoundColor = "background-color: #FFE4B5;";
+                    r3RoundColor = inProgressColor;
                 }
 
                 return {...item, 
@@ -207,17 +246,10 @@ export default class EventItems extends NavigationMixin(LightningElement)
 
     }
 
-    async connectedCallback() {
-        await isRecruiter()
+    connectedCallback() {
+        isRecruiter()
         .then(result => {
             this.isRecruiter = result;
-        })
-        .catch(error => {
-            this.error = error;
-            this.isRecruiter = false;
-        })
-        if(this.isRecruiter)
-        {
             this.parameters = this.getQueryParameters();
             this.eventId = this.parameters.c__recordId;
 
@@ -231,7 +263,11 @@ export default class EventItems extends NavigationMixin(LightningElement)
             })
 
             this.initializeComponent();
-        }
+        })
+        .catch(error => {
+            this.error = error;
+            this.isRecruiter = false;
+        })
         
     }
     
@@ -267,11 +303,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
     }
     
     //Action to perfrom when modal box is opened
-    @track disableR1ProxyInterviewer;
-    @track disableR2ProxyInterviewer;
-    @track disableR3ProxyInterviewer;
     openModal(event) {
-        // to open modal set isModalOpen tarck value as true
         if(this.isInterviewer)
         {
             alert('You are not authorized to perform this action');
@@ -356,26 +388,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
         return picklistoptions;
             
     }
-
-    @track candidateStatus;
-    @track codepairLink;
-    @track interviewLink;
-    @track R1InterviewerEmail;
-    @track R1ProxyInterviewer;
-    @track R1Observer;
-    @track R1Time;
-    @track R1Sift;
-    @track R1Feedback;
-    @track R2InterviewerEmail;
-    @track R2Observer;
-    @track R2Time;
-    @track R2Sift;
-    @track R2Feedback;
-    @track R3InterviewerEmail;
-    @track R3Observer;
-    @track R3Time;
-    @track R3Sift;
-    @track R3Feedback;
 
     //method to set the selected values in the Modify Candidate Modal box
     handleChange(event) {
@@ -493,7 +505,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
     
     //Action to perform on clicking SAVE on EDIT Modal
     submitDetails() {
-        // to close modal set isModalOpen tarck value as false
         //update Event Item Record
         setEventItem({selectedEventItemId:this.selectedEventItemId,
             candidateStatus:this.candidateStatus,
@@ -556,13 +567,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
             
         ];
     }
-    @track newCandidateName;
-    @track newCandidateEmail;
-    @track newCandidateContact;
-    @track newCandidateResume;
-    @track newCandidateRoleEvaluation;
-    @track newCandidateInterviewLink;
-    @track newCandidateCodePairLink;
+    
     //handle new candidate details change
     handleNewCandidateChange(event){
         var value = event.target.value;
@@ -655,8 +660,6 @@ export default class EventItems extends NavigationMixin(LightningElement)
         }
     }
 
-    @track isDeleteCandidateDisabled=true;
-    @track selectedEventItems=null;
     //Method to make delete Button enable/disabled based on the row select/unselect
     disableDeleteButton(event)
     {

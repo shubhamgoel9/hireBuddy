@@ -1,5 +1,4 @@
 import { LightningElement } from 'lwc';
-import getNamespace from '@salesforce/apex/HirebuddyController.getNamespace';
 import {namespace} from './namespaceutils';
 
 function removeNamespaceFromKeyInObject(object) {

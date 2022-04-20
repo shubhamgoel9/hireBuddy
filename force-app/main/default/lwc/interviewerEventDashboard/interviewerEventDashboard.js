@@ -120,14 +120,11 @@ export default class InterviewerEventDashboard extends NavigationMixin(Lightning
     parameters = {};
     connectedCallback() {
         this.parameters = this.getQueryParameters();
-        console.log('prit parameter : ' + JSON.stringify(this.parameters));
-        console.log('prit c__recordId : ' + JSON.stringify(this.parameters.c__recordId));
         this.eventId = this.parameters.c__recordId;
 
         getEventName({eventId:this.eventId})
         .then(result => {
 			this.eventName = result;
-            console.log('Prit: eventName:: '+ this.eventName);
         })
         .catch(error => {
 			this.error = error;
@@ -137,39 +134,36 @@ export default class InterviewerEventDashboard extends NavigationMixin(Lightning
         getAllEventItems({eventId:this.eventId})
 		.then(result => {
 			this.eventItems = result.map(item=>{
-                console.log('Prit item::--- '+JSON.stringify(item));
 
                 item = removeNamespaceFromKeyInObject(item);
-                console.log('Prit item::--- '+JSON.stringify(item));
-                console.log('Prit: condition check '+ (item.R1RoundStatus__c === 'In Progress') );
-                console.log('Prit: r1round status: '+item.R1RoundStatus__c);
-                let r1RoundColor //= item.R1RoundStatus__c === 'In Progress' ? "slds-text-color_error":"slds-text-color_success";
-                let r2RoundColor //= item.R2RoundStatus__c == 'In Progress' ? "slds-text-color_error":"slds-text-color_success";
-                let r3RoundColor //= item.R3RoundStatus__c == 'In Progress' ? "data-table-aqua":"data-table-green";
-                
+                let r1RoundColor 
+                let r2RoundColor 
+                let r3RoundColor
+                let completedColor = "background-color: #C1E1C1;"
+                let inProgressColor = "background-color: #FFE4B5;"
                 if(item.R1RoundStatus__c == 'Completed')
                 {
-                    r1RoundColor =  "background-color: #C1E1C1;";
+                    r1RoundColor =  completedColor;
                 } 
                 else if(item.R1RoundStatus__c == 'In Progress')
                 {
-                    r1RoundColor = "background-color: #FFE4B5;"
+                    r1RoundColor = inProgressColor;
                 }
                 if(item.R2RoundStatus__c == 'Completed')
                 {
-                    r2RoundColor =  "background-color: #C1E1C1";
+                    r2RoundColor =  completedColor;
                 } 
                 else if(item.R2RoundStatus__c == 'In Progress')
                 {
-                    r2RoundColor = "background-color: #FFE4B5;";
+                    r2RoundColor = inProgressColor;
                 }
                 if(item.R3RoundStatus__c == 'Completed')
                 {
-                    r3RoundColor =  "background-color: #C1E1C1;";
+                    r3RoundColor =  completedColor;
                 } 
                 else if(item.R3RoundStatus__c == 'In Progress')
                 {
-                    r3RoundColor = "background-color: #FFE4B5;";
+                    r3RoundColor = inProgressColor;
                 }
 
                 return {...item, 

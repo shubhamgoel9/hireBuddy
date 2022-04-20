@@ -6,11 +6,8 @@ import setStatusToInterviewing from '@salesforce/apex/HireBuddyController.setSta
 import getInterviewerStatus from '@salesforce/apex/HireBuddyController.getInterviewerStatus';
 import isInterviewer from '@salesforce/apex/HirebuddyController.isInterviewer';
 import { removeNamespaceFromKeyInObject, addNamespaceForKeyInObject, namespace } from 'c/utility';
-import {refreshApex} from '@salesforce/apex';
 export default class InterviewRound extends LightningElement {
     @track searchKey; 
-    //@wire(getCandiateByRoundId, { roundId: 'a018c00000SpSEMAA3' }) accounts;
-   // @track roundId;
     @track accounts;
     @track feedback;
     @track theRecord = {};
@@ -20,6 +17,7 @@ export default class InterviewRound extends LightningElement {
     @wire(getInterviewerStatus) currentStatus;
 
 
+    //Method to set the Interviewer status to interviewing 
     setStatus(event) {
 
         setStatusToInterviewing({roundId:this.roundId})
@@ -32,12 +30,15 @@ export default class InterviewRound extends LightningElement {
         }) 
     }
 
+    //Method to set the feedback
     genericOnChange(event){
         this.theRecord[event.target.name] = event.target.value;
 
         this.feedback = event.target.value;
 
     }
+
+    //Method to handle complete button event
     handleCompleted(event) { 
         setFeedback({roundId:this.roundId,feedback:this.feedback})
         .then(result => {
@@ -63,22 +64,13 @@ export default class InterviewRound extends LightningElement {
 
     //Get All Event Items to display in dashboard
     parameters = {};
-    async connectedCallback() {
-        await isInterviewer()
-        .then(result => {
-            this.isInterviewer = result;
-        })
-        .catch(error => {
-            this.error = error;
-            this.isInterviewer = false;
-        })
-
+    connectedCallback() {
         this.parameters = this.getQueryParameters();
         this.roundId = this.parameters.c__recordId;
-        
-        if(this.isInterviewer)
-        {
-            await getInterviewerStatus().then(result => {
+        isInterviewer()
+        .then(result => {
+            this.isInterviewer = result;
+            getInterviewerStatus().then(result => {
                 this.currentStatus = result;
                 
                 if (result == 'Interviewing') {
@@ -92,7 +84,7 @@ export default class InterviewRound extends LightningElement {
                 this.error = error;
             }) 
 
-            await getCandiateByRoundId({roundId:this.roundId})
+            getCandiateByRoundId({roundId:this.roundId})
                 .then(result => {
                 
                     if(result != undefined)
@@ -116,6 +108,15 @@ export default class InterviewRound extends LightningElement {
                 this.error = error;
                 this.eventItems = undefined;
             })
+        })
+        .catch(error => {
+            this.error = error;
+            this.isInterviewer = false;
+        })
+        
+        if(this.isInterviewer)
+        {
+            
         }
         
     }

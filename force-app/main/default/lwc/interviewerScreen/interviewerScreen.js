@@ -15,7 +15,6 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     @wire(getMyUpcomingRound) roundList;
     @wire(getMyTodayEvent) myTodayEvent;
     @wire(getCurrentUserName) currentUser;
-    //@wire(getInterviewerStatus) 
     @track currentStatus;
    
     options = [
@@ -24,10 +23,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         { label: '     Interviewing', value: 'Interviewing' },
     ];
 
-    /*get capitalizedGreeting() {
-        return `Welcome ${this.greeting.toUpperCase()}!`;
-    }*/
-
+    //Method to get the list of rounds assigned to interviewer
     get upcomingRounds(){
         refreshApex(this.roundList);
         refreshApex(this.myTodayEvent);
@@ -49,26 +45,28 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
     }
 
 
-    async connectedCallback()
+    //Get the current interviewer status
+    connectedCallback()
     {
-        await isInterviewer()
+        isInterviewer()
         .then(result => {
             this.isInterviewer = result;
+            getInterviewerStatus().then(result => {
+
+                this.currentStatus = result;
+    
+            }).catch(error => {
+                this.error = error;
+            }) 
         })
         .catch(error => {
             this.error = error;
             this.isInterviewer = false;
         })
 
-        await getInterviewerStatus().then(result => {
-
-            this.currentStatus = result;
-
-        }).catch(error => {
-			this.error = error;
-		}) 
     }
     
+    //Method to handle the change of interviewer status
     handleStatusChange(event) {
         var selectedStatus = event.target.value;
         setInterviewerStatus({status:selectedStatus})
@@ -93,6 +91,7 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         });
     }
 
+    //Method to navigate to event dashboard
     handleEventBoardNavigate(event){
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
@@ -105,21 +104,8 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
         });
     }
 
+    //Method to navigate assigned rounds to interviewer
     handleRoundNavigate(event) {
-       /* var roundId = event.currentTarget.dataset.id;
-        const navConfig = {
-            type: "standard__component",
-            attributes: {
-              componentName: "c__interviewDetails"
-            },
-            state: {
-               c__recordId:  roundId
-            }
-          };
-      
-
-        //4. Invoke Naviate method
-    this[NavigationMixin.Navigate](navConfig); */
         // Generate a URL to a User record page
         var funActID = event.currentTarget.dataset.id;
          
@@ -127,10 +113,8 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
        this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                //recordId: funActID,
                 apiName: namespace+'Assigned_Rounds',
                 actionName: 'new',
-                //actionName: 'view',
             },
             state: {
                 c__recordId: funActID            }
@@ -138,22 +122,6 @@ export default class InterviewerScreen extends NavigationMixin(LightningElement)
             this.recordPageUrl = url;
         })
         ; 
-    }
-
-    /*handleRoundNavigation(event){
-        event.preventDefault();
-        var funActID = event.currentTarget.dataset.id;
-        
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: funActID,
-                objectApiName: 'Round__c',
-                actionName: 'view'
-            }
-        });
-        
-    }*/
-    
+    }    
    
 }

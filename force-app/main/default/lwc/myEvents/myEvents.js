@@ -30,6 +30,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
         
     }
 
+    //Method to return the future event to html page
     get futureEvents(){
         refreshApex(this.pastEvents);
         if(this.eventList.data != undefined)
@@ -45,6 +46,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
         return this.eventList.data;
     }
 
+    //Method to return past events to html page
     get pastEvents(){
         refreshApex(this.eventList);
 
@@ -61,6 +63,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
         return this.pastEventList.data;
     }
 
+    //Method to navigate to the clicked event
     handleEventScreen(event) {
         event.preventDefault();
         var funEventID = event.currentTarget.dataset.id;
@@ -80,6 +83,7 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 		});
     }
 
+    //Method to to navigate to interviewer assignment page on buttonn click
     navigateToInterviewerAssignment(event) {
         event.preventDefault();
 
@@ -88,12 +92,12 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
 			type: 'standard__navItemPage',
 			attributes: {
                 apiName: namespace+'Interviewer_Assignment',
-                //actionName: 'new',
             }
 		});
     }
 
 
+    //Method to open all the records of the Hiring_Event with 'Recent' Filter
     handleViewAll() {
         this[NavigationMixin.Navigate]({
 
@@ -103,15 +107,13 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
                 actionName: 'list'
             },
             state: {
-                // 'filterName' is a property on the page 'state'
-                // and identifies the target list view.
-                // It may also be an 18 character list view id.
                 filterName: 'Recent' // or by 18 char '00BT0000002TONQMA4'
             }
 		});
 
     }
 
+    //Method to create the new Hiring event
     navigateToNewHiringEvent(){
         this[NavigationMixin.Navigate]({
             type: 'standard__objectPage',
@@ -119,26 +121,8 @@ export default class MyEvents extends NavigationMixin(LightningElement) {
                 objectApiName: namespace+"Hiring_Event__c",
                 actionName: 'new'
             },
-            // state: {
-            //     defaultFieldValues: defaultValues
-            // }
         }); 
 
     }
-
-    // navigateToRefreshPage(){
-
-    //     refreshApex(this.eventList);
-    //     refreshApex(this.pastEvents);
-
-    //     this[NavigationMixin.Navigate]({
-
-	// 		type: 'standard__navItemPage',
-	// 		attributes: {
-    //             apiName: 'Home_Recruiter',
-    //             //actionName: 'new',
-    //         }
-	// 	});
-    // }
 
 }

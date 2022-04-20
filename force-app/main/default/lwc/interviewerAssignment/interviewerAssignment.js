@@ -1,5 +1,4 @@
-import { LightningElement, track,wire,api } from 'lwc';
-import { refreshApex } from '@salesforce/apex';
+import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import assignInterviewerToPanel from '@salesforce/apex/InterviewerAssignmentService.assignInterviewerToPanel';
 import getPanelList from '@salesforce/apex/InterviewerAssignmentService.getPanelList';
@@ -31,54 +30,55 @@ export default class InterviewerAssignment extends LightningElement {
     @track error;
     @track isRecruiter;
 
-
-    @api refresh() {
-        this.initializeComponent();
-    }
+    @track isDeleteDisabled=true;
+    @track selectedInterviewerItem=null;
 
     connectedCallback()
     {
-       this.initializeComponent();
-    }
-
-    async initializeComponent()
-    {
-        await isRecruiter()
+        isRecruiter()
         .then(result => {
             this.isRecruiter = result;
+            if(this.isRecruiter)
+            {
+                this.initializeComponent();
+            }
         })
         .catch(error => {
             this.error = error;
             this.isRecruiter = false;
         })
-        if(this.isRecruiter)
-        {
-            await getAllInterviewerList()
-            .then(result=>{
-                this.allInterviewerList = [];
-                for(const key in result)
-                {
-                    this.allInterviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
-                }
-            })
-            .catch(error => {
-                this.error=error;
-                this.allInterviewerList=undefined;
-            })
+    }
 
-            if(this.panelId) {
-                this.getInterviewerListFromPanel();
+    //initialize
+    async initializeComponent()
+    {
+        //Method to get all of the interviewers assigned to all panels
+        await getAllInterviewerList()
+        .then(result=>{
+            this.allInterviewerList = [];
+            for(const key in result)
+            {
+                this.allInterviewerList[key]=removeNamespaceFromKeyInObject(result[key]);
             }
+        })
+        .catch(error => {
+            this.error=error;
+            this.allInterviewerList=undefined;
+        })
 
-            await getPanelList()
-            .then(result => {
-                this.panelList=result;
-            })
-            .catch(error => {
-                this.error = error;
-                this.panelList = undefined;
-            })
+        if(this.panelId) {
+            this.getInterviewerListFromPanel();
         }
+
+        //Method to get the list of panels
+        await getPanelList()
+        .then(result => {
+            this.panelList=result;
+        })
+        .catch(error => {
+            this.error = error;
+            this.panelList = undefined;
+        })
 
         this.isDataEmpty = (!(this.userEmail && this.panelId));
     }
@@ -100,6 +100,7 @@ export default class InterviewerAssignment extends LightningElement {
         return picklistoptions;   
     }
 
+    //handle the panel change dropdown event
     handleChange(event)
     {
         var value = event.target.value;
@@ -150,7 +151,8 @@ export default class InterviewerAssignment extends LightningElement {
 		})
     }
 
-    assignInterviewer()
+    //Method to assign the interviewer to the panel and the interviewer permission set
+    async assignInterviewer()
     {
         var allValid = [
             ...this.template.querySelectorAll('lightning-input'),
@@ -176,7 +178,7 @@ export default class InterviewerAssignment extends LightningElement {
         }
         if (allValid) 
         {
-            assignInterviewerToPanel({userEmail:this.userEmail, panelId:this.panelId})
+            await assignInterviewerToPanel({userEmail:this.userEmail, panelId:this.panelId})
             .then(result => {
                 this.dispatchEvent(
                     new ShowToastEvent({
@@ -186,32 +188,31 @@ export default class InterviewerAssignment extends LightningElement {
                     })
                 );
                 //this.initializeComponent();
+                assignPermissionSet({userEmail:this.userEmail})
+                .then(result => {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Permission Assigned Successfully!',
+                            variant: 'success'
+                        })
+                    );
+                    this.initializeComponent();
+                })
+                .catch(error => {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error Assigning Permission to Interviewer',
+                            message: error.body.message,
+                            variant: 'error'
+                        })
+                    );
+                });
             })
             .catch(error => {
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error Assigning Interviewer to Panel',
-                        message: error.body.message,
-                        variant: 'error'
-                    })
-                );
-            });
-
-            assignPermissionSet({userEmail:this.userEmail})
-            .then(result => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Permission Assigned Successfully!',
-                        variant: 'success'
-                    })
-                );
-                this.initializeComponent();
-            })
-            .catch(error => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error Assigning Permission to Interviewer',
                         message: error.body.message,
                         variant: 'error'
                     })
@@ -226,8 +227,6 @@ export default class InterviewerAssignment extends LightningElement {
         
     }
 
-    @track isDeleteDisabled=true;
-    @track selectedInterviewerItem=null;
     //Method to make delete Button enable/disabled based on the row select/unselect
     disableDeleteButton(event)
     {
@@ -241,7 +240,13 @@ export default class InterviewerAssignment extends LightningElement {
         }
     }
 
+    //Method to delete the selected interviewers from panel and remove assigned permissionset
     async deleteInterviewer() {
+        var selInterviewerList = this.selectedItems;
+        for(const key in selInterviewerList)
+        {
+            this.selectedItems[key] = addNamespaceForKeyInObject(selInterviewerList[key]);
+        }
         await deleteInterviewerList({interviewerList:this.selectedItems})
             .then(() => {
                 this.dispatchEvent(
@@ -251,6 +256,26 @@ export default class InterviewerAssignment extends LightningElement {
                         variant: 'success'
                     })
                 );
+                removePermissionSet({interviewerList:this.selectedItems})
+                .then(() => {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Interviewer permission removed',
+                            variant: 'success'
+                        })
+                    );
+                    this.initializeComponent();
+                })
+                .catch(error => {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error removing Interviewer permission.',
+                            message: error.body.message,
+                            variant: 'error'
+                        })
+                    );
+                });
             })
             .catch((error) => {
                 this.dispatchEvent(
@@ -262,32 +287,6 @@ export default class InterviewerAssignment extends LightningElement {
                 );
             }
         );
-
-        var selInterviewerList = this.selectedItems;
-        for(const key in selInterviewerList)
-        {
-            this.selectedItems[key] = addNamespaceForKeyInObject(selInterviewerList[key]);
-        }
-        await removePermissionSet({interviewerList:this.selectedItems})
-        .then(() => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Interviewer permission removed',
-                    variant: 'success'
-                })
-            );
-            this.initializeComponent();
-        })
-        .catch(error => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error removing Interviewer permission.',
-                    message: error.body.message,
-                    variant: 'error'
-                })
-            );
-        });
     }
     
 }
