@@ -113,7 +113,6 @@ global with sharing class HireBuddyController {
         WHERE User__c = :userId
         LIMIT 1
       ];
-      System.debug('Prit: interviewerStatus: ' + interviewer[0]);
       return interviewer[0].InterviewerStatus__c;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());

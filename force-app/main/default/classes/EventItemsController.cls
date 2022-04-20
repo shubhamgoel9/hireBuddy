@@ -16,7 +16,6 @@ global class EventItemsController {
   /*Get all Event Items of a particular event*/
   @AuraEnabled
   public static List<HiringEventItem__c> getAllEventItem(String eventId) {
-  System.debug('Prit: event id::'+eventId);
       List<HiringEventItem__c> eventItemList = [
         SELECT 
           Id,
@@ -57,7 +56,6 @@ global class EventItemsController {
           R3SiftLink__c,
           R3Observer__c
           FROM HiringEventItem__c WHERE  CandidateId__r.HiringEventId__c=:eventId ORDER BY Id];
-          System.debug('itemList:: '+eventItemList);
       return eventItemList;
   }
 
@@ -88,7 +86,6 @@ global class EventItemsController {
     String R3Feedback
     ) 
     {
-      System.debug('Prit: selectedEventItemId:: '+selectedEventItemId);
       userTimeZone = UserInfo.getTimeZone().getID();
       List<HiringEventItem__c> items = [ SELECT
         Id,
@@ -130,7 +127,6 @@ global class EventItemsController {
       }
       if(!updateList.isEmpty()) 
       {
-        System.debug('Prit: updateList:: '+JSON.serialize(updateList));
         update updateList;
       }
     }
@@ -195,7 +191,6 @@ global class EventItemsController {
     2. Three rounds*/
     @AuraEnabled
     public static void deleteCandidateDetails(List<HiringEventItem__c> selectedEventItems){
-      System.debug('Inside deleteCandidateDetails: '+selectedEventItems);
         List<SObject> toBeDeleted = new List<SObject>();
         for(HiringEventItem__c item: selectedEventItems)
         {
@@ -222,7 +217,6 @@ global class EventItemsController {
     @AuraEnabled
     public static List<Interviewer__c> getInterviewerList(Id panelId){
       try {
-        System.debug('Prit: Getting interviewer list');
         return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c, PanelName__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL AND Panel__r.Id =:panelId];
         
       } catch (Exception e) {
@@ -255,7 +249,6 @@ global class EventItemsController {
         if(!round.isEmpty()) round[0].StartTime__c = InterviewTime;
       }
 
-      System.debug('Prit: Interviewer:: '+InterviewerEmail);
       if(InterviewerEmail != null || ProxyInterviewer != null) 
       {
         String toEmail;

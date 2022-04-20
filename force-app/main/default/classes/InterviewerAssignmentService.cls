@@ -44,7 +44,6 @@ global with sharing class InterviewerAssignmentService {
             {
                 emailIds.add(inter.InterviewerEmail__c);
             }
-            System.debug('Prit: emailIds: '+emailIds);
             List<User> userList = [SELECT Id FROM User WHERE Email =:emailIds];
             for(User usr: userList)
             {
