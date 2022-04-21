@@ -52,5 +52,19 @@ public class InterviewerAssignmentServiceTest {
         }catch(Exception ex){}
     }
 
-    
+    @isTest
+    static void assignPermissionSetTest() {
+        try{
+            String userEmail = [SELECT Id,Email FROM User WHERE Id = :UserInfo.getUserId()][0].Email;
+            InterviewerAssignmentService.assignPermissionSet(userEmail);
+        }catch(Exception ex){}
+    }
+
+    @isTest
+    static void removePermissionSetTest() {
+        try{
+            String userEmail = [SELECT Id,Email FROM User WHERE Id = :UserInfo.getUserId()][0].Email;
+            InterviewerAssignmentService.removePermissionSet([SELECT Id, InterviewerName__c, InterviewerEmail__c, PanelName__c,Panel__c FROM Interviewer__c WHERE InterviewerEmail__c = :userEmail]);
+        }catch(Exception ex){}
+    }
 }

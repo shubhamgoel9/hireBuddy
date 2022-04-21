@@ -1,14 +1,23 @@
 global class EventItemsController {
 
-  private static String plainNamespace = null;
-  private static String namespacePrefix = null;
   private static String userTimeZone = null;
+  private static Map<Id,String> eventIdToeventName = new Map<Id,String>();
+  private static Map<Id,List<HiringEventItem__c>> eventIdToEventItemList = new Map<Id,List<HiringEventItem__c>>();
 
   /*Get EventName*/
   @AuraEnabled
   public static string getEventName(Id eventId){
     try {
-      return [SELECT Id,Name FROM Hiring_Event__c WHERE Id = :eventId].Name;
+      if(eventIdToeventName != null && eventIdToeventName.get(eventId) != null)
+      {
+        return eventIdToeventName.get(eventId);
+      }
+      else 
+      {
+        String eventName = [SELECT Id,Name FROM Hiring_Event__c WHERE Id = :eventId].Name;
+        eventIdToeventName.put(eventId,eventName);
+        return eventName;
+      } 
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
@@ -16,47 +25,59 @@ global class EventItemsController {
   /*Get all Event Items of a particular event*/
   @AuraEnabled
   public static List<HiringEventItem__c> getAllEventItem(String eventId) {
-      List<HiringEventItem__c> eventItemList = [
-        SELECT 
-          Id,
-          HiringEvent__r.Name,
-          CandidateName__c,
-          CodepairLink__c,
-          CandidateId__r.HiringEventId__r.Name,
-          CandidateId__r.HiringEventId__r.Panel__c,
-          InterviewLink__c,
-          ResumeLink__c,
-          RoleEvaluation__c,
-          CandidateStatus__c,
-          R1Round__c,
-          R1RoundStatus__c,
-          R1Interviewer__c,
-          R1InterviewerEmail__c,
-          R1ProxyInterviewer__c,
-          R1StartTime__c,
-          R1Feedback__c,
-          R1SiftLink__c,
-          R1Observer__c,
-          R2Round__c,
-          R2RoundStatus__c,
-          R2Interviewer__c,
-          R2InterviewerEmail__c,
-          R2ProxyInterviewer__c,
-          R2StartTime__c,
-          R2Feedback__c,
-          R2SiftLink__c,
-          R2Observer__c,
-          R3Round__c,
-          R3RoundStatus__c,
-          R3Interviewer__c,
-          R3InterviewerEmail__c,
-          R3ProxyInterviewer__c,
-          R3StartTime__c,
-          R3Feedback__c,
-          R3SiftLink__c,
-          R3Observer__c
-          FROM HiringEventItem__c WHERE  CandidateId__r.HiringEventId__c=:eventId ORDER BY Id];
-      return eventItemList;
+    try {
+      if(eventIdToEventItemList != null && eventIdToEventItemList.get(eventId) != null)
+      {
+        return eventIdToEventItemList.get(eventId);
+      }
+      else 
+      {  
+        List<HiringEventItem__c> eventItemList = [
+          SELECT 
+            Id,
+            HiringEvent__r.Name,
+            CandidateName__c,
+            CodepairLink__c,
+            CandidateId__r.HiringEventId__r.Name,
+            CandidateId__r.HiringEventId__r.Panel__c,
+            InterviewLink__c,
+            ResumeLink__c,
+            RoleEvaluation__c,
+            CandidateStatus__c,
+            R1Round__c,
+            R1RoundStatus__c,
+            R1Interviewer__c,
+            R1InterviewerEmail__c,
+            R1ProxyInterviewer__c,
+            R1StartTime__c,
+            R1Feedback__c,
+            R1SiftLink__c,
+            R1Observer__c,
+            R2Round__c,
+            R2RoundStatus__c,
+            R2Interviewer__c,
+            R2InterviewerEmail__c,
+            R2ProxyInterviewer__c,
+            R2StartTime__c,
+            R2Feedback__c,
+            R2SiftLink__c,
+            R2Observer__c,
+            R3Round__c,
+            R3RoundStatus__c,
+            R3Interviewer__c,
+            R3InterviewerEmail__c,
+            R3ProxyInterviewer__c,
+            R3StartTime__c,
+            R3Feedback__c,
+            R3SiftLink__c,
+            R3Observer__c
+            FROM HiringEventItem__c WHERE  CandidateId__r.HiringEventId__c=:eventId ORDER BY Id];
+        eventIdToEventItemList.put(eventId,eventItemList);
+        return eventItemList;
+      }
+    }catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
   }
 
   /*Modify the EventItem record based on the inputs from Edit screen */
