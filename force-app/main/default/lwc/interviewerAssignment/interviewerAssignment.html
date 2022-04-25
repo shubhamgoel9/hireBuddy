@@ -28,7 +28,7 @@
                     <td colspan="3" style="width:10%;">
                     </td>
                     <td colspan="3" style="width:45%;">
-                        <lightning-input data-id='userEmail' onchange={handleChange} label ="Enter Interviewer Email" value="" pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email" maxlength="50"></lightning-input>
+                        <lightning-input data-id='userEmail' onchange={handleChange} label ="Enter Interviewer Email" value={userEmail} pattern="[A-Za-z0-9._-]+@salesforce.com" message-when-pattern-mismatch="Please enter a valid salesforce email" maxlength="50"></lightning-input>
                     </td>
                 </tr>
                 <tr class="slds-hint-parent">

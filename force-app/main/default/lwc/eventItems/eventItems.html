@@ -199,7 +199,7 @@
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R1Time" type="datetime" onchange={handleChange} label="R1 Time" value={eventItemRecord.R1StartTime__c}></lightning-input>
+                          <lightning-input data-id="R1Time" type="datetime" onchange={handleChange} label="R1 Time" value={eventItemRecord.R1StartTime__c} required={isR1TimeRequired}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
@@ -230,7 +230,7 @@
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R2Time" type="datetime" onchange={handleChange} label="R2 Time" value={eventItemRecord.R2StartTime__c}></lightning-input>
+                          <lightning-input data-id="R2Time" type="datetime" onchange={handleChange} label="R2 Time" value={eventItemRecord.R2StartTime__c} required={isR2TimeRequired}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
@@ -261,7 +261,7 @@
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>
                         <td>
-                          <lightning-input data-id="R3Time" type="datetime" onchange={handleChange} label="R3 Time" value={eventItemRecord.R3StartTime__c}></lightning-input>
+                          <lightning-input data-id="R3Time" type="datetime" onchange={handleChange} label="R3 Time" value={eventItemRecord.R3StartTime__c} required={isR3TimeRequired}></lightning-input>
                         </td>
                       </tr>
                       <tr class="slds-hint-parent" key={eventItemRecord.Id}>

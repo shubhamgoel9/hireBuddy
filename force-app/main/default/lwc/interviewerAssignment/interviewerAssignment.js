@@ -53,6 +53,7 @@ export default class InterviewerAssignment extends LightningElement {
     async initializeComponent()
     {
         //Method to get all of the interviewers assigned to all panels
+        this.userEmail=undefined;
         await getAllInterviewerList()
         .then(result=>{
             this.allInterviewerList = [];
@@ -218,11 +219,6 @@ export default class InterviewerAssignment extends LightningElement {
                     })
                 );
             });
-            this.userEmail=null;
-            //this.panelId=null;
-            this.isDataEmpty=true;
-            //this.openModal();
-
         }
         
     }

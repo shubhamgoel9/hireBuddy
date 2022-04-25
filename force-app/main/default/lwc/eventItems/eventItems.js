@@ -158,6 +158,9 @@ export default class EventItems extends NavigationMixin(LightningElement)
     @track R3Time;
     @track R3Sift;
     @track R3Feedback;
+    @track isR1TimeRequired;
+    @track isR2TimeRequired;
+    @track isR3TimeRequired;
 
     //Variables for new Candidate details
     @track newCandidateName;
@@ -416,6 +419,14 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 this.disableR1ProxyInterviewer=true;
             }
             this.R1InterviewerEmail = value;
+            if(value === 'None')
+            {
+                this.isR1TimeRequired=false;
+            }
+            else
+            {
+                this.isR1TimeRequired=true;
+            }
         }
         else if(event.target.dataset.id === 'R1ProxyInterviewer')
         {
@@ -424,6 +435,7 @@ export default class EventItems extends NavigationMixin(LightningElement)
         else if(event.target.dataset.id === 'R1Observer')
         {
             this.R1Observer = value;
+            this.isR1TimeRequired = true;
         }
         else if(event.target.dataset.id === 'R1Time')
         {
@@ -448,6 +460,14 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 this.disableR2ProxyInterviewer=true;
             }
             this.R2InterviewerEmail = value;
+            if(value === 'None')
+            {
+                this.isR2TimeRequired=false;
+            }
+            else
+            {
+                this.isR2TimeRequired=true;
+            }
         }
         else if(event.target.dataset.id === 'R2ProxyInterviewer')
         {
@@ -480,6 +500,14 @@ export default class EventItems extends NavigationMixin(LightningElement)
                 this.disableR3ProxyInterviewer=true;
             }
             this.R3InterviewerEmail = value;
+            if(value === 'None')
+            {
+                this.isR3TimeRequired=false;
+            }
+            else
+            {
+                this.isR3TimeRequired=true;
+            }
         }
         else if(event.target.dataset.id === 'R3ProxyInterviewer')
         {
@@ -506,49 +534,70 @@ export default class EventItems extends NavigationMixin(LightningElement)
     //Action to perform on clicking SAVE on EDIT Modal
     submitDetails() {
         //update Event Item Record
-        setEventItem({selectedEventItemId:this.selectedEventItemId,
-            candidateStatus:this.candidateStatus,
-            interviewLink:this.interviewLink,
-            codepairLink:this.codepairLink,
-            R1InterviewerEmail:this.R1InterviewerEmail,
-            R1ProxyInterviewer:this.R1ProxyInterviewer,
-            R1Observer:this.R1Observer,
-            R1Time:this.R1Time,
-            R1Sift:this.R1Sift,
-            R1Feedback:this.R1Feedback,
-            R2InterviewerEmail:this.R2InterviewerEmail,
-            R2ProxyInterviewer:this.R2ProxyInterviewer,
-            R2Observer:this.R2Observer,
-            R2Time:this.R2Time,
-            R2Sift:this.R2Sift,
-            R2Feedback:this.R2Feedback,
-            R3InterviewerEmail:this.R3InterviewerEmail,
-            R3ProxyInterviewer:this.R3ProxyInterviewer,
-            R3Observer:this.R3Observer,
-            R3Time:this.R3Time,
-            R3Sift:this.R3Sift,
-            R3Feedback:this.R3Feedback
-        })
-        .then(() => {
+        const allValid = [
+            ...this.template.querySelectorAll('lightning-input'),
+            ...this.template.querySelectorAll('lightning-combobox'),
+        ].reduce((validSoFar, inputCmp) => {
+            inputCmp.reportValidity();
+            return validSoFar && inputCmp.checkValidity();
+            }, true);
+        if (allValid) 
+        {    
+            setEventItem({selectedEventItemId:this.selectedEventItemId,
+                candidateStatus:this.candidateStatus,
+                interviewLink:this.interviewLink,
+                codepairLink:this.codepairLink,
+                R1InterviewerEmail:this.R1InterviewerEmail,
+                R1ProxyInterviewer:this.R1ProxyInterviewer,
+                R1Observer:this.R1Observer,
+                R1Time:this.R1Time,
+                R1Sift:this.R1Sift,
+                R1Feedback:this.R1Feedback,
+                R2InterviewerEmail:this.R2InterviewerEmail,
+                R2ProxyInterviewer:this.R2ProxyInterviewer,
+                R2Observer:this.R2Observer,
+                R2Time:this.R2Time,
+                R2Sift:this.R2Sift,
+                R2Feedback:this.R2Feedback,
+                R3InterviewerEmail:this.R3InterviewerEmail,
+                R3ProxyInterviewer:this.R3ProxyInterviewer,
+                R3Observer:this.R3Observer,
+                R3Time:this.R3Time,
+                R3Sift:this.R3Sift,
+                R3Feedback:this.R3Feedback
+            })
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Candidate Record Modfied Successfully!',
+                        variant: 'success'
+                    })
+                );
+                this.isModalOpen = false;
+                this.initializeComponent();
+            })
+            .catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Modify Error',
+                        message: error.body.message,
+                        variant: 'error'
+                    })
+                );
+            });
+        }
+        else
+        {
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Candidate Record Modfied Successfully!',
-                    variant: 'success'
-                })
-            );
-            this.isModalOpen = false;
-            this.initializeComponent();
-        })
-        .catch(error => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Modify Error',
-                    message: error.body.message,
+                    title: 'Required fields missing',
+                    message: '',
                     variant: 'error'
                 })
             );
-        });
+
+        }
     }
 
     //Add New Candidate Button onlick event to open candidateModal

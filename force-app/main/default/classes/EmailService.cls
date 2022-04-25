@@ -20,8 +20,9 @@ public with sharing class EmailService {
         email.setHtmlBody('Hello' + name + ' ,' + '<br/><br/>' + mailContent + '<br/><br/>Regards<br/> HireBuddy');
         try{
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });
-        }catch(exception e){
-            apexpages.addmessage(new apexpages.message(apexpages.severity.error,e.getMessage()));
+        }catch(Exception e){
+            System.debug('Exception occoured while sending mail: '+e.getMessage());
+            throw e;
         }
         
         toMail = '';

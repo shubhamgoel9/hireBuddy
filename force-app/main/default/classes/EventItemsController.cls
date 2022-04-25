@@ -105,7 +105,9 @@ global class EventItemsController {
     DateTime R3Time,
     String R3Sift,
     String R3Feedback
-    ) 
+  ) 
+  {
+    try
     {
       userTimeZone = UserInfo.getTimeZone().getID();
       List<HiringEventItem__c> items = [ SELECT
@@ -150,24 +152,31 @@ global class EventItemsController {
       {
         update updateList;
       }
+    }catch(Exception e)
+    {
+      System.debug('Exception caught in setEventItem:: '+e.getStackTraceString());
+      throw new AuraHandledException(e.getMessage());
     }
+  }
 
     /*Add the following new records
     1. Candidate
     2. Three rounds of the candidate
     3. Hiring Event Item*/
-    @AuraEnabled
-    public static void setNewCandidateDetails(
-      Id eventId,
-      String newCandidateName,
-      String newCandidateEmail,
-      String newCandidateContact,
-      String newCandidateResume,
-      String newCandidateRoleEvaluation,
-      String newCandidateInterviewLink,
-      String newCandidateCodePairLink)
-    {
-        Candidate__c newCandidate = new Candidate__c(
+  @AuraEnabled
+  public static void setNewCandidateDetails(
+    Id eventId,
+    String newCandidateName,
+    String newCandidateEmail,
+    String newCandidateContact,
+    String newCandidateResume,
+    String newCandidateRoleEvaluation,
+    String newCandidateInterviewLink,
+    String newCandidateCodePairLink)
+  {
+    try
+    {    
+      Candidate__c newCandidate = new Candidate__c(
           HiringEventId__c=eventId, 
           Name=newCandidateName, 
           Email__c=newCandidateEmail,
@@ -177,93 +186,99 @@ global class EventItemsController {
           InterviewLink__c = newCandidateInterviewLink,
           CodepairLink__c = newCandidateCodePairLink);
         
-        insert newCandidate;
+      insert newCandidate;
 
-        Round__c R1Round = new Round__c(
-          Name='Round1',
-          HiringEvent__c=eventId,
-          Candidate__c = newCandidate.Id);
-        Round__c R2Round = new Round__c(
-          Name = 'Round2',
-          HiringEvent__c=eventId,
-          Candidate__c = newCandidate.Id);
-        Round__c R3Round = new Round__c(
-          Name='Round3',
-          HiringEvent__c=eventId,
-          Candidate__c = newCandidate.Id);
+      Round__c R1Round = new Round__c(
+        Name='Round1',
+        HiringEvent__c=eventId,
+        Candidate__c = newCandidate.Id);
+      Round__c R2Round = new Round__c(
+        Name = 'Round2',
+        HiringEvent__c=eventId,
+        Candidate__c = newCandidate.Id);
+      Round__c R3Round = new Round__c(
+        Name='Round3',
+        HiringEvent__c=eventId,
+        Candidate__c = newCandidate.Id);
 
-        insert R1Round;
-        insert R2Round;
-        insert R3Round;
+      insert R1Round;
+      insert R2Round;
+      insert R3Round;
 
-        HiringEventItem__c newItem = new HiringEventItem__c(
-          CandidateId__c = newCandidate.Id,
-          R1Round__c = R1Round.Id,
-          R2Round__c = R2Round.Id,
-          R3Round__c = R3Round.Id,
-          HiringEvent__c = eventId);
-        
-        insert newItem;
-          
-    }
-
-    /* Delete the following records along with the Event Item 
-    1. Candidate
-    2. Three rounds*/
-    @AuraEnabled
-    public static void deleteCandidateDetails(List<HiringEventItem__c> selectedEventItems){
-        List<SObject> toBeDeleted = new List<SObject>();
-        for(HiringEventItem__c item: selectedEventItems)
-        {
-          toBeDeleted.add(item.CandidateId__c.getSObjectType().newSObject(item.CandidateId__c));
-          if(item.R1Round__c != null) toBeDeleted.add(item.R1Round__c.getSObjectType().newSObject(item.R1Round__c));
-          if(item.R2Round__c != null) toBeDeleted.add(item.R2Round__c.getSObjectType().newSObject(item.R2Round__c));
-          if(item.R3Round__c != null) toBeDeleted.add(item.R3Round__c.getSObjectType().newSObject(item.R3Round__c));
-          toBeDeleted.add(item);
-        }
-        delete toBeDeleted;
-
-    }
-
-    @AuraEnabled
-    public static Id getPanelId(Id eventId){
-      try {
-        List<Hiring_Event__c> events = [SELECT Id, Panel__c FROM Hiring_Event__c WHERE Id = :eventId LIMIT 1];
-        return events[0].Panel__c;
-      } catch (Exception e) {
-        throw new AuraHandledException(e.getMessage());
-      }
-    }
-
-    @AuraEnabled
-    public static List<Interviewer__c> getInterviewerList(Id panelId){
-      try {
-        return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c, PanelName__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL AND Panel__r.Id =:panelId];
-        
-      } catch (Exception e) {
-        throw new AuraHandledException(e.getMessage());
-      }
-    }
-
-    @AuraEnabled
-    public static void deleteInterviewerList(List<Interviewer__c> interviewerList){
-      try {
-        delete interviewerList;
-      } catch (Exception e) {
-        throw new AuraHandledException(e.getMessage());
-      }
-    }
-
-    /* --------------HELPER METHODS----------------*/
-    private static void updateRound(Id roundId,
-      String InterviewerEmail,
-      String ProxyInterviewer,
-      String Observer,
-      DateTime InterviewTime,
-      String Sift,
-      String Feedback,
-      List<SObject> updateList)
+      HiringEventItem__c newItem = new HiringEventItem__c(
+        CandidateId__c = newCandidate.Id,
+        R1Round__c = R1Round.Id,
+        R2Round__c = R2Round.Id,
+        R3Round__c = R3Round.Id,
+        HiringEvent__c = eventId);
+      
+      insert newItem;
+    }catch(Exception e)
     {
+      System.debug('Exception caught in setNewCandidateDetails:: '+e.getStackTraceString());
+      throw new AuraHandledException(e.getMessage());
+    }   
+  }
+
+  /* Delete the following records along with the Event Item 
+  1. Candidate
+  2. Three rounds*/
+  @AuraEnabled
+  public static void deleteCandidateDetails(List<HiringEventItem__c> selectedEventItems){
+      List<SObject> toBeDeleted = new List<SObject>();
+      for(HiringEventItem__c item: selectedEventItems)
+      {
+        toBeDeleted.add(item.CandidateId__c.getSObjectType().newSObject(item.CandidateId__c));
+        if(item.R1Round__c != null) toBeDeleted.add(item.R1Round__c.getSObjectType().newSObject(item.R1Round__c));
+        if(item.R2Round__c != null) toBeDeleted.add(item.R2Round__c.getSObjectType().newSObject(item.R2Round__c));
+        if(item.R3Round__c != null) toBeDeleted.add(item.R3Round__c.getSObjectType().newSObject(item.R3Round__c));
+        toBeDeleted.add(item);
+      }
+      delete toBeDeleted;
+
+  }
+
+  @AuraEnabled
+  public static Id getPanelId(Id eventId){
+    try {
+      List<Hiring_Event__c> events = [SELECT Id, Panel__c FROM Hiring_Event__c WHERE Id = :eventId LIMIT 1];
+      return events[0].Panel__c;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static List<Interviewer__c> getInterviewerList(Id panelId){
+    try {
+      return [SELECT Id, InterviewerName__c, InterviewerEmail__c,InterviewerStatus__c, PanelName__c FROM Interviewer__c WHERE InterviewerEmail__c != NULL AND Panel__r.Id =:panelId];
+      
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static void deleteInterviewerList(List<Interviewer__c> interviewerList){
+    try {
+      delete interviewerList;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  /* --------------HELPER METHODS----------------*/
+  private static void updateRound(Id roundId,
+    String InterviewerEmail,
+    String ProxyInterviewer,
+    String Observer,
+    DateTime InterviewTime,
+    String Sift,
+    String Feedback,
+    List<SObject> updateList)
+  {
+    try{
+
       List<Round__c> round = [Select Id, Interviewer__c, ProxyInterviewer__c, Interviewer__r.Name, Observer__c, StartTime__c, SiftLink__c, Feedback__c from Round__c where Id=:roundId];
       
       if(InterviewTime != null){
@@ -321,12 +336,23 @@ global class EventItemsController {
       {
         updateList.add(round[0]);
       }
+    }catch(Exception e)
+    {
+      System.debug('Exception caught in updateRound: '+e.getStackTraceString());
+      throw new AuraHandledException(e.getMessage());
     }
+  }
 
-    private static void sendEmail(String toEmail, String subject, String toName, String mailContent, String startTime) {
-        EmailService.toMail = toEmail;
+  private static void sendEmail(String toEmail, String subject, String toName, String mailContent, String startTime) {
+      EmailService.toMail = toEmail;
+      try
+      {
         EmailService.sendMail(subject, toName, mailContent);
-        //CalenderInvite.sendinvite(new List<String> {toEmail}, startTime);
-    }
+      //CalenderInvite.sendinvite(new List<String> {toEmail}, startTime);
+      }catch(Exception e)
+      {
+        throw e;
+      }
+  }
 
 }
